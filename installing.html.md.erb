@@ -3,14 +3,21 @@ title: Installing Pivotal Concourse OLM
 owner: Concourse 
 ---
 
-All IaaSes
+This topic should include the following:
 
-- Install Concourse OLM OR moving to Pivotal Concourse OLM from your current OSS concourse setup.
-- Verify Installation
-- View ATC 
-- Make test pipeline
+- Creating/Editing the manifest. 
+	- Information about sizing. Tell users that if they need to scale, they can modify these properties and redeploy.
+	- Information about which auth method to use and how to configure. Also tell users they can rotate these creds using the Fly CLI. 
+	- Information about whether to use and external or internal database and if external how to configure. 
+	- Do they need to set up load balancers?
+	- What about tsa certs? Do those need to be rotated.
+- Deploying with BOSH.
+- If you are migrating from OSS concourse, how to bring in your data. Reference the backing up pipeline
+build data topic. 
 
 ## Create a Manifest
+
+1. Download the [manifest template](https://github.com/pivotal-cf/docs-concourse-olm/blob/master/concourse.yml) from the Concourse OLM documentation repository. 
 
 
 
