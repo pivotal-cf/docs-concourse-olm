@@ -3,6 +3,31 @@ title: Concourse Architecture
 owner: Concourse
 ---
 
-This topic should include information about:
+This topic describes the components that make up a Concourse installation and their functions.
 
-- Each component, what it does, and how it interacts with the others.
+## <a id="diagram"></a> Diagram
+
+The following diagram introduces the components that make up a Concourse installation.
+
+![Arch Doc](concourse-arch.png)
+
+## <a id="descriptoin"></a> Component Descriptions
+
+The following list describes the function of each Concourse component:
+
+* The **ATC** is an HTTP server that does the following:
+	* Provides the Concourse web UI.
+	* Exposes the Concourse API on port 8080, which serves the Fly CLI and other components.
+	* Schedules pipelines to run on worker VMs. The ATC uses data stored in the PostgreSQL database to know what to schedule.
+* The **TSA** is an SSH server that the does the following:
+	* Secures the [registration of worker VMs to the ATC](http://concourse.ci/registering-via-tsa.html). Listens on port 2222. 
+		* Acts as a reverse-proxy for workers running in other networks. In this case, the TSA advertises an ephemeral port as the worker VM address.
+* The **PostgreSQL** database does the following:
+	* Stores all pipeline data, such as build logs and resource versions. 
+* A **Worker** is a stateless VM that does the following:
+	* Registers itself with and sends heartbeats to the ATC. The **Beacon** does this by communicating with the ATC through the TSA.
+	* Runs pipelines using Garden containers and Baggageclaim volumes.
+		* **Garden** orchestrates **containers** remotely. After receiving instructions from the ATC on port 7777, Garden uses containers to do things such as discover [resource](http://concourse.ci/resource-types.html) versions or run steps in a [build plan](http://concourse.ci/build-plans.html).
+		* **Baggageclaim** provides an API for remote management of disk resources, or **volumes**, which are mounted to containers. After receiving instructions from the ATC on port 7788, Baggageclaim uses volumes to store persistent caches of resource versions and to propogate artifacts such as caches and task outputs through the containers used for a build.
+
+For more information, see the [Concourse Documentation](http://concourse.ci/architecture.html). 
