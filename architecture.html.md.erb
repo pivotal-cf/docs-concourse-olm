@@ -13,9 +13,11 @@ The following diagram introduces the components that make up a Concourse install
 * A PostgreSQL database
 * A _Worker_ VM that includes the Beacon, Garden, and Baggageclaim components, along with container and volume instances.
 
+See the [Component Descriptions](#description) section for information on how each component functions.
+
 ![Arch Doc](concourse-arch.png)
 
-## <a id="descriptoin"></a> Component Descriptions
+## <a id="description"></a> Component Descriptions
 
 The following table describes the function of each Concourse component:
 
@@ -25,7 +27,7 @@ The following table describes the function of each Concourse component:
 <th>Function</th>
 </tr>
 <tr>
-<td>ATC</td>
+<td>ATC<br>(located on the web VM</td>
 <td>The <b>ATC</b> is an HTTP server that does the following:
 <ul>
 <li>Provides the Concourse web UI.</li>
@@ -36,7 +38,7 @@ The following table describes the function of each Concourse component:
 </tr>
 <tr>
 <td>
-TSA
+TSA<br>(located on the web VM)
 </td>
 <td>
 The <b>TSA</b> is a SSH server that secures the <a href="http://concourse.ci/registering-via-tsa.html">registration of worker VMs to the ATC</a>. Listens on port 2222.
