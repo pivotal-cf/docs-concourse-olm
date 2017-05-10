@@ -3,17 +3,13 @@ title: Concourse Architecture
 owner: Concourse
 ---
 
-This topic describes the components that make up a Concourse installation and their functions.
+This topic describes the VMs and software components that make up a Concourse installation.
 
-## <a id="diagram"></a> Diagram
+## <a id="diagram"></a> Component Diagram
 
-The following diagram introduces the components that make up a Concourse installation:
+Concourse runs its software components on three VM types: a _web_ VM, a _server_ VM, and one or more _worker_ VMs. This diagram shows where its components run and how they work together.
 
-* A _Web_ VM that includes the ATC and TSA components
-* A PostgreSQL database
-* A _Worker_ VM that includes the Beacon, Garden, and Baggageclaim components, along with container and volume instances.
-
-See the [Component Descriptions](#description) section for information on how each component functions.
+The [Component Descriptions](#description) below explain what each component does. [Internal vs External Workers](#comms) describes the communication paths that the web and worker VMs use depending on whether they run in the same network.
 
 ![Arch Doc](concourse-arch.png)
 
@@ -22,47 +18,54 @@ See the [Component Descriptions](#description) section for information on how ea
 The following table describes the function of each Concourse component:
 
 <table>
-<tr>
-<th>Part</th>
-<th>Function</th>
-</tr>
-<tr>
-<td>ATC<br>(located on the web VM</td>
-<td>The <b>ATC</b> is an HTTP server that does the following:
-<ul>
-<li>Provides the Concourse web UI.</li>
-<li>Exposes the Concourse API on port 8080, which serves the Fly CLI and other components</li>
-<li>Schedules pipelines to run on worker VMs. The ATC uses data stored in the PostgreSQL database to know what to schedule</li>
-</ul>
-</td>
-</tr>
-<tr>
-<td>
-TSA<br>(located on the web VM)
-</td>
-<td>
-The <b>TSA</b> is a SSH server that secures the <a href="http://concourse.ci/registering-via-tsa.html">registration of worker VMs to the ATC</a>. Listens on port 2222.
-<br><br>
-If a Concourse installation uses workers running in separate networks from the ATC, the TSA acts as a reverse-proxy. In this case, the TSA advertises an ephemeral port as the worker VM address.
-</ul>
-</td>
-</tr>
-<tr>
-<td>PostgreSQL</td>
-<td>The <b>PostgreSQL</b> database does stores all pipeline data, such as build logs and resource versions.</td>
-</tr>
-<tr>
-<td>Worker</td>
-<td>A <b>Worker</b> is a VM that does the following:
-<ul>
-<li>Registers itself with and sends heartbeats to the ATC. The <b>Beacon</b> does this by communicating with the ATC through the TSA.</li>
-<li>Runs pipelines using Garden containers and Baggageclaim volumes.
-</li>
-</ul>
-<b>Garden</b> orchestrates <b>containers</b> remotely. After receiving instructions from the ATC on port 7777, Garden uses containers to do things such as discover <a href="http://concourse.ci/resource-types.html">resource</a> versions or run steps in a <a href="http://concourse.ci/build-plans.html">build plan</a>.<br><br>
-<b>Baggageclaim</b> provides an API for remote management of disk resources, or <b>volumes</b>, which are mounted to containers. After receiving instructions from the ATC on port 7788, Baggageclaim uses volumes to store persistent caches of resource versions and to propogate artifacts such as caches and task outputs through the containers used for a build.
-</td>
-</tr>
+  <tr>
+    <th>VM</th>
+    <th>Component</th>
+    <th>Function</th>
+  </tr><tr>
+    <td rowspan=2><b>Web</b></td>
+    <td><b>ATC</b></td>
+    <td>Runs an HTTP server that:
+      <ul><li>Provides the Concourse web UI.</li>
+      <li>Serves the Concourse API on port 8080, to support the Fly CLI and other components.</li>
+      <li>Schedules pipelines to run on worker VMs.</li></ul></td>
+  </tr><tr>
+    <td><b>TSA</b></td>
+    <td>Runs an SSH server that:
+      <ul><li>Listens on port 2222.</li>
+      <li>Securely <a href="http://concourse.ci/registering-via-tsa.html">registers worker VMs</a> for ongoing communication with the ATC, when worker and ATC run in the same network.</li></ul>
+    If a Concourse installation uses workers running in separate networks from the ATC, the TSA acts as a reverse-proxy. In this case, the TSA advertises an ephemeral port as the worker VM address.</td>
+  </tr><tr>
+    <td><b>Database</b></td>
+    <td><b>PostgreSQL</td>
+    <td>Stores all pipeline data, such as build logs and resource versions, for use by worker VMs.</td>
+  </tr><tr>
+    <td rowspan=3><b>Worker</b></td>
+    <td><b>Beacon</b></td>
+    <td>Registers with the ATC that the worker VM can run Concourse build pipelines, and sends heartbeats in one of two ways:
+      <ul><li>If the worker runs in the same network as the web VM, communicates internally with the ATC through the TSA.</li><li>
+      If the worker runs in a different network from the web VM, sends messages via TCP.</li></ul></td>
+  </tr><tr>
+    <td><b>Garden</b></td>
+    <td>
+      <ul><li>Listens on port 7777.</li>
+      <li>Provides an API for the ATC to manage <b>containers</b> to do things like:
+        <ul><li>Discover new versions of <a href="http://concourse.ci/resource-types.html">resources</a>.</li>
+        <li>Run the tasks in a pipeline <a href="http://concourse.ci/build-plans.html">build plan.</a></li></ul></li></ul></td>
+  </tr><tr>
+    <td><b>Baggageclaim</b></td>
+    <td>
+      <ul><li>Listens on port 7788.</li>
+      <li>Provides an API for the ATC to manage disk resources, or <b>volumes</b>, mounted to containers.</li>
+      <li>Uses volumes to store persistent caches of resource versions and to propagate artifacts such as caches and task outputs through the containers used for a build.</li></ul></td>
+  </tr>
 </table>
 
 For more information, see the [Concourse Documentation](http://concourse.ci/architecture.html). 
+
+## <a id="comms"></a> Internal vs. External Workers
+
+TK
+
+
+
