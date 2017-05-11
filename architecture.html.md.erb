@@ -7,11 +7,11 @@ This topic describes the VMs and software components that make up a Concourse in
 
 ## <a id="diagram"></a> Component Diagram
 
-Concourse runs its software components on three VM types: a _web_ VM, a _server_ VM, and one or more _worker_ VMs. This diagram shows where its components run and how they work together.
-
-The [Component Descriptions](#description) below explain what each component does. [Internal vs. External Workers](#comms) describes the two setups that the web VM uses to securely communicate with worker VMs, depending on whether or not the ATC can access the workers directly.
+Concourse runs its software components on three VM types: _web_ VMs, _server_ VMs, and _worker_ VMs. The web VM accepts external requests, typically routed by a load balancer. This diagram shows where Concourse components run and what their communication paths are.
 
 ![Arch Doc](concourse-arch.png)
+
+The [Component Descriptions](#description) below explain what each component does. The [Internal vs. External Workers](#comms) section describes the two setups that enable the ATC to communicate with workers, depending on whether or not it can access the worker VMs directly.
 
 ## <a id="description"></a> Component Descriptions
 
@@ -34,22 +34,18 @@ The following table describes the function of each Concourse component:
     <td>Runs an SSH server that:
       <ul><li>Listens on port 2222.</li>
       <li>Securely <a href="http://concourse.ci/registering-via-tsa.html">registers worker VMs</a> for use by the ATC.</li>
-      <li>Handshakes with worker VMs to open an ongoing <a href="#comms">secure connection</a> between the ATC and the workers:
-        <ul><li>Regular SSH for internal workers, VMs that the ATC can access directly.</li>
-        <li>Reverse SSH tunnel for external workers, VMs in different network from ATC and behind firewall, or otherwise inaccessible.</li></ul></li>
-      <li>Pings workers for heartbeat every 30 seconds, and notifies ATC that worker is in <code>stalled</code> state if no response.</li></ul>
+      <li>For <a href="#comms-external">external worker</a> VMs, handshakes opens a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
+      <li>Pings workers for heartbeat every 30 seconds, and notifies ATC of data changes, or that worker is in <code>stalled</code> state if no response.</li></ul>
     </td>
   </tr><tr>
     <td><b>Database</b></td>
     <td><b>PostgreSQL</td>
-    <td>Stores all pipeline data, such as build logs and resource versions, for use by the ATC.</td>
+    <td>Stores pipeline data, such as build logs and resource versions, for use by the ATC.</td>
   </tr><tr>
     <td rowspan=3><b>Worker</b></td>
     <td><b>Beacon</b></td>
-    <td><ul><li>Sends worker addresses and other <a href="https://github.com/concourse/atc/blob/master/worker.go">information</a> to the ATC, to register that the worker is ready to run Concourse build pipelines</li>
-      <li>Handshakes with TSA on web VM to open an ongoing <a href="#comms">secure connection</a> to the ATC:
-        <ul><li>Regular SSH for internal workers, VMs that the ATC can access directly.</li>
-        <li>Reverse SSH tunnel for external workers, VMs in different network from ATC and behind firewall, or otherwise inaccessible.</li></ul></li></ul>
+    <td><ul><li>For <a href="#comms-external">external worker</a> VMs, handshakes with TSA to open a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
+    <li>Sends Garden and Baggageclaim addresses to the ATC, to register that the worker is ready to run Concourse build pipelines</li></ul>
   </tr><tr>
     <td><b>Garden</b></td>
     <td>Runs an HTTP server that:
@@ -72,19 +68,21 @@ For more information, see the [Concourse Documentation](http://concourse.ci/arch
 
 Concourse workers can be either _internal_, also called _local_; or _external_, also called _remote_. These two types of worker VMs differ as follows:
 
-* **Internal worker**: The web VM, which hosts the ATC, can make direct HTTP calls to the worker VM.
+* A worker VM is **internal** when the web VM, which hosts the ATC, can make direct HTTP calls to the worker VM.
   - Typical when web and worker VMs are all on the same private network.
   - To let users call the Concourse API from anywhere, point a load balancer to the web VM.
 
-* **External worker**: The web VM cannot directly connect to the worker VM via HTTP or SSH, but the worker VM can SSH into the web VM.
+* A worker VM is **external** when the web VM cannot directly connect to the worker VM via HTTP or SSH.
   - Typical when the worker VMs are behind a firewall in a separate network from the web VM, or when security groups prevent communication from web VM to worker.
   - To let users call the Concourse API from anywhere, host web VM on a public network and run external workers on a separate, private network.
 
-Both internal and external workers can SSH into the web VM to log in through a secure connection.
+Both internal and external workers can use SSH to securely log into the web VM.
 
-Depending on whether the worker VMs are internal or external, Concourse sets up secure communications from the ATC to the workers as described below.
+Depending on whether the worker VMs are internal or external, Concourse sets up secure communications from the ATC as described below.
 
 ### <a id="comms-internal"></a> Internal Worker Communications
+
+Concourse sets up communications between the ATC and internal worker VMS as follows:
 
 1. The worker's Beacon establishes an SSH connection to the TSA port on the web VM.
 
@@ -97,6 +95,8 @@ Depending on whether the worker VMs are internal or external, Concourse sets up 
 1. ATC makes direct HTTP calls to Garden and Baggageclaim on the worker, to create containers and volumes for running containerized processes.
 
 ### <a id="comms-external"></a> External Worker Communications
+
+Concourse sets up communications between the ATC and external worker VMS as follows:
 
 1. The worker's Beacon establishes an SSH connection to the TSA port on the web VM.
 
