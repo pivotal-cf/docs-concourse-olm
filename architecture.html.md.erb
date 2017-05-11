@@ -70,15 +70,17 @@ For more information, see the [Concourse Documentation](http://concourse.ci/arch
 
 ## <a id="comms"></a> Internal vs. External Workers
 
-Concourse workers can be either _internal_, also called _local_; or _external_, also called _remote_:
+Concourse workers can be either _internal_, also called _local_; or _external_, also called _remote_. These two types of worker VMs differ as follows:
 
-* **Internal**: The web VM, which hosts the ATC, can make direct HTTP calls to the worker VM. The worker VM can SSH back into the web VM to open a secure connection.
+* **Internal worker**: The web VM, which hosts the ATC, can make direct HTTP calls to the worker VM.
   - Typical when web and worker VMs are all on the same private network.
   - To let users call the Concourse API from anywhere, point a load balancer to the web VM.
 
-* **External**: The web VM cannot directly connect to the worker VM via HTTP or SSH, but the worker VM can SSH into the web VM.
+* **External worker**: The web VM cannot directly connect to the worker VM via HTTP or SSH, but the worker VM can SSH into the web VM.
   - Typical when the worker VMs are behind a firewall in a separate network from the web VM, or when security groups prevent communication from web VM to worker.
   - To let users call the Concourse API from anywhere, host web VM on a public network and run external workers on a separate, private network.
+
+Both internal and external workers can SSH into the web VM to log in through a secure connection.
 
 Depending on whether the worker VMs are internal or external, Concourse sets up secure communications from the ATC to the workers as described below.
 
