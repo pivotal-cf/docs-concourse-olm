@@ -82,7 +82,7 @@ Concourse sets up secure communications from the ATC to worker VMs in two ways, 
 
 ### <a id="comms-internal"></a> Internal Worker Communications
 
-Concourse sets up communications between the ATC and internal worker VMS as follows:
+Concourse sets up communications between the ATC and internal worker VMs as follows:
 
 1. The worker's Beacon connects to the TSA via SSH and runs the `register-worker` command to the TSA, passing in the worker [payload](https://github.com/concourse/atc/blob/master/worker.go).
 
@@ -92,7 +92,7 @@ Concourse sets up communications between the ATC and internal worker VMS as foll
 
 ### <a id="comms-external"></a> External Worker Communications
 
-Concourse sets up communications between the ATC and external worker VMS as follows:
+Concourse sets up communications between the ATC and external worker VMs as follows:
 
 1. The worker's Beacon connects to the TSA via SSH and runs the `forward-worker` command to the TSA, passing in the worker [payload](https://github.com/concourse/atc/blob/master/worker.go).
 
