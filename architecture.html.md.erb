@@ -7,7 +7,7 @@ This topic describes the VMs and software components that make up a Concourse in
 
 ## <a id="diagram"></a> Component Diagram
 
-Concourse software components can be logically split between 2 subsystems: a _server_ (web on picture) and one or more _worker_. In a simple setup all of them can run on a single VM. In a more complex system servers and workers can be scalled accross multiple VMs. This diagram shows where its components run and how they work together.
+Concourse software components can be logically split between two subsystems: a _server_ (web on picture) and one or more _worker_. In a simple setup all of them can run on a single VM. In a more complex system servers and workers can be scalled accross multiple VMs. This diagram shows where its components run and how they work together.
 
 The [Component Descriptions](#description) below explain what each component does. [Internal vs. External Workers](#comms) describes the two setups that the web VM uses to securely communicate with worker VMs, depending on whether or not the ATC can access the workers directly.
 
