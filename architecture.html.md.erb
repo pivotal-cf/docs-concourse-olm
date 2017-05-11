@@ -82,7 +82,7 @@ Concourse workers can be either _internal_, also called _local_; or _external_, 
 
 Depending on whether the worker VMs are internal or external, Concourse sets up secure communications from the ATC to the workers as described below.
 
-## <a id="comms-internal"></a> Internal Worker Communications
+### <a id="comms-internal"></a> Internal Worker Communications
 
 1. The worker's Beacon runs the `register-worker` command, passing in the worker [data object](https://github.com/concourse/atc/blob/master/worker.go).
 
@@ -90,7 +90,7 @@ Depending on whether the worker VMs are internal or external, Concourse sets up 
 
 1. ATC uses the `ssh` connection to call Garden and Baggageclaim on the worker, to create containers and volumes for running containerized processes.
 
-## <a id="comms-external"></a> External Worker Communications
+### <a id="comms-external"></a> External Worker Communications
 
 1. The worker's Beacon runs the `forward-worker` command, passing in the worker [data object](https://github.com/concourse/atc/blob/master/worker.go).
 
