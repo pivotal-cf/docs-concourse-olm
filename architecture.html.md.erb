@@ -7,15 +7,19 @@ This topic describes the VMs and software components that make up a Concourse in
 
 ## <a id="diagram"></a> Component Diagram
 
-Concourse software components can be logically split into two main subsystems: a _web_ or _server_ subsystem, and one or more _worker_. In a simple setup, both can run on a single VM. In a more complex system, servers and workers run on multiple VMs.
+Concourse software components can be logically split into two main subsystems: a _web_ or _server_ subsystem, and one or more _workers_. 
+In a simple setup, both can run on a single VM. In a more complex system, servers and workers run on multiple VMs.
 
-In addition, a separate load balancer can handle external requests to the web subsystem, and a separate database component runs Concourse's PostgreSQL server. To let users call the Concourse API from anywhere, point a load balancer to the web VM or connect the web VM to a public network.
+In addition, a separate load balancer can handle external requests to the web subsystem, and a separate database component runs Concourse's PostgreSQL server. 
+To let users call the Concourse API from anywhere, point a load balancer to the web VM or connect the web VM to a public network.
 
 This diagram shows where Concourse components run and what their communication paths are.
 
 ![Arch Doc](concourse-arch.png)
 
-The [Component Descriptions](#description) below explain what each component does. The [Internal vs. External Workers](#comms) section describes the two setups that enable the ATC to communicate with workers, depending on whether or not it can access the worker VMs directly.
+The [Component Descriptions](#description) below explain what each component does. 
+The [Internal vs. External Workers](#comms) section describes the two setups that enable the ATC to communicate with workers, 
+depending on whether or not it can access the worker VMs directly.
 
 ## <a id="description"></a> Component Descriptions
 
@@ -39,16 +43,18 @@ The following table describes the function of each Concourse component:
       <ul><li>Listens on port 2222.</li>
       <li>Securely <a href="http://concourse.ci/registering-via-tsa.html">registers worker VMs</a> for use by the ATC.</li>
       <li>For <a href="#comms-external">external worker</a> VMs, handshakes opens a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
-      <li>Pings workers for heartbeat every 30 seconds, updates ATC with worker metric changes, and notifies ATC that worker is in <code>stalled</code> state if there is no response.</li></ul>
+      <li>Pings workers for heartbeat every 30 seconds, updates ATC with worker metric changes, and, 
+          if there is no response, notifies ATC that the worker is in a <code>stalled</code> state.</li></ul>
     </td>
   </tr><tr>
     <td><b>Database</b></td>
     <td><b>PostgreSQL</td>
-    <td>Stores pipeline data, such as build configurations, build logs and resource versions, for use by worker VMs.</td>
+    <td>Stores pipeline data, such as build configurations, build logs, and resource versions, for use by worker VMs.</td>
   </tr><tr>
     <td rowspan=3><b>Worker</b></td>
     <td><b>Beacon</b></td>
-    <td><ul><li>For <a href="#comms-external">external worker</a> VMs, handshakes with TSA to open a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
+    <td><ul><li>For <a href="#comms-external">external worker</a> VMs, handshakes with TSA to open a reverse SSH tunnel 
+                for ongoing communication between the ATC and the worker.</li>
     <li>Sends Garden and Baggageclaim addresses to the ATC, to register that the worker is ready to run Concourse build pipelines</li></ul>
   </tr><tr>
     <td><b>Garden</b></td>
