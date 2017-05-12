@@ -9,7 +9,7 @@ This topic describes the VMs and software components that make up a Concourse in
 
 Concourse software components can be logically split into two main subsystems: a _web_ or _server_ subsystem, and one or more _worker_. In a simple setup, both can run on a single VM. In a more complex system, servers and workers run on multiple VMs.
 
-In addition, a load balancer VM can handle external requests to the web subsystem, and a _database_ VM can run Concourse's PostgreSQL server. To let users call the Concourse API from anywhere, point a load balancer to the web VM or connect the web VM to a public network.
+In addition, a separate load balancer can handle external requests to the web subsystem, and a separate database component runs Concourse's PostgreSQL server. To let users call the Concourse API from anywhere, point a load balancer to the web VM or connect the web VM to a public network.
 
 This diagram shows where Concourse components run and what their communication paths are.
 
