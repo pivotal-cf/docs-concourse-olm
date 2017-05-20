@@ -7,18 +7,14 @@ This topic describes the VMs and software components that make up a Concourse in
 
 ## <a id="diagram"></a> Component Diagram
 
-Concourse software components can be logically split into two main subsystems: a _web_ or _server_ subsystem, and one or more _workers_. 
-In a simple setup, both can run on a single VM. In a more complex system, servers and workers run on multiple VMs.
+Concourse software components can be logically split into two main subsystems: a _web_ (or _server_) subsystem, and one or more _workers_. In a simple setup, both subsystems can run on a single VM. In more complex systems, Concourse web and worker subsystems run on multiple VMs.
 
-In addition, a separate load balancer can handle external requests to the web subsystem, and a separate database component runs Concourse's PostgreSQL server. 
-To let users call the Concourse API from anywhere, point a load balancer to the web VM or connect the web VM to a public network.
-
-This diagram shows where Concourse components run and what their communication paths are.
+This diagram shows a Concourse deployment with web and server subsystems on separate VMs. You can deploy each subsystem on a single VM, as shown, or on multiple VMs in parallel. A dedicated database VM runs Concourse’s PostgreSQL server. If needed, an optional load balancer points external traffic to web VMs.
 
 ![Arch Doc](concourse-arch.png)
 
 The [Component Descriptions](#description) below explain what each component does. 
-The [Internal vs. External Workers](#comms) section describes the two setups that enable the ATC to communicate with workers, 
+The [Internal vs. External Workers](#comms) section describes the two setups that enable the ATC (think "Air Traffic Controller") to communicate with TSA-approved (think "Transit Security Administration") workers, 
 depending on whether or not it can access the worker VMs directly.
 
 ## <a id="description"></a> Component Descriptions
@@ -27,14 +23,14 @@ The following table describes the function of each Concourse component:
 
 <table>
   <tr>
-    <th>VM</th>
+    <th>Subsystem</th>
     <th>Component</th>
     <th>Function</th>
   </tr><tr>
     <td rowspan=2><b>Web</b></td>
     <td><b>ATC</b></td>
     <td>Runs an HTTP server that:
-      <ul><li>Provides the Concourse web UI.</li>
+      <ul><li>Runs the Concourse web UI.</li>
       <li>Serves the Concourse API on port 8080, to support the Fly CLI and other tools.</li>
       <li>Schedules pipelines to run on worker VMs.</li></ul></td>
   </tr><tr>
@@ -42,7 +38,7 @@ The following table describes the function of each Concourse component:
     <td>Runs an SSH server that:
       <ul><li>Listens on port 2222.</li>
       <li>Securely <a href="http://concourse.ci/registering-via-tsa.html">registers worker VMs</a> for use by the ATC.</li>
-      <li>For <a href="#comms-external">external worker</a> VMs, handshakes opens a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
+      <li>For <a href="#comms-external">external worker</a> VMs, handshakes with Beacon to open a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
       <li>Pings workers for heartbeat every 30 seconds, updates ATC with worker metric changes, and, 
           if there is no response, notifies ATC that the worker is in a <code>stalled</code> state.</li></ul>
     </td>
@@ -53,9 +49,9 @@ The following table describes the function of each Concourse component:
   </tr><tr>
     <td rowspan=3><b>Worker</b></td>
     <td><b>Beacon</b></td>
-    <td><ul><li>For <a href="#comms-external">external worker</a> VMs, handshakes with TSA to open a reverse SSH tunnel 
-                for ongoing communication between the ATC and the worker.</li>
-    <li>Sends Garden and Baggageclaim addresses to the ATC, to register that the worker is ready to run Concourse build pipelines</li></ul>
+    <td><ul><li>Sends Garden and Baggageclaim addresses to the ATC, to register that the worker is ready to run Concourse build pipelines</li>
+      <li>For <a href="#comms-external">external worker</a> VMs, handshakes with TSA to open a reverse SSH tunnel 
+                for ongoing communication between the ATC and the worker.</li></ul>
   </tr><tr>
     <td><b>Garden</b></td>
     <td>Runs an HTTP server that:
@@ -81,6 +77,8 @@ Concourse workers can be either _internal_, also called _local_; or _external_, 
 * A worker VM is **internal** when the web VM, which hosts the ATC, can make direct HTTP calls to the worker VM. This is typical when web and worker VMs are all on the same private network.
 
 * A worker VM is **external** when the web VM cannot directly connect to the worker VM via HTTP or SSH. This is typical when the worker VMs are behind a firewall in a separate network from the web VM, or when security groups prevent communication from web VM to worker.
+
+You might use both internal and external workers in the same deployment. For example, if your main Concourse installation runs on Linux and you need Windows workers to run tests in a remote, Windows-based infrastructure.
 
 Both internal and external workers can use SSH to securely log into the web VM.
 
