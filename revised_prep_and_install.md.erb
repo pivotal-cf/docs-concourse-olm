@@ -1,0 +1,37 @@
+
+
+To set up your environment and install a concourse cluster
+ - follow instructions in http://concourse.ci/clusters-with-bosh.html
+  (includes sample manifest, links to bosh docs, iaas-specific config, etc)
+
+Consider customizing in your manifest:
+1) external postgres: https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.1#p=postgresql
+  Set these properties on the atc job in your concourse deployment to point concourse at your existing postgres deployment. Otherwise it will expect to use bosh links to resolve the location of the postgres job included in the concourse bosh release
+
+2) Load Balancers:
+  If you wish to have multiple atc+tsa vms you will need them behind a load balancer. Use the load balancer's url/ip for the external_url property on the atc job. Not concisely documented on concourse.ci but mentioned in several places, e.g. Installing > Standalone Binary > Cluster with remote Postgres
+
+3) Auth (http://concourse.ci/teams.html):
+  i) Basic Auth is simple for environments protected by firewall
+   - can rotate team credentials from the fly cli with set-team
+     - must be logged in as a team to change credentials unless logged in as main (admin)
+   - less secure
+   - cannot revoke individual's access, only whole team
+  ii) UAA is strongly recommended, especially for concourse deployments which are visible outside your organizations network (see also github, but not likely to be viable for enterprise customers)
+    - supports more secure authentication flows (oauth, 2-factor(?))
+    - allows access control per user (note that concourse only knows about teams)
+      - see caveats in the teams documentation for limitations of concourse authorization model
+
+4) Avoiding Dockerhub or docker registry:
+  s3-image-resource can be used in place of docker-image-resource
+    - must be able to upload image to an s3 compatible blobstore
+    - must be bosh deloyed onto all worker vm's
+    - https://github.com/pivotal-cf/s3-image-resource
+    - https://github.com/pivotal-cf/s3-image-resource-release
+    - consider if this should be documented elsewhere as it is maintained but not supported
+
+
+Helpful pipelines:
+ - customer[0] a.k.a. pcf-pipelines a.k.a. pcf-platform-automation pipelines:
+  - https://network.pivotal.io/products/pcf-automation/
+  - https://github.com/pivotal-cf/pcf-pipelines/blob/master/README.md
