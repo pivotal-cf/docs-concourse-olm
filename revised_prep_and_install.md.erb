@@ -30,6 +30,10 @@ Consider customizing in your manifest:
     - https://github.com/pivotal-cf/s3-image-resource-release
     - consider if this should be documented elsewhere as it is maintained but not supported
 
+Restoring existing Concourse Database:
+ - User can ssh into database vm on their old deployment and use `pg_dumpall -c -f DUMPFILE` to get a dump of all the pipeline and build data, then ssh into the database vm on their new deployment (scp over the DUMPFILE) and use `psql -f DUMPFILE` to restore a fresh concourse to that state (caution, we suspect this would delete any data in an existing concourse database).
+
+
 
 Helpful pipelines:
  - customer[0] a.k.a. pcf-pipelines a.k.a. pcf-platform-automation pipelines:
