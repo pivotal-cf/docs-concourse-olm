@@ -24,22 +24,22 @@ Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) 
 ## Setting Up and Installing Concourse OLM
 <ol>
  <li>Configure your IaaS environment (refer to the values required for cloudconfig).</li>
- <li>Download and install the BOSH CLI v2.</li>
- <li>Address operating system-specific dependencies by downloading and installing the required packages.</li> 
+ <li>Download and install the <a href="http://bosh.io/docs/cli-v2.html#install">BOSH CLI v2</a>.</li>
+ <li>Address operating system-specific dependencies by downloading and installing <a href="http://bosh.io/docs/cli-env-deps.html">the required packages</a>.</li> 
  <li>Download the following packages from PivNet:<br /> 
   <ul>
   <li>Concourse OLM release. This includes the Concourse BOSH release and the Garden-runC BOSH release.</li>
   <li>A stemcell</li>
   </ul>
  </li>
- <li>Download the following packages from bosh.io:<br />
+ <li>Download the following packages from <a href="https://bosh.io">bosh.io</a>:<br />
   <ul>
   <li>Your IaaS’ Cloud Provider Interface (CPI)</li> 
   <li>A unique BOSH Director<br/>
    <p class="note"><strong>Note</strong>: This Director is exclusively for use with Concourse OLM. Do not use the Ops Manager Director associated with an existing PCF deployment.</p></li>
   </ul>
  </li>
- <li>Install the BOSH Director as appropriate for your IaaS.</li>
+ <li><a href="http://bosh.io/docs/init.html">Install the BOSH Director</a> as appropriate for your IaaS.</li>
  <li>Prepare the Concourse deployment manifest. You can write your own manifest, or modify a template with your unique configuration.<br/>
  <p class="note"><strong>Note</strong>: By default, the deployment manifest does not provide any authorization configuration. Follow the instructions in Authorization to configure authorization protocols.<br />
 
