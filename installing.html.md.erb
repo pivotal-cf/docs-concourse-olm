@@ -1,23 +1,60 @@
 ---
-title: Installing Pivotal Concourse OLM 
-owner: Concourse 
+title: Installing Concourse OLM 
+owner: Concourse / OLM
 ---
 
-This topic should include the following:
+# Installing Concourse OLM 
 
-- Creating/Editing the manifest. 
-	- Information about sizing. Tell users that if they need to scale, they can modify these properties and redeploy.
-	- Information about which auth method to use and how to configure. Also tell users they can rotate these creds using the Fly CLI. 
-	- Information about whether to use and external or internal database and if external how to configure. 
-	- Do they need to set up load balancers?
-	- What about tsa certs? Do those need to be rotated.
-- Deploying with BOSH.
-- If you are migrating from OSS concourse, how to bring in your data. Reference the backing up pipeline
-build data topic. 
+Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery tool that lets you build and monitor scalable pipelines seamlessly. This topic describes how to install Concourse OLM and what you’ll need to install it successfully.
 
-## Create a Manifest
+<p class="note"><strong>Note</strong>: Concourse OLM requires a unique BOSH Director. Do not use the Ops Manager Director associated with an existing PCF deployment.</p> 
 
-1. Download the [manifest template](https://github.com/pivotal-cf/docs-concourse-olm/blob/master/concourse.yml) from the Concourse OLM documentation repository. 
+## Prerequisites
+<p class="note"><strong>Note</strong>: If you do not have all these prerequisites, read the installation procedure before deciding whether or not to install Concourse OLM. Some of the prerequisites are addressed in the general installation process.</p>
+
+<ul>
+<li>A supported IaaS provider</li>
+<li>A unique BOSH Director<br />
+<p class="note"><strong>Note</strong>: Concourse OLM requires a unique BOSH Director. Do not use the Ops Manager Director associated with an existing PCF deployment.</p></li> 
+<li>The BOSH CLI (v2)</li>
+<li>The most recent Concourse + Garden Run-C BOSH releases</li> 
+<li>An s3-compatible blob store</li>
+
+
+## Setting Up and Installing Concourse OLM
+<ol>
+ <li>Configure your IaaS environment (refer to the values required for cloudconfig).</li>
+ <li>Download and install the BOSH CLI v2.</li>
+ <li>Address operating system-specific dependencies by downloading and installing the required packages.</li> 
+ <li>Download the following packages from PivNet:<br /> 
+  <ul>
+  <li>Concourse OLM release. This includes the Concourse BOSH release and the Garden-runC BOSH release.</li>
+  <li>A stemcell</li>
+  </ul>
+ </li>
+ <li>Download the following packages from bosh.io:<br />
+  <ul>
+  <li>Your IaaS’ Cloud Provider Interface (CPI)</li> 
+  <li>A unique BOSH Director<br/>
+   <p class="note"><strong>Note</strong>: This Director is exclusively for use with Concourse OLM. Do not use the Ops Manager Director associated with an existing PCF deployment.</p></li>
+  </ul>
+ </li>
+ <li>Install the BOSH Director as appropriate for your IaaS.</li>
+ <li>Prepare the Concourse deployment manifest. You can write your own manifest, or modify a template with your unique configuration.<br/>
+ <p class="note"><strong>Note</strong>: By default, the deployment manifest does not provide any authorization configuration. Follow the instructions in Authorization to configure authorization protocols.<br />
+
+Additionally, if you want to use your own trusted Certificate Authority (CA) and certificate, provide `tls_cert` and `tls_key` values in the manifest.</p></li>  
+ <li>Prepare the cloud-config.yml file.<br/>
+<p class="note"><strong>Note</strong>: If you refer to a specific configuration parameter in your deployment manifest, you must specify its value in the cloud-config.yml.</p></li>
+<li>Open a terminal window.</li>
+<li>Type <code>bosh update-cloud-config config.yml</code>.</li>
+<li>Upload the releases to the BOSH Director.</li>
+<li>In the terminal, type <code>bosh deploy concourse.yml</code>. After Concourse OLM deploys, a success message displays.</li>
+</ol>
+
+That’s it! You just deployed Concourse OLM.
+
+
 
 
 
