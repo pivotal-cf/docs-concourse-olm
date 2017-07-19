@@ -17,16 +17,20 @@ When you encrypt Concourse OLM, it secures the following values. These values ar
 * **Team auth configurations.** These often contain OAuth client secrets.
 
 The following things are not encrypted:
-* **Build logs**
-* **Resource versions**
-* **Resource metadata** 
-<pre class="note"><strong>Note</strong>: If your pipeline is <a href="https://concourse.ci/fly-expose-pipeline.html">exposed</a>, resource metadata is publicly visible. It should never contain credentials.
-</pre>
-* **Component names**, like pipeline names or job names. Resources and jobs specifically exist in their own tables, with their names in plaintext, and only their config encrypted.
+<ul>
+<li><strong>Build logs</strong></li>
+<li><strong>Resource versions</strong></li>
+<li><strong>Resource metadata</strong><br/>
+<p class="note"><strong>Note</strong>: If your pipeline is <a href="https://concourse.ci/fly-expose-pipeline.html">exposed</a>, resource metadata is publicly visible. It should never contain credentials.
+</p>
+</li>
+<li><strong>Component names</strong>, like pipeline names or job names. Resources and jobs specifically exist in their own tables, with their names in plaintext, and only their config encrypted.
+</li>
+</ul>
 
 ## Enabling Encryption
 
-<pre class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption may cause some downtime. If your deployment uses multiple ATCs, they may not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
+<p class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption may cause some downtime. If your deployment uses multiple ATCs, they may not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
 
 On startup, the ATC encrypts all existing plaintext data. From now on, any new data will be encrypted before it's sent over the network to the database.
 
@@ -48,10 +52,10 @@ On startup, the ATC will decrypt all existing data and re-encrypt it with the ne
 </ol>
 
 ## Disabling Encryption
-Disable encryption by passing the <code>old_encryption_key</code> property with no new key. Without a new encryption key, the ATC will decrypt all existing data on start.
+Disable encryption by passing the <code>old\_encryption\_key</code> property with no new key. Without a new encryption key, the ATC will decrypt all existing data on start.
 <ol>
 <li>Navigate to your Concourse OLM manifest.</li>
-<li>Rename the <code>encryption_key</code> property to <code>old_encryption_key</code>.</li>
+<li>Rename the <code>encryption\_key</code> property to <code>old\_encryption\_key</code>.</li>
 <li>Redeploy.</li>
-<li>Delete the <code>old_encryption_key</code> property.</li>
+<li>Delete the <code>old\_encryption\_key</code> property.</li>
 </ol>
