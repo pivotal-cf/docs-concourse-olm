@@ -5,52 +5,32 @@ owner: Concourse / OLM
 
 Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery tool that lets you build and monitor scalable pipelines seamlessly. This topic describes how to install Concourse OLM and what you’ll need to install it successfully.
 
-<p class="note"><strong>Note</strong>: Concourse OLM requires a unique BOSH Director. Do not use the Ops Manager Director associated with an existing PCF deployment.</p> 
-
 ## Prerequisites
-<p class="note"><strong>Note</strong>: If you do not have all these prerequisites, read the installation procedure before deciding whether or not to install Concourse OLM. Some of the prerequisites are addressed in the general installation process.</p>
+<p class="note"><strong>Note</strong>: Please ensure that you have all the prerequisites before starting installation.</p>
 
 <ul>
-<li>A supported IaaS provider</li>
-<li>A unique BOSH Director<br />
-<p class="note"><strong>Note</strong>: Concourse OLM requires a unique BOSH Director. Do not use the Ops Manager Director associated with an existing PCF deployment.</p></li> 
-<li>The BOSH CLI (v2)</li>
-<li>The most recent Concourse + Garden Run-C BOSH releases</li> 
-<li>An s3-compatible blob store</li>
+<li>A supported IaaS provider AWS, Azure, GCP or vSphere</li>
+<li>A <a href="http://bosh.io/docs/init.html">BOSH Director</a><br />
+<p class="note"><strong>Note</strong>: Do not use the Ops Manager Director associated with an existing PCF deployment.</p></li> 
+<li><a href="http://bosh.io/docs/cli-v2.html#install">BOSH CLI v2</a></li>
+<li>Concourse + Garden Run-C BOSH releases downloaded from Pivotal Network</li> 
+<li>The stemcell for your IaaS downloaded from Pivotal Network</li>
 
 
 ## Setting Up and Installing Concourse OLM
 <ol>
- <li>Configure your IaaS environment (refer to the values required for cloudconfig).</li>
- <li>Download and install the <a href="http://bosh.io/docs/cli-v2.html#install">BOSH CLI v2</a>.</li>
- <li>Address operating system-specific dependencies by downloading and installing <a href="http://bosh.io/docs/cli-env-deps.html">the required packages</a>.</li> 
- <li>Download the following packages from PivNet:<br /> 
-  <ul>
-  <li>Concourse OLM release. This includes the Concourse BOSH release and the Garden-runC BOSH release.</li>
-  <li>A stemcell</li>
-  </ul>
- </li>
- <li>Download the following packages from <a href="https://bosh.io">bosh.io</a>:<br />
-  <ul>
-  <li>Your IaaS’ Cloud Provider Interface (CPI)</li> 
-  <li>A unique BOSH Director<br/>
-   <p class="note"><strong>Note</strong>: This Director is exclusively for use with Concourse OLM. Do not use the Ops Manager Director associated with an existing PCF deployment.</p></li>
-  </ul>
- </li>
- <li><a href="http://bosh.io/docs/init.html">Install the BOSH Director</a> as appropriate for your IaaS.</li>
- <li>Prepare the Concourse deployment manifest. You can write your own manifest, or <a href="LINK TO PIVNET TEMPLATE">modify a template</a> with your unique configuration.<br/>
- <p class="note"><strong>Note</strong>: By default, the deployment manifest does not provide any authorization configuration. Follow the instructions in <a href="./authorizing.html">Authorization</a> to configure authorization protocols.<br />
+ <li>Configure your IaaS environment by modifying your cloud config for bosh deployment. </li>
+ <li>Prepare the Concourse deployment manifest. You can write your own manifest or <a href="./concourse-TEMPLATE.yml">modify a template</a> with your unique configuration.<br/>
+ <p class="note"><strong>Note</strong>: You will need to configure authentication. Follow the instructions in <a href="./authenticating.html">Authentication</a>.<br/>
 
-Additionally, if you want to use your own trusted Certificate Authority (CA) and certificate, provide `tls_cert` and `tls_key` values in the manifest.</p></li>  
- <li>Prepare the cloud-config.yml file.<br/>
-<p class="note"><strong>Note</strong>: If you refer to a specific configuration parameter in your deployment manifest, you must specify its value in the cloud-config.yml.</p></li>
-<li>Open a terminal window.</li>
-<li>Type <code>bosh update-cloud-config config.yml</code>.</li>
-<li>Upload the releases to the BOSH Director.</li>
-<li>In the terminal, type <code>bosh deploy concourse.yml</code>. After Concourse OLM deploys, a success message displays.</li>
+Additionally provide `tls_cert` and `tls_key` values in the manifest.</p></li>  
+ <li>Prepare the cloud-config.yml file and upload it to your bosh director with <code>bosh update-cloud-config</code>.<br/>
+<p class="note"><strong>Note</strong>: Your cloud config defines IaaS-specific configurations for vms, networks etc.</p></li>
+<li>Deploy Concourse with <code>bosh deploy</code>. After Concourse OLM deploys, a success message displays.</li>
 </ol>
-
+<br/>
 That’s it! You just deployed Concourse OLM.
+
 
 
 

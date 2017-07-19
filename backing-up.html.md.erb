@@ -3,15 +3,20 @@ title: Backing Up and Restoring a Concourse OLM Database
 owner: Concourse
 ---
 
-Backing up Concourse OLM databases is a best practice that helps protect build history and team information over time. Pivotal recommends that you schedule periodic backups of Concourse OLM databases, before and after updates, or after other substantial changes. 
+Backing up Concourse OLM databases is a best practice that helps protect pipelines, build history and team information over time. Pivotal recommends that you schedule periodic backups of Concourse OLM database, before and after updates, or after other substantial changes. 
 
 You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties. Specifically, the backup and restore process restores build history, pipelines, and team information. It cannot restore builds that were running at the time of backup.
 
-This topic explains both how to back up a database, and how to restore it. 
+Concourse database is PostgresSQL database that can be internal (deployed from the Concourse bosh release) or any external PostgresSQl database that you choose to configure with Concourse. 
+
+For complete backup and restore procedures refer to your version of PostgresSQL database. For example 
+https://www.postgresql.org/docs/9.1/static/backup.html
+
+This topic provides a sample backup and restore procedure for internal Concourse PostgresSQL database. 
 
 ## Backing Up a Concourse OLM Database
 
-This procedure explains how to back up a Concourse OLM database. This procedure requires a PostgreSQL database. 
+This procedure explains how to back up a Concourse OLM database deployed from the concourse bosh release.
 
 <ol>
 <li>SSH into your database VM. You may want to use <a href="https://bosh.io/docs/sysadmin-commands.html#ssh">BOSH SSH</a>.</li>
