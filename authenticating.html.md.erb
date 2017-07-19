@@ -45,8 +45,10 @@ $ fly set-team -n NAME \
 Follow GitHub’s instructions to [Create an OAuth application on GitHub](https://github.com/settings/applications/new).
 
 **Tips:** 
-* Use a recognizable name, home page, and description. These will help your users recognize a trusted source when they log in.
-* Use the external URL of your Concourse server with </code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: https://ci.concourse.ci/auth/github/callback.
+<ul>
+<li>Use a recognizable name, home page, and description. These will help your users recognize a trusted source when they log in.</li>
+<li>Use the external URL of your Concourse server with </code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: h<span>ttps</span>://ci.concourse.ci/auth/github/callback.</li>
+</ul>
 
 ### Configuring the Client
 GitHub provides a Client ID and a Client Secret for your new application. Use these to set the following flags:
@@ -66,7 +68,7 @@ If you're configuring GitHub Enterprise, set these additional flags as well:
 --github-auth-api-url=https://github.example.com/api/v3/
 </pre>
 </li>
-<pre class="note"><strong>Note</strong>: The API URL must end in a forward slash (/).</pre>
+<p class="note"><strong>Note</strong>: The API URL must end in a forward slash (/).</pre>
 </ol>
 
 ### Authorizing GitHub users, teams, and organizations
