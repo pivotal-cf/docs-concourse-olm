@@ -13,19 +13,19 @@ For more information, read <a href="./installing.html" class="subnav">Installing
 
 ## <a id="backing-up"></a>Back Up and Restore
 
-Backing up Concourse OLM databases is a best practice that helps protect build history and team information over time. You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties. 
+Backing up Concourse OLM databases is a best practice that helps protect pipelines, build history, and team information over time. You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties. 
 
 For more information, read <a href="./backing-up.html" class="subnav">Backing Up and Restoring a Concourse OLM Database</a>.
 
 ## <a id="authenticating"></a>Authentication
 
-To protect confidential or sensitive data, Concourse OLM provides options for both authentication and authorization of different users. 
+In order to protect confidential or sensitive data, Concourse OLM provides options for both user authentication and team authorization. 
 
 For more information, read <a href="./authenticating.html" class="subnav">Configuring Authentication for Concourse OLM</a>.
 
 ## <a id="encryption"></a>Database Encryption
 
-Concourse OLM lets you encrypt sensitive information before it reaches the database. By using encryption, you ensure that plaintext credentials do not exist in memory for longer than absolutely necessary.
+Concourse OLM lets you encrypt sensitive information in the database. 
 
 For more information, read <a href="./encryption.html" class="subnav">Encrypting Concourse OLM Databases</a>.
 
@@ -34,5 +34,9 @@ For more information, read <a href="./encryption.html" class="subnav">Encrypting
 Credential management works by replacing the credentials with [((parameters))](https://concourse.ci/fly-set-pipeline.html#parameters) in your pipeline or task config files. Credential management also allows for credentials to be rotated and managed from outside the pipeline or team, and prevents them from being revealed by [get-pipeline](https://concourse.ci/fly-get-pipeline.html).
 
 For more information, read <a href="./credential-management.html" class="subnav">Credential Management in Concourse OLM</a>.
+
+## <a id="architecture"></a>Architecture
+
+For information about the Concourse architecture please see <a href="./architecture.html" class="subnav">Architecture</a>.
 
 You can also read the documentation for the open source [Concourse project](http://concourse.ci/introduction.html), which powers Concourse OLM.
