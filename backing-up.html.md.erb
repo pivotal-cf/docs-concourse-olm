@@ -39,44 +39,39 @@ cd ~
 </pre>
 </li>
 <li>Enter the command to generate a backup file:
+
 <pre class="terminal">
 POSTGRES-BINARY-LOCATION/pg_dumpall -c -f /FILEPATH/BACKUP-FILE-NAME
 </pre>
+
 When you generate the backup file, you can use any name and any file extension. For example: "january-backup.txt".
 
-<pre class="note"><strong>Note</strong>: The <code>-c</code> flag will wipe any unsaved data on the database. When you back up the database, check to be sure you have saved any important data.</pre>
+<p class="note"><strong>Note</strong>: The -c flag will wipe any unsaved data on the database. When you back up the database, check to be sure you have saved any important data.
+</p>
 </li>
+
 <li>Extract the backup file from the VM. You may want to use <a href="https://bosh.io/docs/cli-v2.html#errand-mgmt">BOSH SCP</a>.</li>
 <li>Store the backup file somewhere secure.</li>
 </ol>
 
 ## Restoring a Concourse OLM Database
 
-Once you’ve generated a backup file, you can apply it to a database to restore a previous state. Do not use a backup file to overwrite an existing database. Overwriting databases will lead to data loss, and may lead to total deployment failure. Only apply a backup to a new database.
+Once you generate a backup file, you can apply it to a database to restore a previous state. Do not use a backup file to overwrite an existing database. Overwriting databases leads to data loss, and may lead to total deployment failure. Only apply a backup to a new database.
+
+Follow the steps below to restore a Concourse OLM database.
 
 <ol>
-	<li>Insert your backup file into the database VM. You may want to use <a href="https://bosh.io/docs/cli-v2.html#errand-mgmt">BOSH SCP<a>.</li>
+	<li>Insert your backup file into the database VM. You may want to use <a href="https://bosh.io/docs/cli-v2.html#errand-mgmt">BOSH SCP</a>.</li>
 	<li>SSH into your database VM. You may want to use <a href="https://bosh.io/docs/sysadmin-commands.html#ssh">BOSH SSH</a>.</li>
 	<li>Locate the Postgres binaries on your VM by entering the following command:<br/>
-	<pre class="terminal">
-	ps aux | grep postgres
-	</pre>
+	<pre class="terminal">ps aux | grep postgres</pre>
 	The binary location displays.
 	</li>
 	<li>Switch to the <code>vcap</code> user. This user has permissions to use the backup and restore commands.<br/>
-	<pre class="terminal">
-	sudo su vcap
-	</pre>		
-	</li>
+	<pre class="terminal">sudo su vcap</pre></li>
 	<li>Navigate to the root directory.<br/>
-	<pre class="terminal">	
-	cd ~
-	</pre>	
-	</li>
+	<pre class="terminal">cd ~</pre></li>
 	<li>
 	Apply the backup file to the database.
-	<pre class="terminal">
-	psql -f BACKUP-FILE-NAME
-	</pre>
-	</li>
+	<pre class="terminal">psql -f BACKUP-FILE-NAME</pre></li>
 </ol>
