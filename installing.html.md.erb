@@ -21,7 +21,8 @@ Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) 
  <p class="note"><strong>Note</strong>: You will also need to configure authentication. Follow the instructions in <a href="./authenticating.html">Authentication</a>.<br/>
 
 Additionally, provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</p></li>  
- <li>Prepare the <code>cloud-config.yml</code> file and upload it to your bosh director with <code>bosh update-cloud-config</code>.<br/>
+
+ <li>Prepare the <code>cloud-config.yml</code> file and upload it to your BOSH Director with <code>bosh update-cloud-config</code>.<br/>
 <p class="note"><strong>Note</strong>: Your cloud config defines IaaS-specific configurations for virtual machiness, networks, and more.</p></li>
 <li>Deploy Concourse with <code>bosh deploy</code>. After Concourse OLM deploys, a success message displays.</li>
 </ol>
