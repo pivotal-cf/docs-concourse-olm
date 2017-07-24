@@ -3,18 +3,18 @@ title: Configuring Authentication for Concourse OLM
 owner: Concourse / OLM
 ---
 
-Continuous integration tools can grant considerable visibility into an organization’s source code and applications. In order to protect confidential or sensitive data, Concourse OLM provides options for both authentication and authorization of different users. 
+Continuous integration tools can grant considerable visibility into an organization's source code and applications. To protect confidential or sensitive data, Concourse OLM provides options for both authentication and authorization of different users. 
 
 **User authentication** controls who can log in to Concourse OLM servers. 
 
-**User authorization** controls which data a user is allowed to see.
+**User authorization** controls what data a user is allowed to see.
 
 The authentication methods for Concourse OLM teams are determined by flags passed to [set-team](http://concourse.ci/fly-set-team.html). The exception to this is [main team](http://concourse.ci/teams.html#main-team), which is the default team for any Concourse OLM instance. <code>Main team</code> is configured as part of the initial deployment.
 
-You can enable multiple authentication methods simultaneously. If you use multiple authentication methods, users will be given the choice to log in using any of them.
+You can enable multiple authentication methods simultaneously. If you use multiple authentication methods, users are given the choice to log in using any of them.
 
 ## Configuring Basic Authentication
-HTTP Basic authentication is the simplest of the authentication mechanisms. It has good support in both browsers and command line tools. It provides a single set of credentials for all users to share.
+HTTP Basic authentication is the simplest of the authentication mechanisms. It has good support in both browsers and command line tools. It provides a single set of credentials for all of a team's users to share.
 
 **Important**: Basic authentication is the least secure method of authentication, because shared credentials can be compromised or misused easily. Many highly secure organizations, such as financial institutions, do not allow the use of basic authorization.
 
@@ -42,11 +42,13 @@ $ fly set-team -n NAME \
 </pre>
 
 ### Configuring the callback URL
-Follow GitHub’s instructions to [Create an OAuth application on GitHub](https://github.com/settings/applications/new).
+Follow GitHub's instructions to [Create an OAuth application on GitHub](https://github.com/settings/applications/new).
 
 **Tips:** 
-* Use a recognizable name, home page, and description. These will help your users recognize a trusted source when they log in.
-* Use the external URL of your Concourse server with </code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: https://ci.concourse.ci/auth/github/callback.
+<ul>
+<li>Use a recognizable name, home page, and description to help your users recognize a trusted source when they log in.</li>
+<li>Use the external URL of your Concourse server with <code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: <code>h<span>ttps</span>://ci.concourse.ci/auth/github/callback</code>.</li>
+</ul>
 
 ### Configuring the Client
 GitHub provides a Client ID and a Client Secret for your new application. Use these to set the following flags:
@@ -59,19 +61,19 @@ GitHub provides a Client ID and a Client Secret for your new application. Use th
 --github-auth-client-id=CLIENT_ID
 --github-auth-client-secret=CLIENT_SECRET
 </pre><br/>
-If you're configuring GitHub Enterprise, set these additional flags as well:
+If you are configuring GitHub Enterprise, set these additional flags as well:
 <pre class="terminal">
 --github-auth-auth-url=https://github.example.com/login/oauth/authorize
 --github-auth-token-url=https://github.example.com/login/oauth/access_token
 --github-auth-api-url=https://github.example.com/api/v3/
 </pre>
-<pre class="note"><strong>Note</strong>: The API URL must end in a forward slash (/).</pre>
 </li>
+<p class="note"><strong>Note</strong>: The API URL must end in a forward slash (/).</p>
 </ol>
 
 ### Authorizing GitHub users, teams, and organizations
-Now you can allow different organizations, teams, and individual users to access your server.
-This is done by setting the following flags:
+
+You can now allow different organizations, teams, and individual users to access your server. 
 <ol>
 <li>Open a terminal window.</li>
 <li>Navigate to your Concourse OLM deployment manifest.</li>
@@ -93,10 +95,10 @@ You can use any of these flags multiple times to allow different levels of acces
 ## Configuring UAA OAuth
 If you’re using the User Access and Authentication (UAA) Cloud Foundry component, you can set up OAuth with your Concourse OLM.
 
-The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a CF deployment. 
+The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a Cloud Foundry deployment. 
 
 ## Configuring the UAA client
-Configure a client for Concourse with your UAA. The callback URL is the external URL of your Concourse server with /auth/oauth/callback appended. For example, https://ci.concourse.ci/auth/oauth/callback.
+Configure a client for Concourse with your UAA. The callback URL is the external URL of your Concourse server with `/auth/oauth/callback` appended. For example, `https://ci.concourse.ci/auth/oauth/callback`.
 
 An example client is below. This client should be stored under [uaa.clients](http://bosh.io/jobs/uaa?source=github.com/cloudfoundry/uaa-release&version=13#p=uaa.clients):
 

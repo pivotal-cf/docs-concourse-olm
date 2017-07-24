@@ -5,36 +5,38 @@ owner: Concourse
 
 Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) is a continuous integration tool that lets you build, scale, and monitor pipelines outside of your PCF deployment. Using Concourse OLM, you can set up production pipelines to deploy and manage your apps in real time.  
 
+## <a id="install"></a>Installing Concourse OLM
 
-## <a id="snapshot"></a>Product Snapshot
+This topic describes how to install Concourse OLM and what you need to install it successfully.
 
-The following table provides version and version-support information about Pivotal Concourse OLM.
+For more information, read <a href="./installing.html" class="subnav">Installing Concourse OLM</a>.
 
-<table class="nice">
-    <th>Element</th>
-    <th>Details</th>
-    <tr>
-        <td>Version</td>
-        <td>vYOUR-VERSION-NUMBER</td>
-    </tr>
-    <tr>
-        <td>Release date</td>
-        <td>YOUR-RELEASE-DATE (Ex: July 1, 2017)</td>
-    </tr>
-    <tr>
-        <td>Software component version</td>
-        <td>vYOUR-SOFTWARE-COMPONENT-VERSION-NUMBER</td>
-    </tr>
-    <tr>
-        <td>Compatible Ops Manager version(s)</td>
-        <td>vYOUR-COMPATIBLE-OPS-MAN-VERSION (Ex. v1.8.x, v1.9.x, v1.10.x)</td>
-    </tr>
-    <tr>
-        <td>Compatible Elastic Runtime version(s)</td>
-        <td>vYOUR-COMPATIBLE-ELASTIC-RUNTIME-VERSION (Ex. v1.8.x, v1.9.x, v1.10.x)</td>
-    </tr>
-    <tr>
-        <td>IaaS support</td>
-        <td>AWS?, Azure?, GCP?, OpenStack?, and vSphere?</td>
-    </tr>
-</table>
+## <a id="backing-up"></a>Back Up and Restore
+
+Backing up Concourse OLM databases is a best practice that helps protect pipelines, build history, and team information over time. You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties. 
+
+For more information, read <a href="./backing-up.html" class="subnav">Backing Up and Restoring a Concourse OLM Database</a>.
+
+## <a id="authenticating"></a>Authentication
+
+In order to protect confidential or sensitive data, Concourse OLM provides options for both user authentication and team authorization. 
+
+For more information, read <a href="./authenticating.html" class="subnav">Configuring Authentication for Concourse OLM</a>.
+
+## <a id="encryption"></a>Database Encryption
+
+Concourse OLM lets you encrypt sensitive information in the database. 
+
+For more information, read <a href="./encryption.html" class="subnav">Encrypting Concourse OLM Databases</a>.
+
+## <a id="creds"></a>Managing Credentials
+
+Credential management works by replacing the credentials with [((parameters))](https://concourse.ci/fly-set-pipeline.html#parameters) in your pipeline or task config files. Credential management also allows for credentials to be rotated and managed from outside the pipeline or team, and prevents them from being revealed by [get-pipeline](https://concourse.ci/fly-get-pipeline.html).
+
+For more information, read <a href="./credential-management.html" class="subnav">Credential Management in Concourse OLM</a>.
+
+## <a id="architecture"></a>Architecture
+
+For information about the Concourse architecture please see <a href="./architecture.html" class="subnav">Architecture</a>.
+
+You can also read the documentation for the open source [Concourse project](http://concourse.ci/introduction.html), which powers Concourse OLM.

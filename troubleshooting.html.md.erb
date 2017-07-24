@@ -23,7 +23,7 @@ Fly commands useful for troubleshooting:
   workers: Listing registered workers
    - useful to verify that the number of containers aren't exceeding maximum allowable container on a worker.
   prune-worker: Reap a non-running worker
-   - stop concourse from tracking an out of commision worker
+   - stop concourse from tracking an out of commission worker
   volumes: Listing active volumes
    - check disk usage across workers.
 
@@ -60,12 +60,12 @@ Job doesnt get started (Build stuck in Pending state)
   Solution:
   - restart atc job.
    -> This can be done either by loggin in as a root user on concourse web vms (the ones on which atc job is located.) Then running `monit restart atc`
-   -> Or by runing `bosh restart web --force`, which will be slower than previous option.
+   -> Or by running `bosh restart web --force`, which will be slower than previous option.
 Updating Concourse in Concourse Job errors out
   Symptom
    - when bosh deploying a concourse update from a job running on that concourse typically the job will error with "worker for container not found." This is expected as the bosh director will recreate the worker vm
   Solution:
-   - run it again; it should be a no-op the second time after a sucessful update
+   - run it again; it should be a no-op the second time after a successful update
    - or just live with an orange build; it was probably a successful redeploy
   Gotcha:
    - this is only possible when running with a bosh director as the director is performing the update. If your concourse is deployed using bosh create-env you will need to perform the update elsewhere, typically from your workstation
