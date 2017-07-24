@@ -27,7 +27,7 @@ Fly commands useful for troubleshooting:
   volumes: Listing active volumes
    - check disk usage across workers.
 
-* pipeline troubleshooting: (do we even need this?)
+* pipeline troubleshooting:
   pipelines: Listing configured pipelines
   builds: Showing build history
    - useful for getting build ids of one-off tasks run using execute
@@ -43,37 +43,38 @@ Fly commands useful for troubleshooting:
 
 
 Common bosh Issues: https://bosh.io/docs/tips.html
+
 Common concourse Issues:
-Worker Out of Disk Space
- Symptoms:
-  - cannot create volume: permissions denied (approximate error wording)
- Solution:
-  - increase persistent disk for worker or increase number of worker vms
-Container Limit Reached (unlikely)
-  Symptoms:
-   - cannot create container: limit of 250 containers reached
-  Solution:
-   - check fly containers
-   - increase number of worker vms
-   - decrease gc_interval if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)
-Job doesnt get started (Build stuck in Pending state)
-  Solution:
-  - restart atc job.
-   -> This can be done either by loggin in as a root user on concourse web vms (the ones on which atc job is located.) Then running `monit restart atc`
-   -> Or by running `bosh restart web --force`, which will be slower than previous option.
-Updating Concourse in Concourse Job errors out
-  Symptom
-   - when bosh deploying a concourse update from a job running on that concourse typically the job will error with "worker for container not found." This is expected as the bosh director will recreate the worker vm
-  Solution:
-   - run it again; it should be a no-op the second time after a successful update
-   - or just live with an orange build; it was probably a successful redeploy
-  Gotcha:
-   - this is only possible when running with a bosh director as the director is performing the update. If your concourse is deployed using bosh create-env you will need to perform the update elsewhere, typically from your workstation
-Bosh Can't Finish Worker Upgrade While Tasks Running
-  Symptom:
-   - if you have a long running task bosh won't be able to finalize the upgrade by restarting the worker job until all of the worker's jobs (tasks?) have stopped
-  Solution:
-   - just wait
-   - try to avoid long running tasks
-     - e.g.: pool-resource if misused
-   - cancel running tasks/jobs
+* Worker Out of Disk Space
+- Symptoms:
+   - cannot create volume: permissions denied (approximate error wording)
+ - Solution:
+   - increase persistent disk for worker or increase number of worker vms
+* Container Limit Reached (unlikely)
+  - Symptoms:
+    - cannot create container: limit of 250 containers reached
+  - Solution:
+    - check fly containers
+    - increase number of worker vms
+    - decrease gc_interval if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)
+* Job doesnt get started (Build stuck in Pending state)
+  - Solution:
+    - restart atc job.
+     -> This can be done either by loggin in as a root user on concourse web vms (the ones on which atc job is located.) Then running `monit restart atc`
+     -> Or by running `bosh restart web --force`, which will be slower than previous option.
+* Updating Concourse in Concourse Job errors out
+  - Symptom
+    - when bosh deploying a concourse update from a job running on that concourse typically the job will error with "worker for container not found." This is expected as the bosh director will recreate the worker vm
+  - Solution:
+    - run it again; it should be a no-op the second time after a successful update
+    - or just live with an orange build; it was probably a successful redeploy
+  - Gotcha:
+    - this is only possible when running with a bosh director as the director is performing the update. If your concourse is deployed using bosh create-env you will need to perform the update elsewhere, typically from your workstation
+* Bosh Can't Finish Worker Upgrade While Tasks Running
+  - Symptom:
+    - if you have a long running task bosh won't be able to finalize the upgrade by restarting the worker job until all of the worker's jobs (tasks?) have stopped
+  - Solution:
+    - just wait
+    - try to avoid long running tasks
+      - e.g.: pool-resource if misused
+    - cancel running tasks/jobs

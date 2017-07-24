@@ -23,7 +23,9 @@ Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) 
 Additionally, provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</p></li>  
  <li>Prepare the <code>cloud-config.yml</code> file and upload it to your bosh director with <code>bosh update-cloud-config</code>.<br/>
 <p class="note"><strong>Note</strong>: Your cloud config defines IaaS-specific configurations for virtual machiness, networks, and more.</p></li>
-<li>Deploy Concourse with <code>bosh deploy</code>. After Concourse OLM deploys, a success message displays.</li>
+<li>Deploy Concourse with <code>bosh deploy</code>. Please refer to <a href="https://bosh.io/docs/cli-v2.html">bosh cli</a> on possible options for deploy command.</li>
+<li>The web interface runs on port 8080 (if tls in not configured) or 4443 by default, you could configure your infrastructure settings to map port 80 to 8080, 443 to 4443, and 2222 to 2222.</li>
+<li>More details about advanced installation scenarios such as <a href="https://concourse.ci/clusters-with-bosh.html">Supporting external workers</a> can be found in concourse documentations.</li>
 </ol>
 <br/>
 That's it! You just deployed Concourse OLM.
