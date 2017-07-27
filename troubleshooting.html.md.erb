@@ -3,72 +3,82 @@ title: Monitoring and Troubleshooting Your Installation
 owner: Concourse
 ---
 
+This topic broadly outlines techniques for troubleshooting your Concourse OLM installation. 
 
-Monitoring concourse for metrics: http://concourse.ci/metrics.html
+## Concourse OLM Log Collection
 
-The logs for a specific job inside concourse release will be located in the vms on which that job was running at the location /var/vcap/sys/log/<concourse-job-name>/*.log. To enable syslog forwarding or to get logs for other components of concourse refer to: https://bosh.io/docs/job-logs.html.
+Find the logs for a specific job in the VM on which that job was running. Those logs are stored at <code>/var/vcap/sys/log/<\CONCOURSE-JOB-NAME>/*.log.</code> 
 
+## Troubleshooting With Fly Commands
 
-Fly commands useful for troubleshooting:
+### Concourse OLM environment troubleshooting
+<code>containers</code>: Lists active containers
+This confirms which container or task got placed on which worker
+<code>workers</code>: Lists registered workers
+This helps you verify that the number of containers aren't exceeding maximum allowable number of containers on a worker.
+<code>prune-worker</code>: Reaps a non-running worker
+Stops Concourse OLM from tracking an out-of-commission worker.
+<code>volumes</code>: Lists active volumes
+Checks disk usage across workers.
 
-* concourse (env) troubleshooting:
-  containers: Listing active containers
-   - check which container/task got placed on which worker
-  workers: Listing registered workers
-   - useful to verify that the number of containers aren't exceeding maximum allowable container on a worker.
-  prune-worker: Reap a non-running worker
-   - stop concourse from tracking an out of commission worker
-  volumes: Listing active volumes
-   - check disk usage across workers.
+### Pipeline troubleshooting:
+<code>pipelines</code>: Lists configured pipelines
+<code>builds</code>: Shows build history
+This is useful for getting build IDs of one-off tasks you've run using <code>execute</code>.
+<code>validate-pipeline</code>: Validates a pipeline's configuration
+Checks pipeline for validity without calling <code>set-pipeline</code>.
+<code>check-resource</code>: Checks for new versions  
+This is useful when developing a new resource.
+<code>watch</code>: View logs of in-progress builds
+<code>intercept</code>: Accesses a running or recent build's steps
+<code>execute</code>: Submits Local Tasks
+This is useful for spinning up a task quickly to test before putting it in a job.
 
-* pipeline troubleshooting:
-  pipelines: Listing configured pipelines
-  builds: Showing build history
-   - useful for getting build ids of one-off tasks run using execute
-  validate-pipeline: Validate a pipeline's configuration
-   - check pipeline for validity without calling set-pipeline
-  check-resource: Trigger discovery of new versions
-   - useful when developing a new resource
-  watch: View logs of in-progress builds
-  intercept: Accessing a running or recent build's steps
-   - poke around in a task container to see what's up
-  execute: Submitting Local Tasks
-   - spinning up a task quickly to test before putting it in a job
+## Common Concourse OLM Issues
+<table>
+  <th>Problem</th>
+  <th>Error</th>
+  <th>Solution</th>
+  <th>Other information</th>
+  <tr>
+    <td>The worker is out of disk space</td>
+    <td>An error displays about inability to create volume. It may say permissions are denied.</td>
+    <td>Increase persistent disk for worker or increase number of worker VMs.</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>Container Limit Reached</td>
+    <td>Cannot create container: limit of 250 containers reached</td>
+    <td>Check fly containers<br/>
+    Increase number of worker VMs<br/>
+    Decrease <code>gc_interval</code> if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)</td>
+    <td>This error state is unlikely to appear.</td>
+  </tr>
+  <tr>
+    <td>Job Doesn't Start</td>
+    <td>This error may present as the build getting stuck in Pending state</td>
+    <td>Restart the ATC job.<br/>
+    To restart the ATC, log in as a root user on Concourse OLM web VMs (the ones on which ATC job is located), then running <code>monit restart atc</code>.<br/>
+    Alternatively, run <code>bosh restart web --force</code>, which will be slower than the previous option.</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>Updating Concourse OLM in Concourse OLM Job fails</td>
+    <td>When BOSH deploying a Concourse OLM update from a job running on that Concourse OLM instance fails, typically the job will error with "worker for container not found." This is expected behavior; the BOSH Director will recreate the worker VM.</td>
+    <td>Run the job again.</td>
+    <td>N/A</td>
+  </tr>
+  <tr>
+    <td>Bosh Can't Finish Worker Upgrade While Tasks Running</td>
+    <td>If you have a long running task, BOSH won't be able to finalize the upgrade by restarting the worker job until all of the work has stopped.</td>
+    <td>Wait for the work to complete.<br/>
+    If you need to accomplish this quickly, cancel running tasks and jobs.</td>
+    <td>N/A</td>
+  </tr>
+</table>
 
+## Other troubleshooting resources
 
+Monitoring Concourse for metrics: http://concourse.ci/metrics.html
+To enable syslog forwarding or to get logs for other components of concourse refer to: https://bosh.io/docs/job-logs.html.
 Common bosh Issues: https://bosh.io/docs/tips.html
-
-Common concourse Issues:
-* Worker Out of Disk Space
-- Symptoms:
-   - cannot create volume: permissions denied (approximate error wording)
- - Solution:
-   - increase persistent disk for worker or increase number of worker vms
-* Container Limit Reached (unlikely)
-  - Symptoms:
-    - cannot create container: limit of 250 containers reached
-  - Solution:
-    - check fly containers
-    - increase number of worker vms
-    - decrease gc_interval if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)
-* Job doesnt get started (Build stuck in Pending state)
-  - Solution:
-    - restart atc job.
-     -> This can be done either by loggin in as a root user on concourse web vms (the ones on which atc job is located.) Then running `monit restart atc`
-     -> Or by running `bosh restart web --force`, which will be slower than previous option.
-* Updating Concourse in Concourse Job errors out
-  - Symptom
-    - when bosh deploying a concourse update from a job running on that concourse typically the job will error with "worker for container not found." This is expected as the bosh director will recreate the worker vm
-  - Solution:
-    - run it again; it should be a no-op the second time after a successful update
-    - or just live with an orange build; it was probably a successful redeploy
-  - Gotcha:
-    - this is only possible when running with a bosh director as the director is performing the update. If your concourse is deployed using bosh create-env you will need to perform the update elsewhere, typically from your workstation
-* Bosh Can't Finish Worker Upgrade While Tasks Running
-  - Symptom:
-    - if you have a long running task bosh won't be able to finalize the upgrade by restarting the worker job until all of the worker's jobs (tasks?) have stopped
-  - Solution:
-    - just wait
-    - try to avoid long running tasks
-      - e.g.: pool-resource if misused
-    - cancel running tasks/jobs
