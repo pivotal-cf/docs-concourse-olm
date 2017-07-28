@@ -10,66 +10,105 @@ This topic should include:
 - Fly commands that may be useful for troubleshooting
 
 
-Monitoring concourse for metrics: http://concourse.ci/metrics.html
+## Metrics
 
-The logs for a specific job inside concourse release will be located in the vms on which that job was running at the location /var/vcap/sys/log/<concourse-job-name>/*.log. To enable syslog forwarding or to get logs for other components of concourse refer to: https://bosh.io/docs/job-logs.html.
+http://concourse.ci/metrics.html
 
 
-Fly commands useful for troubleshooting:
+## Logs
 
-* concourse (env) troubleshooting:
-  containers: Listing active containers
-   - check which container/task got placed on which worker
-  workers: Listing registered workers
-   - useful to verify that the number of containers aren't exceeding maximum allowable container on a worker.
-  prune-worker: Reap a non-running worker
-   - stop concourse from tracking an out of commission worker
-  volumes: Listing active volumes
-   - check disk usage across workers.
+https://bosh.io/docs/job-logs.html
 
-* pipeline troubleshooting: (do we even need this?)
-  pipelines: Listing configured pipelines
-  builds: Showing build history
+You can run `bosh logs` on your Concourse OLM VM instances
+
+
+## Troubleshooting
+
+### Concourse Environment Troubleshooting
+  
+#### `fly workers`: Listing registered workers
+   - useful to verify that the number of containers aren't exceeding the 250 container per worker maximum
+   - can use the worker name to derive the VM name
+
+#### `fly containers`: Listing active containers
+   - check which worker a container was placed on
+  
+#### `fly volumes`: Listing active volumes
+   - check which worker a volume was placed on
+  
+#### `fly prune-worker`: Reap a non-running worker
+   - stop concourse from tracking an out-of-commission worker
+
+
+### Pipeline Troubleshooting
+#### `fly pipelines`: Listing configured pipelines
+  
+#### `fly builds`: Showing build history
    - useful for getting build ids of one-off tasks run using execute
-  validate-pipeline: Validate a pipeline's configuration
+  
+#### `fly validate-pipeline`: Validate a pipeline's configuration
    - check pipeline for validity without calling set-pipeline
-  check-resource: Trigger discovery of new versions
-   - useful when developing a new resource
-  watch: View logs of in-progress builds
-  intercept: Accessing a running or recent build's steps
-   - poke around in a task container to see what's up
-  execute: Submitting Local Tasks
+  
+#### `fly check-resource`: Trigger discovery of new versions
+  - Necessary to grab versions of the resource in the past
+  
+#### `fly watch`: View logs of in-progress builds
+  
+#### `fly intercept`: Accessing the container of a running or recent build's step
+- This will put you in the actual container that ran the step, which lets you interact with the system to debug
+
+#### `fly execute`: Submitting Local Tasks
    - spinning up a task quickly to test before putting it in a job
 
 
-Common bosh Issues: https://bosh.io/docs/tips.html
-Common concourse Issues:
-Worker Out of Disk Space
+### Common Bosh Issues
+https://bosh.io/docs/tips.html
+
+### Common Concourse Issues
+
+#### Worker Out of Disk Space
+
  Symptoms:
   - cannot create volume: permissions denied (approximate error wording)
  Solution:
   - increase persistent disk for worker or increase number of worker vms
-Container Limit Reached (unlikely)
+
+#### Container Limit Reached (unlikely)
   Symptoms:
    - cannot create container: limit of 250 containers reached
   Solution:
    - check fly containers
    - increase number of worker vms
-   - decrease gc_interval if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)
-Job doesnt get started (Build stuck in Pending state)
+   - decrease [`gc_interval`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse#p=gc_interval) on the `atc` in your BOSH manifest, if set to custom value. A large interval could mean that expired containers are kept around long enough that they build up
+
+#### Build Stuck in Pending State
+  
   Solution:
-  - restart atc job.
-   -> This can be done either by loggin in as a root user on concourse web vms (the ones on which atc job is located.) Then running `monit restart atc`
+  - restart atc job
+   -> This can be done either by logging in as a root user ([`bosh ssh`](https://bosh.io/docs/sysadmin-commands.html#ssh)) on Concourse web VMs (the ones on which atc job is located.) Then running `monit restart atc`
    -> Or by running `bosh restart web --force`, which will be slower than previous option.
-Updating Concourse in Concourse Job errors out
+
+#### "Redeploy Concourse" Job never finishes
   Symptom
-   - when bosh deploying a concourse update from a job running on that concourse typically the job will error with "worker for container not found." This is expected as the bosh director will recreate the worker vm
+  - The worker draining script waits for all jobs to finish. The "Redeploy Concourse" job will be stuck waiting for itself to finish, leading to the Job never finishing.
+
+  Solution:
+  - make sure the job is set as `interruptible: true`
+  Gotcha:
+  - this is only possible when running with a bosh director as the director is performing the update. If your concourse is deployed using bosh create-env you will need to perform the update elsewhere, typically from your workstation
+
+
+#### "Redeploy Concourse" Job goes orange
+  Symptom
+   - when using Concourse to BOSH deploy itself, typically the job will error with "worker for container not found." This is expected as the bosh director will recreate the worker VM.
+
   Solution:
    - run it again; it should be a no-op the second time after a successful update
    - or just live with an orange build; it was probably a successful redeploy
   Gotcha:
    - this is only possible when running with a bosh director as the director is performing the update. If your concourse is deployed using bosh create-env you will need to perform the update elsewhere, typically from your workstation
-Bosh Can't Finish Worker Upgrade While Tasks Running
+
+#### BOSH Can't Finish Worker Upgrade While Tasks Running
   Symptom:
    - if you have a long running task bosh won't be able to finalize the upgrade by restarting the worker job until all of the worker's jobs (tasks?) have stopped
   Solution:
