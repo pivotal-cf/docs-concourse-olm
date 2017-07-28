@@ -1,41 +1,47 @@
+---
+title: Preparing an Environment for Concourse
+owner: Concourse / OLM
+---
 
+Instructions for preparing your environment for Concourse installation can
+be found here: http://concourse.ci/clusters-with-bosh.html The instructions found
+on this page includes sample manifest files, references to prerequisite BOSH knowledge,
+IaaS-specific configurations, etc.
 
-To set up your environment and install a concourse cluster
- - follow instructions in http://concourse.ci/clusters-with-bosh.html
-  (includes sample manifest, links to bosh docs, iaas-specific config, etc)
-
-Consider customizing in your manifest:
-1) external postgres: https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.1#p=postgresql
-  Set these properties on the atc job in your concourse deployment to point concourse at your existing postgres deployment. Otherwise it will expect to use bosh links to resolve the location of the postgres job included in the concourse bosh release
-
-2) Load Balancers:
-  If you wish to have multiple atc+tsa vms you will need them behind a load balancer. Use the load balancer's url/ip for the external_url property on the atc job. Not concisely documented on concourse.ci but mentioned in several places, e.g. Installing > Standalone Binary > Cluster with remote Postgres
-
-3) Auth (http://concourse.ci/teams.html):
-  i) Basic Auth is simple for environments protected by firewall
-   - can rotate team credentials from the fly cli with set-team
-     - must be logged in as a team to change credentials unless logged in as main (admin)
-   - less secure
-   - cannot revoke individual's access, only whole team
-  ii) UAA is strongly recommended, especially for concourse deployments which are visible outside your organizations network (see also github, but not likely to be viable for enterprise customers)
-    - supports more secure authentication flows (oauth, 2-factor(?))
-    - allows access control per user (note that concourse only knows about teams)
-      - see caveats in the teams documentation for limitations of concourse authorization model
-
-4) Avoiding Dockerhub or docker registry:
-  s3-image-resource can be used in place of docker-image-resource
-    - must be able to upload image to an s3 compatible blobstore
-    - must be bosh deloyed onto all worker vm's
-    - https://github.com/pivotal-cf/s3-image-resource
-    - https://github.com/pivotal-cf/s3-image-resource-release
-    - consider if this should be documented elsewhere as it is maintained but not supported
-
-Restoring existing Concourse Database:
- - User can ssh into database vm on their old deployment and use `pg_dumpall -c -f DUMPFILE` to get a dump of all the pipeline and build data, then ssh into the database vm on their new deployment (scp over the DUMPFILE) and use `psql -f DUMPFILE` to restore a fresh concourse to that state (caution, we suspect this would delete any data in an existing concourse database).
-
-
-
-Helpful pipelines:
- - customer[0] a.k.a. pcf-pipelines a.k.a. pcf-platform-automation pipelines:
-  - https://network.pivotal.io/products/pcf-automation/
-  - https://github.com/pivotal-cf/pcf-pipelines/blob/master/README.md
+<ol>
+  <li>
+    <b>Deploying Concourse with an External PostgresDB:</b>
+    <div>
+      The default configuration of Concourse will install and connect to an internally
+      managed postgres database. An operator may wish to instruct Concourse to connect
+      to an externally managed postgres database instead.
+      The specific configuration changes that you will need to make can be made in the
+      properties of the atc job <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.2#p=postgresql"> here </a>
+    </div>
+  </li>
+  <li>
+    <b>Load Balancing Multiple ATCs</b>
+    <div>
+      If you anticipate a heavy load on your Concourse installation, you may want
+      to consider installing a Load Balancer with multiple ATCs. You can find
+      additional documentation on how to set up clusters on the docs <a href="http://concourse.ci/binaries.html#cluster-with-remote-postgres">here</a>
+    </div>
+  </li>
+  <li>
+    <b>Reference Pipelines</b>
+    <div>
+        The Pivotal Cloud Foundry Services team has a collection of reference
+        pipeliness that may be useful for operators to use as a starting point:
+          <ul>
+            <li><a href="https://github.com/pivotal-cf/pcf-pipelines">PCF-Pipelines</a></li>
+            <li><a href="https://github.com/pivotalservices/concourse-pipeline-samples">Concourse How-Tos and Samples</a></li>
+          </ul>
+    </div>
+    <div>
+      <b>NOTE:</b> These pipelines are Open Source reference pipelines that are built and maintained
+      by Pivotal R&D and Pivotal Services teams. These are <em>not</em> yet officially supported <body>
+        Pivotal
+      </body>
+    </div>
+  </li>
+</ol>

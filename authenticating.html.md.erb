@@ -1,11 +1,11 @@
 ---
-title: Configuring Authentication for Concourse OLM
+title: Configuring Team Authentication
 owner: Concourse / OLM
 ---
 
-Continuous integration tools can grant considerable visibility into an organization's source code and applications. To protect confidential or sensitive data, Concourse OLM provides options for both authentication and authorization of different users. 
+Continuous integration tools can grant considerable visibility into an organization's source code and applications. To protect confidential or sensitive data, Concourse OLM provides options for both authentication and authorization of different users.
 
-**User authentication** controls who can log in to Concourse OLM servers. 
+**User authentication** controls who can log in to Concourse OLM servers.
 
 **User authorization** controls what data a user is allowed to see.
 
@@ -30,7 +30,7 @@ fly set-team -n YOUR-TEAM \
 </ol>
 
 ## Configuring GitHub OAuth
-A Concourse OLM server can authenticate through GitHub to take advantage of their permission model. Using OAuth also saves Concourse OLM users from having to make a unique login for their Concourse OLM team, because they can use a credential set they already have. 
+A Concourse OLM server can authenticate through GitHub to take advantage of their permission model. Using OAuth also saves Concourse OLM users from having to make a unique login for their Concourse OLM team, because they can use a credential set they already have.
 
 An example GitHub OAuth configuration is below:
 
@@ -44,7 +44,7 @@ $ fly set-team -n NAME \
 ### Configuring the callback URL
 Follow GitHub's instructions to [Create an OAuth application on GitHub](https://github.com/settings/applications/new).
 
-**Tips:** 
+**Tips:**
 <ul>
 <li>Use a recognizable name, home page, and description to help your users recognize a trusted source when they log in.</li>
 <li>Use the external URL of your Concourse server with <code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: <code>h<span>ttps</span>://ci.concourse.ci/auth/github/callback</code>.</li>
@@ -73,7 +73,7 @@ If you are configuring GitHub Enterprise, set these additional flags as well:
 
 ### Authorizing GitHub users, teams, and organizations
 
-You can now allow different organizations, teams, and individual users to access your server. 
+You can now allow different organizations, teams, and individual users to access your server.
 <ol>
 <li>Open a terminal window.</li>
 <li>Navigate to your Concourse OLM deployment manifest.</li>
@@ -95,7 +95,7 @@ You can use any of these flags multiple times to allow different levels of acces
 ## Configuring UAA OAuth
 If you’re using the User Access and Authentication (UAA) Cloud Foundry component, you can set up OAuth with your Concourse OLM.
 
-The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a Cloud Foundry deployment. 
+The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a Cloud Foundry deployment.
 
 ## Configuring the UAA client
 Configure a client for Concourse with your UAA. The callback URL is the external URL of your Concourse server with `/auth/oauth/callback` appended. For example, `https://ci.concourse.ci/auth/oauth/callback`.
