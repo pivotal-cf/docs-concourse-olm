@@ -1,16 +1,16 @@
 ---
-title: Encrypting Concourse OLM Databases
-owner: Concourse / OLM
+title: Encrypting Concourse Databases
+owner: Concourse
 ---
 
 Continuous integration and deployment systems are high-value targets for malicious third parties who want to gain access to your data. Because CI/CD tools have comprehensive access to many components, gaining access to a CI/CD tool often equates to gaining access to all the components that tool touches.
 
-Concourse OLM lets you encrypt sensitive information before it reaches the database. By using encryption, you ensure that plaintext credentials do not exist in memory for longer than absolutely necessary.
+Concourse lets you encrypt sensitive information before it reaches the database. By using encryption, you ensure that plaintext credentials do not exist in memory for longer than absolutely necessary.
 
-Pivotal strongly recommends that Concourse OLM admins enable encryption. In addition to encrypting Concourse OLM, you may want to configure credential management. 
+Pivotal strongly recommends that Concourse admins enable encryption. In addition to encrypting Concourse , you may want to configure credential management.
 
 ### Values affected by encryption
-When you encrypt Concourse OLM, it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default. 
+When you encrypt Concourse , it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default.
 
 * **Resources [sources](https://concourse.ci/configuring-resources.html#source)** and **resource type [sources](https://concourse.ci/configuring-resource-types.html#resource-type-source)**. These sources often contain private keys and other credentials for writing to or accessing the resource.
 * **Task step [parameters](https://concourse.ci/task-step.html#task-params)**, **put step [parameters](https://concourse.ci/put-step.html#put-params)**, and **get step [parameters](https://concourse.ci/get-step.html#get-params)**. Parameters are often used to configure access to an external deployment with which a task is integrating.
@@ -34,19 +34,19 @@ The following things are not encrypted:
 
 On startup, the ATC encrypts all existing plaintext data. After this point, any new data is encrypted before it is sent over the network to the database.
 
-1. Navigate to your Concourse OLM manifest.
-1. Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence. 
+1. Navigate to your Concourse manifest.
+1. Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence.
 1. Redeploy.
 
 ## Rotating the Encryption Key
 Key rotation is a method of exchanging an outdated encryption key for a new one. Using a supported key rotation process helps preserve access to your data while maintaining consistent security.
 
-On startup, the ATC decrypts all existing data and re-encrypts it with the new key. 
+On startup, the ATC decrypts all existing data and re-encrypts it with the new key.
 
 <ol>
-<li>Navigate to your Concourse OLM manifest.</li>
+<li>Navigate to your Concourse manifest.</li>
 <li>Rename the <code>encryption_key</code> property to <code>old_encryption_key</code>.</li>
-<li>Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence.</li> 
+<li>Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence.</li>
 <li>Redeploy.</li>
 <li>Delete the <code>old_encryption_key</code> property.</li>
 </ol>
@@ -54,7 +54,7 @@ On startup, the ATC decrypts all existing data and re-encrypts it with the new k
 ## Disabling Encryption
 Disable encryption by passing the <code>old\_encryption\_key</code> property with no new key. Without a new encryption key, the ATC decrypts all existing data on start.
 <ol>
-<li>Navigate to your Concourse OLM manifest.</li>
+<li>Navigate to your Concourse manifest.</li>
 <li>Rename the <code>encryption\_key</code> property to <code>old\_encryption\_key</code>.</li>
 <li>Redeploy.</li>
 <li>Delete the <code>old\_encryption\_key</code> property.</li>

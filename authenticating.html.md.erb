@@ -1,15 +1,15 @@
 ---
 title: Configuring Team Authentication
-owner: Concourse / OLM
+owner: Concourse
 ---
 
-Continuous integration tools can grant considerable visibility into an organization's source code and applications. To protect confidential or sensitive data, Concourse OLM provides options for both authentication and authorization of different users.
+Continuous integration tools can grant considerable visibility into an organization's source code and applications. To protect confidential or sensitive data, Concourse provides options for both authentication and authorization of different users.
 
-**User authentication** controls who can log in to Concourse OLM servers.
+**User authentication** controls who can log in to Concourse servers.
 
 **User authorization** controls what data a user is allowed to see.
 
-The authentication methods for Concourse OLM teams are determined by flags passed to [set-team](http://concourse.ci/fly-set-team.html). The exception to this is [main team](http://concourse.ci/teams.html#main-team), which is the default team for any Concourse OLM instance. <code>Main team</code> is configured as part of the initial deployment.
+The authentication methods for Concourse teams are determined by flags passed to [set-team](http://concourse.ci/fly-set-team.html). The exception to this is [main team](http://concourse.ci/teams.html#main-team), which is the default team for any Concourse  instance. <code>Main team</code> is configured as part of the initial deployment.
 
 You can enable multiple authentication methods simultaneously. If you use multiple authentication methods, users are given the choice to log in using any of them.
 
@@ -30,7 +30,7 @@ fly set-team -n YOUR-TEAM \
 </ol>
 
 ## Configuring GitHub OAuth
-A Concourse OLM server can authenticate through GitHub to take advantage of their permission model. Using OAuth also saves Concourse OLM users from having to make a unique login for their Concourse OLM team, because they can use a credential set they already have.
+A Concourse server can authenticate through GitHub to take advantage of their permission model. Using OAuth also saves Concourse  users from having to make a unique login for their Concourse  team, because they can use a credential set they already have.
 
 An example GitHub OAuth configuration is below:
 
@@ -55,7 +55,7 @@ GitHub provides a Client ID and a Client Secret for your new application. Use th
 
 <ol>
 <li>Open a terminal window.</li>
-<li>Navigate to your Concourse OLM deployment manifest.</li>
+<li>Navigate to your Concourse  deployment manifest.</li>
 <li>Set the following flags:<br/>
 <pre class="terminal">
 --github-auth-client-id=CLIENT_ID
@@ -76,7 +76,7 @@ If you are configuring GitHub Enterprise, set these additional flags as well:
 You can now allow different organizations, teams, and individual users to access your server.
 <ol>
 <li>Open a terminal window.</li>
-<li>Navigate to your Concourse OLM deployment manifest.</li>
+<li>Navigate to your Concourse  deployment manifest.</li>
 <li>Set the following flags:<br />
 
 To authorize an individual user:
@@ -93,7 +93,7 @@ To authorize an entire organization's members:
 You can use any of these flags multiple times to allow different levels of access.
 
 ## Configuring UAA OAuth
-If you’re using the User Access and Authentication (UAA) Cloud Foundry component, you can set up OAuth with your Concourse OLM.
+If you’re using the User Access and Authentication (UAA) Cloud Foundry component, you can set up OAuth with your Concourse .
 
 The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a Cloud Foundry deployment.
 
