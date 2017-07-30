@@ -2,3 +2,35 @@
 title: Pivotal Concourse Release Notes
 owner: Concourse
 ---
+## Release Notes for Concourse v3.3.3
+<strong>July 31, 2016</strong>
+
+Concourse for PCF is the first version of Concourse that is eligible for
+Pivotal Support. Concourse v3.3.3 was selected for this release because it
+addresses crucial issues from the Concourse Tile beta program. A highlight of
+these new features can be found below.
+
+### Features
+
+* Major changes to the lifecycle management of workers, containers and volumes.
+For more details please refer to issue <a href="https://github.com/concourse/concourse/issues/629">#629</a>
+* Support for webhooks
+* Pipeline config and team auth settings can now be encrypted in the database. See <a href="./encryption">Encrypting Concourse Databases</a>
+* Workers now use <code>overaly</code> instead of <code>btrfs</code> for their filesystesm.
+For more details please refer to issue <a href="https://github.com/concourse/concourse/issues/1045">#1045</a>
+* New templating syntax for pipeline parameterization. See <a href="http://concourse.ci/fly-set-pipeline.html">Using ((parameters))</a>
+* Performance and stability enhancements from schema optimizations,  and parallelized ATC garbage collection
+* Credential Management with Vault
+* Support for GitLab oAuth configurations
+* ...and so much more! For a full history of features please visit
+the official <a href="http://concourse.ci/downloads.html">Concourse Release Notes</a>
+
+### Bug Fixes
+* Misc bug fixes and stability improvements
+* For a full history of bug fixes and known issues please visit
+the official <a href="http://concourse.ci/downloads.html">Concourse Release Notes</a>
+
+### Known issues
+* Operators may encounter memory issues on the ATC while upgrading from a version of Concourse < 3.3.0 to v3.3.3.
+A migration introduced in v3.3.0 that loads all the builds into memory and then processes them.
+It has to do this (rather than read one row at a time and update) as it only has one transaction.
