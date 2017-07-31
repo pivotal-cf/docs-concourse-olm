@@ -31,6 +31,4 @@ the official <a href="http://concourse.ci/downloads.html">Concourse Release Note
 the official <a href="http://concourse.ci/downloads.html">Concourse Release Notes</a>
 
 ### Known issues
-* Operators may encounter memory issues on the ATC while upgrading from a version of Concourse < 3.3.0 to v3.3.3.
-A migration introduced in v3.3.0 that loads all the builds into memory and then processes them.
-It has to do this (rather than read one row at a time and update) as it only has one transaction.
+* Operators may encounter memory issues on the ATC while upgrading from a version of Concourse older than 3.3.0.
