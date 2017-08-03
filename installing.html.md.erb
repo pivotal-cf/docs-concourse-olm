@@ -1,37 +1,27 @@
 ---
-title: Installing Concourse OLM 
-owner: Concourse / OLM
+title: Installing Concourse
+owner: Concourse
 ---
 
-Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery tool that lets you build and monitor scalable pipelines seamlessly. This topic describes how to install Concourse OLM and what you need to install it successfully.
+Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery tool that lets you build and monitor scalable pipelines seamlessly. This topic describes how to install Concourse and what you need to install it successfully.
 
 ## Prerequisites
 <ul>
 <li>A supported IaaS provider: AWS, Azure, GCP, or vSphere</li>
-<li>A <a href="http://bosh.io/docs/init.html">BOSH Director</a>. Do not use the Ops Manager Director associated with an existing PCF deployment.</li> 
+<li>A <a href="http://bosh.io/docs/init.html">BOSH Director</a>. Do not use the Ops Manager Director associated with an existing PCF deployment.</li>
 <li><a href="http://bosh.io/docs/cli-v2.html#install">BOSH CLI v2</a></li>
-<li>Concourse + Garden Run-C BOSH releases downloaded from Pivotal Network</li> 
+<li>Concourse + Garden Run-C BOSH releases downloaded from Pivotal Network</li>
 <li>The stemcell for your IaaS downloaded from Pivotal Network</li>
 </ul>
 
-## Setting Up and Installing Concourse OLM
+## Setting Up and Installing Concourse
 <ol>
  <li>Configure your IaaS environment by modifying your cloud config for BOSH deployment. </li>
  <li>Prepare the Concourse deployment manifest. You can write your own manifest or <a href="./concourse-TEMPLATE.yml">modify a template</a> with your unique configuration.<br/>
  <p class="note"><strong>Note</strong>: You will also need to configure authentication. Follow the instructions in <a href="./authenticating.html">Authentication</a>.<br/>
-
-Additionally, provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</p></li>  
- <li>Prepare the <code>cloud-config.yml</code> file and upload it to your bosh director with <code>bosh update-cloud-config</code>.<br/>
-<p class="note"><strong>Note</strong>: Your cloud config defines IaaS-specific configurations for virtual machiness, networks, and more.</p></li>
-<li>Deploy Concourse with <code>bosh deploy</code>. Please refer to <a href="https://bosh.io/docs/cli-v2.html">bosh cli</a> on possible options for deploy command.</li>
-<li>The web interface runs on port 8080 (if tls in not configured) or 4443 by default, you could configure your infrastructure settings to map port 80 to 8080, 443 to 4443, and 2222 to 2222.</li>
-<li>More details about advanced installation scenarios such as <a href="https://concourse.ci/clusters-with-bosh.html">Supporting external workers</a> can be found in concourse documentations.</li>
+Provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</p></li>
+<li>Prepare the <code>cloud-config.yml</code> file and upload it to your BOSH Director with <code>bosh update-cloud-config</code>.<br/>
+<li>Deploy Concourse with <code>bosh deploy</code>. Refer to the <a href="https://bosh.io/docs/cli-v2.html">BOSH CLI documentation</a> for more information. After Concourse deploys, a success message displays.</li>
 </ol>
 <br/>
-That's it! You just deployed Concourse OLM.
-
-
-
-
-
-
+That's it! You just deployed Concourse.

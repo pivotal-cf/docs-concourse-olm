@@ -1,0 +1,31 @@
+---
+title: Preparing an Environment for Concourse
+owner: Concourse
+---
+
+Instructions for preparing your environment for Concourse installation can
+be found here: http://concourse.ci/clusters-with-bosh.html The instructions found
+on this page includes sample manifest files, references to prerequisite BOSH knowledge,
+IaaS-specific configurations, etc.
+
+<ol>
+  <li>
+    <b>Deploying Concourse with an External PostgresDB:</b>
+    <div>
+      The default configuration of Concourse will install and connect to an internally
+      managed postgres database. An operator may wish to instruct Concourse to connect
+      to an externally managed postgres database instead.
+      The specific configuration changes that you will need to make can be made in the
+      properties of the atc job <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.2#p=postgresql"> here </a>
+    </div>
+  </li>
+  <li>
+    <b>Load Balancing Multiple ATCs</b>
+    <div>
+      If you anticipate a heavy load on your Concourse installation, you may want
+      to consider installing a Load Balancer with multiple ATCs. You can find
+      additional documentation on how to set up clusters on the docs <a href="http://concourse.ci/binaries.html#cluster-with-remote-postgres">here</a>
+    </div>
+  </li>
+
+</ol>

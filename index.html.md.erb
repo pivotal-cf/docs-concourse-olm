@@ -1,45 +1,73 @@
 ---
-title: Concourse OLM for PCF
+title: Concourse for PCF
 owner: Concourse
 ---
 
-Concourse Operations Lifecycle Management (OLM) for Pivotal Cloud Foundry (PCF) is a continuous integration tool that lets you build, scale, and monitor pipelines outside of your PCF deployment. Using Concourse OLM, you can set up production pipelines to deploy and manage your apps in real time.  
+Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration tool that lets you build, scale, and monitor pipelines outside of your PCF deployment. Using Concourse, you can set up production pipelines to deploy and manage your apps in real time.
 
 You can also read the documentation for the open source [Concourse project](http://concourse.ci/introduction.html), which powers Concourse OLM.
 
 ## <a id="install"></a>Installing Concourse OLM
 
-This topic describes how to install Concourse OLM and what you need to install it successfully.
+Concourse for PCF is a BOSH release that will require the operator to install and maintain an independant BOSH director.
 
-For more information, read <a href="./installing.html" class="subnav">Installing Concourse OLM</a>.
+If you are unfamiliar with BOSH, it is recommended you review the <a href="http://bosh.io/docs">BOSH documentation</a> before
+continuing with the installation of Concourse.
+
+When you are ready to install Concourse, you can refer to
+<a href="./prep_and_install.html">Preparing an Environment for Concourse</a>
+and <a href="./installing.html">Installing Pivotal Concourse</a> for further information
+
+## <a id="additional-considerations"></a>Additional Considerations
+
+<strong>Database Encryption</strong>
+
+Concourse lets you encrypt sensitive information before it reaches the database. By using encryption, you ensure that plaintext credentials do not exist in memory for longer than absolutely necessary.
+
+For more information, read <a href="./encryption.html" class="subnav">Encrypting Concourse Databases</a>.
+
+<strong>Credential Management</strong>
+
+With Concourse credential management, pipeline credentials can be parameterized with [((parameters))](https://concourse.ci/fly-set-pipeline.html#parameters) in your pipeline or task config files. Credential management also allows for credentials to be rotated and managed from outside the pipeline or team, and prevents them from being revealed by [get-pipeline](https://concourse.ci/fly-get-pipeline.html).
+
+For more information, read <a href="./credential-management.html" class="subnav">Credential Management in Concourse </a>.
+
+<strong>Team Authentication</strong>
+
+In order to protect confidential or sensitive data, Concourse provides options for team authorization.
+
+For more information, read <a href="./authenticating.html" class="subnav">Configuring Team Authentication</a>.
 
 ## <a id="backing-up"></a>Back Up and Restore
 
-Backing up Concourse OLM databases is a best practice that helps protect pipelines, build history, and team information over time. You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties. 
+Backing up Concourse databases is a best practice that helps protect pipelines, build history, and team information over time. You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties.
 
-For more information, read <a href="./backing-up.html" class="subnav">Backing Up and Restoring a Concourse OLM Database</a>.
+For more information, read <a href="./backing-up.html" class="subnav">Backing Up and Restoring a Concourse Database</a>.
 
-## <a id="authenticating"></a>Authentication
+## <a id="monitoring-and-troubleshooting"></a>Monitoring and Troubleshooting
 
-In order to protect confidential or sensitive data, Concourse OLM provides options for both user authentication and team authorization. 
+Concourse can emit metrics about both the system health itself and about the builds that it is running.
+Operators can tap into these metrics in order to observe the health of the system.
 
-For more information, read <a href="./authenticating.html" class="subnav">Configuring Authentication for Concourse OLM</a>.
+For more information, read <a href="./troubleshooting.html" class="subnav">Monitoring and Troubleshooting</a>.
 
-## <a id="encryption"></a>Database Encryption
+## <a id="architecture"></a>Concourse Architecture
 
-Concourse OLM lets you encrypt sensitive information in the database. 
+Concourse is composed of two major sub-components: the web service (ATC and TSA) and workers.
 
-For more information, read <a href="./encryption.html" class="subnav">Encrypting Concourse OLM Databases</a>.
+For information about the architecture of Concourse and its components please see <a href="./architecture.html" class="subnav">Concourse Architecture</a>.
 
-## <a id="creds"></a>Managing Credentials
+## <a id="reference-pipelines"></a>Reference Pipelines
+The Pivotal Cloud Foundry Services team has a collection of reference
+pipelines that may be useful for operators to use as a starting point:
 
-Credential management works by replacing the credentials with [((parameters))](https://concourse.ci/fly-set-pipeline.html#parameters) in your pipeline or task config files. Credential management also allows for credentials to be rotated and managed from outside the pipeline or team, and prevents them from being revealed by [get-pipeline](https://concourse.ci/fly-get-pipeline.html).
+<ul>
+  <li><a href="https://github.com/pivotal-cf/pcf-pipelines">PCF-Pipelines</a></li>
+  <li><a href="https://github.com/pivotalservices/concourse-pipeline-samples">Concourse How-Tos and Samples</a></li>
+</ul>
 
-For more information, read <a href="./credential-management.html" class="subnav">Credential Management in Concourse OLM</a>.
-
-## <a id="architecture"></a>Architecture
-
-For information about the Concourse architecture please see <a href="./architecture.html" class="subnav">Architecture</a>.
+<b>NOTE:</b> These pipelines are Open Source reference pipelines that are built and maintained
+by Pivotal R&D and Pivotal Services teams. These are <em>not</em> yet officially supported Pivotal
 
 ## <a id="troubleshooting"></a>Monitoring and Troubleshooting Your Installation
 
@@ -47,4 +75,6 @@ If you're having trouble with your Concourse OLM installation, this topic may he
 
 For more information, read <a href="./troubleshooting.html" class="subnav">Troubleshooting</a>.
 
+## Additional Documentation
 
+You can also read the documentation for the open source [Concourse project](http://concourse.ci/introduction.html), which powers Concourse OLM.
