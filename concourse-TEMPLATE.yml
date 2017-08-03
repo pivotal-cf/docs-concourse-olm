@@ -24,6 +24,7 @@ instance_groups:
     default: [dns, gateway]
   - name: vip
     static_ips: [((external_ip))]
+# vm extensions to be used in case the web vm for concourse is required to be behind an load balancer.
 #  vm_extensions:
 #  - concourse  
   jobs:
@@ -31,11 +32,11 @@ instance_groups:
     release: concourse
     properties:
       # replace with your CI's externally reachable URL, e.g. https://ci.concourse.com
-      # external_url: ((EXTERNAL-URL))
+      external_url: ((EXTERNAL-URL))
 
       # Basic Auth is not recommended; please replace with the admin team authentication method of your choice
-      basic_auth_username: admin
-      basic_auth_password: admin
+      basic_auth_username:
+      basic_auth_password:
 
       # replace with your SSL cert and key
       #tls_cert: YOUR-TLS-CERT
