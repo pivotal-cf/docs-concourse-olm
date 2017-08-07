@@ -5,13 +5,13 @@ owner: Concourse
 
 This topic broadly outlines techniques for troubleshooting your Concourse OLM installation. 
 
-## Concourse OLM Log Collection
+## <a id="log-collection"></a> Concourse OLM Log Collection
 
 Find the logs for a specific job in the VM on which that job was running. Those logs are stored at <code>/var/vcap/sys/log/<\CONCOURSE-JOB-NAME>/*.log.</code> 
 
-## Troubleshooting With Fly Commands
+## <a id="fly-commands"></a> Troubleshooting ~with Fly Commands
 
-### Concourse OLM environment troubleshooting
+### <a id="environment"></a> Concourse OLM Environment Troubleshooting
 <code>containers</code>: Lists active containers
 This confirms which container or task got placed on which worker
 <code>workers</code>: Lists registered workers
@@ -21,7 +21,7 @@ Stops Concourse OLM from tracking an out-of-commission worker.
 <code>volumes</code>: Lists active volumes
 Checks disk usage across workers.
 
-### Pipeline troubleshooting:
+### <a id="pipeline"></a> Pipeline Troubleshooting:
 <code>pipelines</code>: Lists configured pipelines
 <code>builds</code>: Shows build history
 This is useful for getting build IDs of one-off tasks you've run using <code>execute</code>.
@@ -34,7 +34,7 @@ This is useful when developing a new resource.
 <code>execute</code>: Submits Local Tasks
 This is useful for spinning up a task quickly to test before putting it in a job.
 
-## Common Concourse OLM Issues
+## <a id="common-issues"></a> Common Concourse OLM Issues
 <table>
   <th>Problem</th>
   <th>Error</th>
@@ -77,7 +77,7 @@ This is useful for spinning up a task quickly to test before putting it in a job
   </tr>
 </table>
 
-## Other troubleshooting resources
+## <a id="other-resources"></a> Other Troubleshooting Resources
 
 Monitoring Concourse for metrics: http://concourse.ci/metrics.html
 To enable syslog forwarding or to get logs for other components of concourse refer to: https://bosh.io/docs/job-logs.html.
