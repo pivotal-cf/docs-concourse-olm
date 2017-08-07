@@ -3,15 +3,17 @@ title: Concourse for PCF
 owner: Concourse
 ---
 
-Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration tool that lets you build, scale, and monitor pipelines outside of your PCF deployment. Using Concourse, you can set up production pipelines to deploy and manage your apps in real time.
+Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration tool that lets you build, scale,
+and monitor pipelines outside of your PCF deployment.
+Using Concourse, you can set up production pipelines to deploy and manage your apps in real time.
 
 You can also read the documentation for the open source [Concourse project](http://concourse.ci/introduction.html), which powers Concourse OLM.
 
 ## <a id="install"></a>Installing Concourse OLM
 
-Concourse for PCF is a BOSH release that will require the operator to install and maintain an independant BOSH director.
+Concourse for PCF is a BOSH release that requires the operator to install and maintain an independant BOSH director.
 
-If you are unfamiliar with BOSH, it is recommended you review the <a href="http://bosh.io/docs">BOSH documentation</a> before
+If you are unfamiliar with BOSH, Pivotal recommends that you review the <a href="http://bosh.io/docs">BOSH documentation</a> before
 continuing with the installation of Concourse.
 
 When you are ready to install Concourse, see
@@ -22,13 +24,17 @@ and <a href="./installing.html">Installing Pivotal Concourse</a>.
 
 <strong>Database Encryption</strong>
 
-Concourse lets you encrypt sensitive information before it reaches the database. By using encryption, you ensure that plaintext credentials do not exist in memory for longer than absolutely necessary.
+Concourse lets you encrypt sensitive information before it reaches the database.
+By using encryption, you ensure that plaintext credentials do not exist in memory for longer than absolutely necessary.
 
 For more information, see <a href="./encryption.html" class="subnav">Encrypting Concourse Databases</a>.
 
 <strong>Credential Management</strong>
 
-With Concourse credential management, pipeline credentials can be parameterized with [((parameters))](https://concourse.ci/fly-set-pipeline.html#parameters) in your pipeline or task config files. Credential management also allows for credentials to be rotated and managed from outside the pipeline or team, and prevents them from being revealed by [get-pipeline](https://concourse.ci/fly-get-pipeline.html).
+With Concourse credential management, pipeline credentials can be parameterized with
+[((parameters))](https://concourse.ci/fly-set-pipeline.html#parameters) in your pipeline or task config files.
+Credential management also allows for credentials to be rotated and managed from outside the pipeline or team,
+and prevents them from being revealed by [get-pipeline](https://concourse.ci/fly-get-pipeline.html).
 
 For more information, see <a href="./credential-management.html" class="subnav">Credential Management in Concourse </a>.
 
@@ -40,7 +46,9 @@ For more information, see <a href="./authenticating.html" class="subnav">Configu
 
 ## <a id="backing-up"></a>Back Up and Restore
 
-Backing up Concourse databases is a best practice that helps protect pipelines, build history, and team information over time. You can also use backed up versions of databases to restore database states after unexpected problems, like database failure, corruption, or interference from malicious third parties.
+Backing up Concourse databases is a best practice that helps protect pipelines, build history, and team information over time.
+You can also use backed up versions of databases to restore database states after unexpected problems,
+like database failure, corruption, or interference from malicious third parties.
 
 For more information, see <a href="./backing-up.html" class="subnav">Backing Up and Restoring a Concourse Database</a>.
 
