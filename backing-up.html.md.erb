@@ -13,7 +13,7 @@ For complete backup and restore procedures refer to the documentation for your v
 
 This topic provides a sample backup and restore procedure for an internal Concourse PostgresSQL database.
 
-## Backing Up a Concourse Database
+## <a id="backing-up"></a> Backing Up a Concourse Database
 
 This procedure explains how to back up a Concourse database deployed from the Concourse BOSH release.
 
@@ -53,7 +53,7 @@ When you generate the backup file, you can use any name and any file extension. 
 <li>Store the backup file somewhere secure.</li>
 </ol>
 
-## Restoring a Concourse Database
+## <a id="restoring"></a> Restoring a Concourse Database
 
 Once you generate a backup file, you can apply it to a database to restore a previous state. Do not use a backup file to overwrite an existing database. Overwriting databases leads to data loss, and may lead to total deployment failure. Only apply a backup to a new database.
 

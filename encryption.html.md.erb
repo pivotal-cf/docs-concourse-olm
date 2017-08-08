@@ -9,7 +9,7 @@ Concourse lets you encrypt the database information at rest. By using encryption
 
 Pivotal strongly recommends that Concourse admins enable encryption. In addition to encrypting the Concourse database, you may want to configure <a href="./credential-management.html">credential management</a> for your pipelines.
 
-### Values affected by encryption
+## <a id="values-affected"></a> Values Affected by Encryption
 When you encrypt Concourse , it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default.
 
 * **Resources [sources](https://concourse.ci/configuring-resources.html#source)** and **resource type [sources](https://concourse.ci/configuring-resource-types.html#resource-type-source)**. These sources often contain private keys and other credentials for writing to or accessing the resource.
@@ -28,7 +28,7 @@ The following things are not encrypted:
 </li>
 </ul>
 
-## Enabling Encryption
+## <a id="enable-encryption"></a> Enabling Encryption
 
 <p class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption may cause some downtime. If your deployment uses multiple ATCs, they may not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
 
@@ -38,7 +38,7 @@ On startup, the ATC encrypts all existing plaintext data. After this point, any 
 1. Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence.
 1. Redeploy.
 
-## Rotating the Encryption Key
+## <a id="rotate-key"></a> Rotating the Encryption Key
 Key rotation is a method of exchanging an outdated encryption key for a new one. Using a supported key rotation process helps preserve access to your data while maintaining consistent security.
 
 On startup, the ATC decrypts all existing data and re-encrypts it with the new key.
@@ -51,7 +51,7 @@ On startup, the ATC decrypts all existing data and re-encrypts it with the new k
 <li>Delete the <code>old_encryption_key</code> property.</li>
 </ol>
 
-## Disabling Encryption
+## <a id="disable-encryption"></a> Disabling Encryption
 Disable encryption by passing the <code>old\_encryption\_key</code> property with no new key. Without a new encryption key, the ATC decrypts all existing data on start.
 <ol>
 <li>Navigate to your Concourse manifest.</li>

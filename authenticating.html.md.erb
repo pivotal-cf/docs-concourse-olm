@@ -13,7 +13,7 @@ The authentication methods for Concourse teams are determined by flags passed to
 
 You can enable multiple authentication methods simultaneously. If you use multiple authentication methods, users are given the choice to log in using any of them.
 
-## Configuring Basic Authentication
+## <a id="basic-auth"></a> Configuring Basic Authentication
 HTTP Basic authentication is the simplest of the authentication mechanisms. It has good support in both browsers and command line tools. It provides a single set of credentials for all of a team's users to share.
 
 **Important**: Basic authentication is the least secure method of authentication, because shared credentials can be compromised or misused easily. Many highly secure organizations, such as financial institutions, do not allow the use of basic authorization.
@@ -29,7 +29,7 @@ fly set-team -n YOUR-TEAM \
 </li>
 </ol>
 
-## Configuring GitHub OAuth
+## <a id="github"></a> Configuring GitHub OAuth
 A Concourse server can authenticate through GitHub to take advantage of their permission model. Using OAuth also saves Concourse  users from having to make a unique login for their Concourse  team, because they can use a credential set they already have.
 
 An example GitHub OAuth configuration is below:
@@ -41,7 +41,7 @@ $ fly set-team -n NAME \
     --github-auth-team NAME/TEAM-NAME
 </pre>
 
-### Configuring the callback URL
+### <a id="callback"></a> Configuring the Callback URL
 Follow GitHub's instructions to [Create an OAuth application on GitHub](https://github.com/settings/applications/new).
 
 **Tips:**
@@ -50,7 +50,7 @@ Follow GitHub's instructions to [Create an OAuth application on GitHub](https://
 <li>Use the external URL of your Concourse server with <code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: <code>h<span>ttps</span>://ci.concourse.ci/auth/github/callback</code>.</li>
 </ul>
 
-### Configuring the Client
+### <a id="client"></a> Configuring the Client
 GitHub provides a Client ID and a Client Secret for your new application. Use these to set the following flags:
 
 <ol>
@@ -71,7 +71,7 @@ If you are configuring GitHub Enterprise, set these additional flags as well:
 <p class="note"><strong>Note</strong>: The API URL must end in a forward slash (/).</p>
 </ol>
 
-### Authorizing GitHub users, teams, and organizations
+### <a id="authorize-github"></a> Authorizing GitHub Users, Teams, and Organizations
 
 You can now allow different organizations, teams, and individual users to access your server.
 <ol>
@@ -92,12 +92,12 @@ To authorize an entire organization's members:
 
 You can use any of these flags multiple times to allow different levels of access.
 
-## Configuring UAA OAuth
+## <a id="uaa-auth"></a> Configuring UAA OAuth
 If you’re using the User Access and Authentication (UAA) Cloud Foundry component, you can set up OAuth with your Concourse .
 
 The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a Cloud Foundry deployment.
 
-## Configuring the UAA client
+## <a id="uaa-client"></a> Configuring the UAA Client
 Configure a client for Concourse with your UAA. The callback URL is the external URL of your Concourse server with `/auth/oauth/callback` appended. For example, `https://ci.concourse.ci/auth/oauth/callback`.
 
 An example client is below. This client should be stored under [uaa.clients](http://bosh.io/jobs/uaa?source=github.com/cloudfoundry/uaa-release&version=13#p=uaa.clients):
@@ -116,7 +116,7 @@ concourse:
   redirect-uri: https://concourse.EXAMPLE.com/auth/uaa/callback
 </pre>
 
-### Configuring the team
+### <a id="team"></a> Configuring the Team
 An example authorization configuration for a team's space in a PCF installation is below:
 
 <pre class="terminal">
