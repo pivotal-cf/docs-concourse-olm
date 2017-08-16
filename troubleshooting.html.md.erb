@@ -5,48 +5,36 @@ owner: Concourse
 
 This topic broadly outlines techniques for troubleshooting your Concourse OLM installation. 
 
-## <a id="log-collection"></a> Concourse OLM Log Collection
+## Concourse OLM Log Collection
 
-Find the logs for a specific job in the VM on which that job was running.
-Those logs are stored at <code>/var/vcap/sys/log/<\CONCOURSE-JOB-NAME>/*.log.</code> 
+Find the logs for a specific job in the VM on which that job was running. Those logs are stored at <code>/var/vcap/sys/log/<<span>C</span>ONCOURSE-JOB-NAME>/*.log</code>. 
 
-## <a id="fly-commands"></a> Troubleshooting with Fly Commands
+## Troubleshooting With Fly Commands
 
-### <a id="environment"></a> Concourse OLM Environment Troubleshooting
-
-+ <code>containers</code>: Lists active containers<br>
+### Concourse OLM environment troubleshooting
+<code>containers</code>: Lists active containers
 This confirms which container or task got placed on which worker
-
-+ <code>workers</code>: Lists registered workers<br>
+<code>workers</code>: Lists registered workers
 This helps you verify that the number of containers aren't exceeding maximum allowable number of containers on a worker.
-
-+ <code>prune-worker</code>: Reaps a non-running worker<br>
+<code>prune-worker</code>: Reaps a non-running worker
 Stops Concourse OLM from tracking an out-of-commission worker.
-
-+ <code>volumes</code>: Lists active volumes<br>
+<code>volumes</code>: Lists active volumes
 Checks disk usage across workers.
 
-### <a id="pipeline"></a> Pipeline Troubleshooting
-
-+ <code>pipelines</code>: Lists configured pipelines
-
-+ <code>builds</code>: Shows build history<br>
-This is useful for getting build IDs of one-off tasks you ran using <code>execute</code>.
-
-+ <code>validate-pipeline</code>: Validates a pipeline's configuration<br>
+### Pipeline troubleshooting:
+<code>pipelines</code>: Lists configured pipelines
+<code>builds</code>: Shows build history
+This is useful for getting build IDs of one-off tasks you've run using <code>execute</code>.
+<code>validate-pipeline</code>: Validates a pipeline's configuration
 Checks pipeline for validity without calling <code>set-pipeline</code>.
-
-+ <code>check-resource</code>: Checks for new versions<br>
+<code>check-resource</code>: Checks for new versions  
 This is useful when developing a new resource.
-
-+ <code>watch</code>: View logs of in-progress builds
-
-+ <code>intercept</code>: Accesses a running or recent build's steps
-
-+ <code>execute</code>: Submits Local Tasks<br>
+<code>watch</code>: View logs of in-progress builds
+<code>intercept</code>: Accesses a running or recent build's steps
+<code>execute</code>: Submits local tasks
 This is useful for spinning up a task quickly to test before putting it in a job.
 
-## <a id="common-issues"></a> Common Concourse OLM Issues
+## Common Concourse OLM Issues
 <table>
   <th>Problem</th>
   <th>Error</th>
@@ -56,45 +44,40 @@ This is useful for spinning up a task quickly to test before putting it in a job
     <td>The worker is out of disk space</td>
     <td>An error displays about inability to create volume. It may say permissions are denied.</td>
     <td>Increase persistent disk for worker or increase number of worker VMs.</td>
-    <td><em>n/a</em></td>
+    <td>N/A</td>
   </tr>
   <tr>
-    <td>Container Limit Reached</td>
+    <td>Container limit reached</td>
     <td>Cannot create container: limit of 250 containers reached</td>
-    <td>Check fly containers.<br/>
-    Increase number of worker VMs.<br/>
-    Decrease <code>gc_interval</code> if set to custom value.
-    A large interval can mean that expired containers are kept around long enough that they build up.</td>
+    <td>Check fly containers<br/>
+    Increase number of worker VMs<br/>
+    Decrease <code>gc_interval</code> if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)</td>
     <td>This error state is unlikely to appear.</td>
   </tr>
   <tr>
-    <td>Job Doesn't Start</td>
+    <td>Job doesn't start</td>
     <td>This error may present as the build getting stuck in Pending state</td>
-    <td>Restart the ATC job, by logging in as a root user on Concourse OLM web VMs (the ones on which ATC job is located),
-    and then running <code>monit restart atc</code>.<br/>
-    Alternatively, run <code>bosh restart web --force</code> This takes longer than restarting the ATC job.</td>
-    <td><em>n/a</em></td>
+    <td>Restart the ATC job.<br/>
+    To restart the ATC, log in as a root user on Concourse OLM web VMs (the ones on which ATC job is located), then running <code>monit restart atc</code>.</td>
+    <td>N/A</td>
   </tr>
   <tr>
-    <td>Updating Concourse OLM in Concourse OLM Job fails</td>
-    <td>When BOSH deploying a Concourse OLM update from a job running on that Concourse OLM instance fails,
-        typically the job errors with "worker for container not found."
-        This is expected behavior; the BOSH Director will recreate the worker VM.</td>
+    <td>Updating Concourse OLM in Concourse OLM job fails</td>
+    <td>When a build fails after BOSH deploying a Concourse OLM update from a job running on that Concourse OLM instance, typically the job will error with "worker for container not found." This is expected behavior; the BOSH Director will recreate the worker VM.</td>
     <td>Run the job again.</td>
-    <td><em>n/a</em></td>
+    <td>N/A</td>
   </tr>
   <tr>
     <td>Bosh Can't Finish Worker Upgrade While Tasks Running</td>
-    <td>If you have a long running task, BOSH cannot finalize the upgrade by restarting the worker job
-        until all of the work has stopped.</td>
+    <td>If you have a long running task, BOSH won't be able to finalize the upgrade by restarting the worker job until all of the work has stopped.</td>
     <td>Wait for the work to complete.<br/>
     If you need to accomplish this quickly, cancel running tasks and jobs.</td>
-    <td><em>n/a</em></td>
+    <td>N/A</td>
   </tr>
 </table>
 
-## <a id="other-resources"></a> Other Troubleshooting Resources
+## Other Troubleshooting Resources
 
-Monitoring Concourse for metrics: http://concourse.ci/metrics.html
-To enable syslog forwarding or to get logs for other components of concourse refer to: https://bosh.io/docs/job-logs.html.
-Common bosh Issues: https://bosh.io/docs/tips.html
+For information about metrics for monitoring Concourse, see [Metrics](http://concourse.ci/metrics.html).
+For information about enabling syslog forwarding and about getting logs for other Concourse components, see [VM Logs](https://bosh.io/docs/job-logs.html).
+For information about common BOSH issues, see [the BOSH tips](https://bosh.io/docs/tips.html).
