@@ -12,27 +12,27 @@ Find the logs for a specific job in the VM on which that job was running. Those 
 ## Troubleshooting With Fly Commands
 
 ### Concourse OLM environment troubleshooting
-<code>containers</code>: Lists active containers
-This confirms which container or task got placed on which worker
-<code>workers</code>: Lists registered workers
-This helps you verify that the number of containers aren't exceeding maximum allowable number of containers on a worker.
-<code>prune-worker</code>: Reaps a non-running worker
-Stops Concourse OLM from tracking an out-of-commission worker.
-<code>volumes</code>: Lists active volumes
-Checks disk usage across workers.
+<code>containers</code>: Lists active containers<br/>
+This confirms which container or task got placed on which worker<br/>
+<code>workers</code>: Lists registered workers<br/>
+This helps you verify that the number of containers aren't exceeding maximum allowable number of containers on a worker.<br/>
+<code>prune-worker</code>: Reaps a non-running worker<br/>
+Stops Concourse OLM from tracking an out-of-commission worker.<br/>
+<code>volumes</code>: Lists active volumes<br/>
+Checks disk usage across workers.<br/>
 
 ### Pipeline troubleshooting:
-<code>pipelines</code>: Lists configured pipelines
-<code>builds</code>: Shows build history
-This is useful for getting build IDs of one-off tasks you've run using <code>execute</code>.
-<code>validate-pipeline</code>: Validates a pipeline's configuration
-Checks pipeline for validity without calling <code>set-pipeline</code>.
-<code>check-resource</code>: Checks for new versions  
-This is useful when developing a new resource.
-<code>watch</code>: View logs of in-progress builds
-<code>intercept</code>: Accesses a running or recent build's steps
-<code>execute</code>: Submits local tasks
-This is useful for spinning up a task quickly to test before putting it in a job.
+<code>pipelines</code>: Lists configured pipelines<br/>
+<code>builds</code>: Shows build history<br/>
+This is useful for getting build IDs of one-off tasks you've run using <code>execute</code>.<br/>
+<code>validate-pipeline</code>: Validates a pipeline's configuration<br/>
+Checks pipeline for validity without calling <code>set-pipeline</code>.<br/>
+<code>check-resource</code>: Checks for new versions<br/>
+This is useful when developing a new resource.<br/>
+<code>watch</code>: View logs of in-progress builds<br/>
+<code>intercept</code>: Accesses a running or recent build's steps<br/>
+<code>execute</code>: Submits local tasks<br/>
+This is useful for spinning up a task quickly to test before putting it in a job.<br/>
 
 ## Common Concourse OLM Issues
 <table>
