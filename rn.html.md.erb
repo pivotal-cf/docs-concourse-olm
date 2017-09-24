@@ -2,6 +2,52 @@
 title: Pivotal Concourse Release Notes
 owner: Concourse
 ---
+
+## <a id="release-notes"></a> Release Notes for Concourse v3.5.0
+<strong>Sep 25, 2017</strong>
+
+### <a id="features"></a> Features
+* Support for <a href="https://github.com/cloudfoundry-incubator/credhub">CredHub</a> for external credential management
+* BaggageClaim volume creation APIs are now asynchronous
+* Parallelized garbage collection. This should make things more durable to a slow worker, and make it harder for containers and volumes to "pile up" when the ATC is out of service briefly (i.e. during a deploy)
+* BaggageClaim's response header timeout is now configurable, which should help those with large images that they're using for privileged tasks.
+
+####Fly CLI 
+* When using groups in pipelines, `fly` will now let you know when you forgot to assign a job to a group
+* `fly` now prints a URL to your build page when you run `execute`
+* The fly command for <a href="http://concourse.ci/fly-set-team.html">`set-team`</a> and <a href="http://concourse.ci/fly-destroy-team.html">`destroy-team`</a> now lets you supply the flag `--non-interactive`
+* Jobs with a pending build now have a static halo to better represent its waiting state
+* The `fly` CLI can now format a pipeline configuration into its 'canonical form' using the new <a href="http://concourse.ci/fly-format-pipeline.html">`format-pipeline`</a> command
+* The <a href="http://concourse.ci/fly-abort-build.html">`abort-build`</a> command can now abort by build ID
+
+####Resources 
+* The <a href="https://github.com/concourse/semver-resource">Semver resource</a> now supports Google Cloud Storage
+* The <a href="https://github.com/concourse/bosh-deployment-resource">Bosh Deployment</a> resource now uses the latest BOSH CLI
+* The <a href="https://github.com/concourse/semver-resource">Semver resource</a> now supports Server Side Encryption
+* The <a href='https://github.com/concourse/git-resource'>Git resource</a> will now save the committer email to `.git/committer`
+
+####Web UI 
+* The legend on the pipeline page will now auto-hide after 10 seconds.
+* When switiching between pipelines, the UI will now fit the pipeline in view.
+* You can also press 'F' center a pipeline in view.
+
+### <a id="bug-fixes"></a> Bug Fixes
+* Jobs and resources with a forward slash in their name no longer error out when loading their details.
+* Fixed a leak with goroutines that happens from <a href="http://concourse.ci/fly-intercept.html">`fly intercept`</a>
+* Check containers will no longer be brutally destroyed if they're used too close to their expiration time.
+* Previously, if a resource or resource type was parameterized via a credential manager, its check containers and caches would be mistakenly garbage-collected. They will now be kept around.
+* Fixed an issue where the pipeline view will reset after a state change on the pipeline.
+* Added the appropriate headers to stop GitHub from caching badges
+* Fixed an issue with the garbage collector that happens when deleting teams 
+* Files with the `setuid` and `setgid` permissions set on them will no longer have them removed. This used to be lost with the `chown` performed for namespacing the files. We'll now restore it after the `chown`.
+* The flags for configuring GitLab oAuth are now present in <a href="http://concourse.ci/fly-set-team.html">`set-team`</a>
+* Fixed an underflow in BaggageClaim's volume size detection
+* The `unpack` parameter in <a href="https://github.com/concourse/s3-resource">S3 resource</a> will no longer load the entire archive into memory, so it can be used for larger archives
+
+
+### <a id="known-issues"></a> Known Issues
+* A migration introduced in `v3.3.0` would load all the builds into memory and then process them, causing a lot of issues when upgrading. We optimized this migration to migrate build plans in batches, rather than all at once.
+
 ## <a id="release-notes"></a> Release Notes for Concourse v3.3.3
 <strong>July 31, 2017</strong>
 
