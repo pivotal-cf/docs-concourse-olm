@@ -3,6 +3,50 @@ title: Concourse Release Notes
 owner: Concourse
 ---
 
+## <a id="release-notes"></a> Release Notes for Concourse v3.6.0
+<strong>Nov 9, 2017</strong>
+
+###<a id="breaking-changes"></a> BREAKING CHANGES
+
+####Postgres
+Concourse 3.6.0 now **requires** you to install and manage an external PostgreSQL v9.5 and above.
+We have enabled an upgrade path to the
+<a href="https://github.com/cloudfoundry/postgres-release">CloudFoundry Postgres BOSH release</a>,
+so please follow the migration instructions carefully.
+
+Migration Instructions:
+
+1. Upload the Cloud Foundry Postgres release to the same BOSH director controlling
+your current Concourse installation. We have tested this upgrade path with version 20,
+currently available on <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release?version=20">bosh.io</a>
+
+2. Once the release is uploaded, add a reference to the job in your Concourse deployment manifest.
+Swap out the `concourse/postgresql` job for `postgres/postgres`.
+
+3. In the same Concourse deployment manifest, update the ATC properties to explicilty configure the database
+and role. You can refer to our <a href="https://github.com/concourse/concourse/commit/17be5f144a799e344c9d1bb56d9595ff164c96ef">
+changes on the single-vm manifest</a> as a reference point.
+
+4. Note that the Postgres DB upgrade **must not** be combined in the same deployment
+operation as a stemcell update
+
+####Garden runC
+Concourse 3.6.0 now requires Garden runC v1.9.0. Make sure you download the appropriate
+version of Garden runC and recreate your workers
+
+###<a id="features"></a>Features
+* `fly validate-pipeline` will now validate the `config` field on embedded tasks.
+As a part of this change we have removed support for configuring both `config`
+and `file`, which was depracated already
+* Build logs now have timestamps. You can find more about it on the feature post <a href="https://medium.com/concourse-ci/build-page-improvements-64ebe663a7ec">here</a>
+* Build page now supports keyboard shortcuts. You can find more about it on the feature post <a href="https://medium.com/concourse-ci/build-page-improvements-64ebe663a7ec">here</a>.
+**KNOWN ISSUE:** keyboard shortcuts are currently non-functional on Firefox browsers
+
+### <a id="bug-fixes"></a> Bug Fixes
+* Fixed an issue with pipeline scheduling that would result in high database connection usage
+* Fixed an issue where clicking and dragging on the pipeline view would send you to the job page
+
+
 ## <a id="release-notes"></a> Release Notes for Concourse v3.5.0
 <strong>Sep 25, 2017</strong>
 
@@ -13,7 +57,7 @@ owner: Concourse
 * Parallelized garbage collection. This should make things more durable to a slow worker, and make it harder for containers and volumes to "pile up" when the ATC is out of service briefly (i.e. during a deploy)
 * BaggageClaim's response header timeout is now configurable, which should help those with large images that they're using for privileged tasks.
 
-####Fly CLI 
+####Fly CLI
 * When using groups in pipelines, `fly` will now let you know when you forgot to assign a job to a group
 * `fly` now prints a URL to your build page when you run `execute`
 * The fly command for <a href="http://concourse.ci/fly-set-team.html">`set-team`</a> and <a href="http://concourse.ci/fly-destroy-team.html">`destroy-team`</a> now lets you supply the flag `--non-interactive`
@@ -21,13 +65,13 @@ owner: Concourse
 * The `fly` CLI can now format a pipeline configuration into its 'canonical form' using the new <a href="http://concourse.ci/fly-format-pipeline.html">`format-pipeline`</a> command
 * The <a href="http://concourse.ci/fly-abort-build.html">`abort-build`</a> command can now abort by build ID
 
-####Resources 
+####Resources
 * The <a href="https://github.com/concourse/semver-resource">Semver resource</a> now supports Google Cloud Storage
 * The <a href="https://github.com/concourse/bosh-deployment-resource">Bosh Deployment</a> resource now uses the latest BOSH CLI
 * The <a href="https://github.com/concourse/semver-resource">Semver resource</a> now supports Server Side Encryption
 * The <a href='https://github.com/concourse/git-resource'>Git resource</a> will now save the committer email to `.git/committer`
 
-####Web UI 
+####Web UI
 * The legend on the pipeline page will now auto-hide after 10 seconds.
 * When switiching between pipelines, the UI will now fit the pipeline in view.
 * You can also press 'F' center a pipeline in view.
@@ -39,7 +83,7 @@ owner: Concourse
 * Previously, if a resource or resource type was parameterized via a credential manager, its check containers and caches would be mistakenly garbage-collected. They will now be kept around.
 * Fixed an issue where the pipeline view will reset after a state change on the pipeline.
 * Added the appropriate headers to stop GitHub from caching badges
-* Fixed an issue with the garbage collector that happens when deleting teams 
+* Fixed an issue with the garbage collector that happens when deleting teams
 * Files with the `setuid` and `setgid` permissions set on them will no longer have them removed. This used to be lost with the `chown` performed for namespacing the files. We'll now restore it after the `chown`.
 * The flags for configuring GitLab oAuth are now present in <a href="http://concourse.ci/fly-set-team.html">`set-team`</a>
 * Fixed an underflow in BaggageClaim's volume size detection
