@@ -19,20 +19,24 @@ Note: you **do not** need to follow these instructions if your Concourse deploym
 
 Migration Instructions:
 
-1. Upload the Cloud Foundry Postgres release to your BOSH director. We have
+1. If you have not done so already, upgrade your Concourse to 3.5.0. Concourse 3.5.0
+includes a change to the postgres job that moves its data to a new location where
+the Cloud Foundry Postgres release will detect and upgrade from.
+
+2. Upload the Cloud Foundry Postgres release to your BOSH director. We have
 tested this upgrade path with version 20, currently available on
 <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release?version=20">bosh.io</a>
 
-2. Once the release is uploaded, add a reference to the job in your Concourse
+3. Once the release is uploaded, add a reference to the job in your Concourse
  deployment manifest. You can do this by swapping out the `concourse/postgresql`
   job for `postgres/postgres`.
 
-3. In the same Concourse deployment manifest, update the ATC properties to
+4. In the same Concourse deployment manifest, update the ATC properties to
 explicilty configure the database name and role. These values will vary based on your
 deployment preferences. You can refer to our <a href="https://github.com/concourse/concourse/commit/17be5f144a799e344c9d1bb56d9595ff164c96ef">
 changes on the single-vm Concourse manifest</a> as a reference point.
 
-4. Note that the Postgres DB upgrade **must not** be combined in the same deployment
+5. Note that the Postgres DB upgrade **must not** be combined in the same deployment
 operation as a stemcell update
 
 ####Garden runC
