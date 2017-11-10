@@ -9,42 +9,47 @@ owner: Concourse
 ###<a id="breaking-changes"></a> BREAKING CHANGES
 
 ####Postgres
-Concourse 3.6.0 now **requires** you to install and manage an external PostgreSQL v9.5 and above.
-We have enabled an upgrade path to the
-<a href="https://github.com/cloudfoundry/postgres-release">CloudFoundry Postgres BOSH release</a>,
-so please follow the migration instructions carefully.
+Concourse 3.6.0 now **requires** you to install and manage an external
+PostgreSQL database (v9.5+). We have enabled an upgrade path to the
+<a href="https://github.com/cloudfoundry/postgres-release">CloudFoundry Postgres BOSH release</a> for your convenience.
+
+Note: you **do not** need to follow these instructions if your Concourse deployment
+ already connects to an external PostgreSQL database (v9.5+)
+
 
 Migration Instructions:
 
-1. Upload the Cloud Foundry Postgres release to the same BOSH director controlling
-your current Concourse installation. We have tested this upgrade path with version 20,
-currently available on <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release?version=20">bosh.io</a>
+1. Upload the Cloud Foundry Postgres release to your BOSH director. We have
+tested this upgrade path with version 20, currently available on
+<a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release?version=20">bosh.io</a>
 
-2. Once the release is uploaded, add a reference to the job in your Concourse deployment manifest.
-Swap out the `concourse/postgresql` job for `postgres/postgres`.
+2. Once the release is uploaded, add a reference to the job in your Concourse
+ deployment manifest. You can do this by swapping out the `concourse/postgresql`
+  job for `postgres/postgres`.
 
-3. In the same Concourse deployment manifest, update the ATC properties to explicilty configure the database
-and role. You can refer to our <a href="https://github.com/concourse/concourse/commit/17be5f144a799e344c9d1bb56d9595ff164c96ef">
-changes on the single-vm manifest</a> as a reference point.
+3. In the same Concourse deployment manifest, update the ATC properties to
+explicilty configure the database name and role. These values will vary based on your
+deployment preferences. You can refer to our <a href="https://github.com/concourse/concourse/commit/17be5f144a799e344c9d1bb56d9595ff164c96ef">
+changes on the single-vm Concourse manifest</a> as a reference point.
 
 4. Note that the Postgres DB upgrade **must not** be combined in the same deployment
 operation as a stemcell update
 
 ####Garden runC
-Concourse 3.6.0 now requires Garden runC v1.9.0. Make sure you download the appropriate
-version of Garden runC and recreate your workers
+Concourse 3.6.0 now requires Garden runC 1.9.0. Make sure you download the appropriate
+version of Garden runC and recreate your workers.
 
 ###<a id="features"></a>Features
 * `fly validate-pipeline` will now validate the `config` field on embedded tasks.
 As a part of this change we have removed support for configuring both `config`
-and `file`, which was depracated already
+and `file`, which has been depracated.
 * Build logs now have timestamps. You can find more about it on the feature post <a href="https://medium.com/concourse-ci/build-page-improvements-64ebe663a7ec">here</a>
 * Build page now supports keyboard shortcuts. You can find more about it on the feature post <a href="https://medium.com/concourse-ci/build-page-improvements-64ebe663a7ec">here</a>.
-**KNOWN ISSUE:** keyboard shortcuts are currently non-functional on Firefox browsers
+  There is a known issue where keyboard shortcuts are non-functional on Firefox browsers. This should be fixed in a subsequent release.
 
 ### <a id="bug-fixes"></a> Bug Fixes
-* Fixed an issue with pipeline scheduling that would result in high database connection usage
-* Fixed an issue where clicking and dragging on the pipeline view would send you to the job page
+* Fixed an issue with pipeline scheduling that would result in high database connection usage.
+* Fixed an issue where clicking and dragging on the pipeline view would send you to the job details page.
 
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.5.0
