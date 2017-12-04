@@ -13,10 +13,10 @@ IaaS-specific configurations, etc.
     <b>Deploying Concourse with an External PostgresDB:</b>
     <div>
       The default configuration of Concourse will install and connect to an internally
-      managed postgres database. An operator may wish to instruct Concourse to connect
-      to an externally managed postgres database instead.
+      managed Postgres database. An operator may wish to instruct Concourse to connect
+      to an externally managed Postgres database instead.
       The specific configuration changes that you will need to make can be made in the
-      properties of the atc job <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.2#p=postgresql"> here </a>
+      properties of the ATC job <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.2#p=postgresql">here</a>.
     </div>
   </li>
   <li>
@@ -24,7 +24,7 @@ IaaS-specific configurations, etc.
     <div>
       If you anticipate a heavy load on your Concourse installation, you may want
       to consider installing a Load Balancer with multiple ATCs. You can find
-      additional documentation on how to set up clusters on the docs <a href="http://concourse.ci/binaries.html#cluster-with-remote-postgres">here</a>
+      additional documentation on how to set up clusters <a href="http://concourse.ci/binaries.html#cluster-with-remote-postgres">here</a>.
     </div>
   </li>
 

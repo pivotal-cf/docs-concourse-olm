@@ -18,7 +18,7 @@ This topic provides a sample backup and restore procedure for an internal Concou
 This procedure explains how to back up a Concourse database deployed from the Concourse BOSH release.
 
 <ol>
-<li>SSH into your database VM. You may want to use <a href="https://bosh.io/docs/sysadmin-commands.html#ssh">BOSH SSH</a>.</li>
+<li>SSH into your database VM. You may want to use <a href="https://bosh.io/docs/cli-v2.html#ssh-mgmt">BOSH SSH</a>.</li>
 <li>Open a terminal window.</li>
 <li>Locate the Postgres binaries on your VM by entering the following command:<br/>
 <pre class="terminal">
@@ -61,7 +61,7 @@ Follow the steps below to restore a Concourse database.
 
 <ol>
 	<li>Insert your backup file into the database VM. You may want to use <a href="https://bosh.io/docs/cli-v2.html#errand-mgmt">BOSH SCP</a>.</li>
-	<li>SSH into your database VM. You may want to use <a href="https://bosh.io/docs/sysadmin-commands.html#ssh">BOSH SSH</a>.</li>
+	<li>SSH into your database VM. You may want to use <a href="https://bosh.io/docs/cli-v2.html#ssh-mgmt">BOSH SSH</a>.</li>
 	<li>Locate the Postgres binaries on your VM by entering the following command:<br/>
 	<pre class="terminal">ps aux | grep postgres</pre>
 	The binary location displays.
