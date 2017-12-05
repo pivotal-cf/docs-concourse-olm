@@ -13,8 +13,6 @@ Concourse 3.6.0 now **requires** you to install and manage an external
 PostgreSQL database (v9.5+). We have enabled an upgrade path to the
 <a href="https://github.com/cloudfoundry/postgres-release">CloudFoundry Postgres BOSH release</a> for your convenience.
 
-Note: You **do not** need to follow these instructions if your Concourse deployment already connects to an external PostgreSQL database (v9.5+).
-
 <p class="note"><strong>Note:</strong> You <strong>do not</strong> need to follow these instructions if your Concourse deployment already connects to an external PostgreSQL database (v9.5+).</p>
 
 Migration Instructions:
@@ -23,7 +21,7 @@ Migration Instructions:
 includes a change to the postgres job that moves its data to a new location where
 the Cloud Foundry Postgres release will detect and upgrade from.
 
-2. Upload the Cloud Foundry Postgres release to your BOSH Director. We have
+2. Upload the Cloud Foundry Postgres release to your BOSH Director. Pivotal
 tested this upgrade path with version 20, currently available on
 <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release?version=20">bosh.io</a>
 
