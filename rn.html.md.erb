@@ -3,6 +3,59 @@ title: Concourse Release Notes
 owner: Concourse
 ---
 
+## <a id="release-notes"></a> Release Notes for Concourse v3.8.0
+<strong>Feb 1, 2018</strong>
+
+###<a id="breaking-changes"></a> WARNING
+If you are currently running a version of Concourse that is older than v3.6.0 and are planning to upgrade to v3.8.0, <strong>you must first upgrade to v3.6.0 before upgrading past it!</strong>
+
+###<a id="features"></a>BREAKING
+* Concourse now support both up and down migrations. In the future, this will allow you to back out of an upgrade and revert back to a previous version of Concourse. However, this work required us to squash our migrations, so you will need to first upgrade to Concourse v3.6.0 before upgrading to v3.8.0
+* If you are upgrading from v3.6.0 you will be required to execute certain changes to your Concourse BOSH manifest.:
+   * New required `atc` property, `token_signing_key`
+   * New required `tsa` property, `token_signing_key`
+   * New required `groundcrew` property, `tsa.worker_key`, type `ssh`
+   * Removed `groundcrew` property, `tsa.private_key`, which was just the private key portion
+   * Replaced `tsa` property, `host_key`, which is now of type `ssh`, containing both the public and private portion.
+   * Removed `tsa` property, `host_public_key`; superseded by the above property
+   * Removed `tsa` property, `authorize_generated_worker_key`; no longer means anything
+   * The tsa `authorized_keys` property must now be specified. No workers are automatically authorized anymore.
+
+You can consult our canges to [`manifests/single-vm.yml`](https://gist.github.com/vito/44cdf3aafcf4ba06349e24e8c21135eb) as a reference
+
+Please also refer to Concourse BOSH release documentation on [`bosh.io`](http://bosh.io/releases/github.com/concourse/concourse?version=3.8.0)
+
+
+###<a id="features"></a> Features
+* The ATC can now be configured with an idle `timeout` for intercept sessions
+* The Generic oAuth provider can now be configured with a CA certificate
+* The Concourse Dashboard has been updated and has a new home under `beta/dashboard`. Tell us what you think about the new dashboard by commenting on our GitHub issue [#1829](https://github.com/concourse/concourse/issues/1829)
+* The [`execute`](http://concourse.ci/fly-execute.html) command will now default to `-x`, which has been replaced with a new flag, `--include-ignored`, to rever to the old behavior. In addition, `fly` will gracefully handle executions with an input that doesn't have a `.gitignore`. It will also gracefully handle inputs that are files and not directories.
+* The ATC will now use a separate database connection pool for the API and the pipeline scheduling work. This will make it so that slow API requests won't starve critical functionality.
+* Pipeline-provided resource types will no longer fail for the first two mintues after configuration
+* Jobs and steps now support [`on_abort`](http://concourse.ci/on-abort-step.html#on_abort)
+* ATC can be configured with a pure-random worker selection strategy. This can be configured by passing `--container-placement-strategy=random` through the `web` command
+* The [`jobs`](http://concourse.ci/fly-jobs.html) command now has a column indicating whether any builds are pending or started for each job
+* The [S3 resource](https://github.com/concourse/s3-resource) now supports being configured with a session token
+* Git repos encrypted with `git-crypt` will now be automatically decrypted by the [Git resource](https://github.com/concourse/git-resource)
+* The ATC can now be configured to serve a metrics endpoint for Prometheus
+* Teams now support BitBucked-based auth
+* The Git resource can now be configured with a HTTPS proxy
+* Inline task configs are now validated as part of pipeline validation
+* The CF resource can now be configured with a Docker username/password for pushing an app using a private repository
+* The Github Release resource now supports being configured with insecure: true to support private GitHub Enterprise installations
+* The Semver resource now supports being configured with skip_ssl_verification: true to support private S3-compatible blobstores
+* ATC now has a flag for using k8s secrets when running in a cluster. This change makes using the k8s credential manager an explicit choice when running inside k8s, and also allows you to use a different credential manager when running in a cluster
+
+###<a id="bug-fixes"></a>Bug Fixes
+* When the ATC is configured with multiple metrics emitters, it will now error, rather than silently picking one
+* Fixed an issue where selecting/copying the build output would also select the timestamp on the left.
+* `fly login` will now error if arguments are mistakenly given to it
+* Turns out you could easily spam the build page by holding `T` to trigger multiple builds. We've fixed that now so it only triggers a build once.
+* Fixed the web UI so that it appropriately shows that you are logged out when your session expires.
+* The deprecated Bosh Deployment resource resource contains the bosh CLI again
+* Fixed an issue with the CredHub integration that made it necessary to configure `--insecure-skip-verify`
+
 ## <a id="release-notes"></a> Release Notes for Concourse v3.6.0
 <strong>Nov 9, 2017</strong>
 
