@@ -9,6 +9,9 @@ owner: Concourse
 ###<a id="breaking-changes"></a> WARNING
 If you are currently running a version of Concourse that is older than v3.6.0 and are planning to upgrade to v3.8.0, <strong>you must first upgrade to v3.6.0 before upgrading past it!</strong>
 
+###<a id="known-issues"></a>Known Issues
+* When configuring CredHub to Concourse, you may encounter a `certificate signed by unkown authority` error. Please see [GH Issue #1873](https://github.com/concourse/concourse/issues/1873) for more details
+
 ###<a id="features"></a>BREAKING
 * Concourse now support both up and down migrations. In the future, this will allow you to back out of an upgrade and revert back to a previous version of Concourse. However, this work required us to squash our migrations, so you will need to first upgrade to Concourse v3.6.0 before upgrading to v3.8.0
 * If you are upgrading from v3.6.0 you will be required to execute certain changes to your Concourse BOSH manifest.:
