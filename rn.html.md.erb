@@ -33,12 +33,12 @@ Please also refer to Concourse BOSH release documentation on [`bosh.io`](http://
 * The ATC can now be configured with an idle `timeout` for intercept sessions
 * The Generic oAuth provider can now be configured with a CA certificate
 * The Concourse Dashboard has been updated and has a new home under `beta/dashboard`. Tell us what you think about the new dashboard by commenting on our GitHub issue [#1829](https://github.com/concourse/concourse/issues/1829)
-* The [`execute`](http://concourse.ci/fly-execute.html) command will now default to `-x`, which has been replaced with a new flag, `--include-ignored`, to rever to the old behavior. In addition, `fly` will gracefully handle executions with an input that doesn't have a `.gitignore`. It will also gracefully handle inputs that are files and not directories.
+* The [`execute`](http://concourse-ci.org/fly-execute.html) command will now default to `-x`, which has been replaced with a new flag, `--include-ignored`, to rever to the old behavior. In addition, `fly` will gracefully handle executions with an input that doesn't have a `.gitignore`. It will also gracefully handle inputs that are files and not directories.
 * The ATC will now use a separate database connection pool for the API and the pipeline scheduling work. This will make it so that slow API requests won't starve critical functionality.
 * Pipeline-provided resource types will no longer fail for the first two mintues after configuration
-* Jobs and steps now support [`on_abort`](http://concourse.ci/on-abort-step.html#on_abort)
+* Jobs and steps now support [`on_abort`](http://concourse-ci.org/on-abort-step.html#on_abort)
 * ATC can be configured with a pure-random worker selection strategy. This can be configured by passing `--container-placement-strategy=random` through the `web` command
-* The [`jobs`](http://concourse.ci/fly-jobs.html) command now has a column indicating whether any builds are pending or started for each job
+* The [`jobs`](http://concourse-ci.org/fly-jobs.html) command now has a column indicating whether any builds are pending or started for each job
 * The [S3 resource](https://github.com/concourse/s3-resource) now supports being configured with a session token
 * Git repos encrypted with `git-crypt` will now be automatically decrypted by the [Git resource](https://github.com/concourse/git-resource)
 * The ATC can now be configured to serve a metrics endpoint for Prometheus
@@ -123,10 +123,10 @@ and `file`, which has been depracated.
 ####Fly CLI
 * When using groups in pipelines, `fly` will now let you know when you forgot to assign a job to a group
 * `fly` now prints a URL to your build page when you run `execute`
-* The fly command for <a href="http://concourse.ci/fly-set-team.html">`set-team`</a> and <a href="http://concourse.ci/fly-destroy-team.html">`destroy-team`</a> now lets you supply the flag `--non-interactive`
+* The fly command for <a href="http://concourse-ci.org/fly-set-team.html">`set-team`</a> and <a href="http://concourse-ci.org/fly-destroy-team.html">`destroy-team`</a> now lets you supply the flag `--non-interactive`
 * Jobs with a pending build now have a static halo to better represent its waiting state
-* The `fly` CLI can now format a pipeline configuration into its 'canonical form' using the new <a href="http://concourse.ci/fly-format-pipeline.html">`format-pipeline`</a> command
-* The <a href="http://concourse.ci/fly-abort-build.html">`abort-build`</a> command can now abort by build ID
+* The `fly` CLI can now format a pipeline configuration into its 'canonical form' using the new <a href="http://concourse-ci.org/fly-format-pipeline.html">`format-pipeline`</a> command
+* The <a href="http://concourse-ci.org/fly-abort-build.html">`abort-build`</a> command can now abort by build ID
 
 ####Resources
 * The <a href="https://github.com/concourse/semver-resource">Semver resource</a> now supports Google Cloud Storage
@@ -141,14 +141,14 @@ and `file`, which has been depracated.
 
 ### <a id="bug-fixes"></a> Bug Fixes
 * Jobs and resources with a forward slash in their name no longer error out when loading their details.
-* Fixed a leak with goroutines that happens from <a href="http://concourse.ci/fly-intercept.html">`fly intercept`</a>
+* Fixed a leak with goroutines that happens from <a href="http://concourse-ci.org/fly-intercept.html">`fly intercept`</a>
 * Check containers will no longer be brutally destroyed if they're used too close to their expiration time.
 * Previously, if a resource or resource type was parameterized via a credential manager, its check containers and caches would be mistakenly garbage-collected. They will now be kept around.
 * Fixed an issue where the pipeline view will reset after a state change on the pipeline.
 * Added the appropriate headers to stop GitHub from caching badges
 * Fixed an issue with the garbage collector that happens when deleting teams
 * Files with the `setuid` and `setgid` permissions set on them will no longer have them removed. This used to be lost with the `chown` performed for namespacing the files. We'll now restore it after the `chown`.
-* The flags for configuring GitLab oAuth are now present in <a href="http://concourse.ci/fly-set-team.html">`set-team`</a>
+* The flags for configuring GitLab oAuth are now present in <a href="http://concourse-ci.org/fly-set-team.html">`set-team`</a>
 * Fixed an underflow in BaggageClaim's volume size detection
 * The `unpack` parameter in <a href="https://github.com/concourse/s3-resource">S3 resource</a> will no longer load the entire archive into memory, so it can be used for larger archives
 
@@ -172,17 +172,17 @@ For more details please refer to issue <a href="https://github.com/concourse/con
 * Pipeline config and team auth settings can now be encrypted in the database. See <a href="./encryption.html">Encrypting Concourse Databases</a>
 * Workers now use <code>overlay</code> instead of <code>btrfs</code> for their filesystems.
 For more details please refer to issue <a href="https://github.com/concourse/concourse/issues/1045">#1045</a>
-* New templating syntax for pipeline parameterization. See <a href="http://concourse.ci/fly-set-pipeline.html">Using ((parameters))</a>
+* New templating syntax for pipeline parameterization. See <a href="http://concourse-ci.org/fly-set-pipeline.html">Using ((parameters))</a>
 * Performance and stability enhancements from schema optimizations,  and parallelized ATC garbage collection
 * Credential Management with Vault
 * Support for GitLab oAuth configurations
 * ...and so much more! For a full history of features please visit
-the official <a href="http://concourse.ci/downloads.html">Concourse Release Notes</a>
+the official <a href="http://concourse-ci.org/downloads.html">Concourse Release Notes</a>
 
 ### <a id="bug-fixes"></a> Bug Fixes
 * Misc bug fixes and stability improvements
 * For a full history of bug fixes and known issues please visit
-the official <a href="http://concourse.ci/downloads.html">Concourse Release Notes</a>
+the official <a href="http://concourse-ci.org/downloads.html">Concourse Release Notes</a>
 
 ### <a id="known-issues"></a> Known Issues
 * Operators may encounter memory issues on the ATC while upgrading from a version of Concourse older than 3.3.0.

@@ -9,7 +9,7 @@ Continuous integration tools can grant considerable visibility into an organizat
 
 **User authorization** controls what data a user is allowed to see.
 
-The authentication methods for Concourse teams are determined by flags passed to [set-team](http://concourse.ci/fly-set-team.html). The exception to this is [main team](http://concourse.ci/teams.html#main-team), which is the default team for any Concourse  instance. <code>Main team</code> is configured as part of the initial deployment.
+The authentication methods for Concourse teams are determined by flags passed to [set-team](http://concourse-ci.org/fly-set-team.html). The exception to this is [main team](http://concourse-ci.org/teams.html#main-team), which is the default team for any Concourse  instance. <code>Main team</code> is configured as part of the initial deployment.
 
 You can enable multiple authentication methods simultaneously. If you use multiple authentication methods, users are given the choice to log in using any of them.
 
@@ -47,7 +47,7 @@ Follow GitHub's instructions to [Create an OAuth application on GitHub](https://
 **Tips:**
 <ul>
 <li>Use a recognizable name, home page, and description to help your users recognize a trusted source when they log in.</li>
-<li>Use the external URL of your Concourse server with <code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: <code>h<span>ttps</span>://ci.concourse.ci/auth/github/callback</code>.</li>
+<li>Use the external URL of your Concourse server with <code>/auth/github/callback</code> appended, for the Authorization callback URL. For example: <code>h<span>ttps</span>://ci.concourse-ci.org/auth/github/callback</code>.</li>
 </ul>
 
 ### <a id="client"></a> Configuring the Client
@@ -98,7 +98,7 @@ If you’re using the User Access and Authentication (UAA) Cloud Foundry compone
 The <code>--uaa-auth-*</code> flags allow you to authorize members of a particular space in a Cloud Foundry deployment.
 
 ## <a id="uaa-client"></a> Configuring the UAA Client
-Configure a client for Concourse with your UAA. The callback URL is the external URL of your Concourse server with `/auth/oauth/callback` appended. For example, `https://ci.concourse.ci/auth/oauth/callback`.
+Configure a client for Concourse with your UAA. The callback URL is the external URL of your Concourse server with `/auth/oauth/callback` appended. For example, `https://ci.concourse-ci.org/auth/oauth/callback`.
 
 An example client is below. This client should be stored under [uaa.clients](http://bosh.io/jobs/uaa?source=github.com/cloudfoundry/uaa-release&version=13#p=uaa.clients):
 
