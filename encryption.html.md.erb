@@ -33,10 +33,34 @@ The following things are not encrypted:
 <p class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption may cause some downtime. If your deployment uses multiple ATCs, they may not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
 
 On startup, the ATC encrypts all existing plaintext data. After this point, any new data is encrypted before it is sent over the network to the database.
+<ol>
+<li>Navigate to your Concourse manifest.</li>
+<li>Add the <code>encryption\_key</code> property to the manifest under <code>instance\_groups/web/jobs/atc/properties</code>.
+<br>Use a random 16- or 32-byte character sequence as the encryption key. </li>
 
-1. Navigate to your Concourse manifest.
-1. Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence.
-1. Redeploy.
+<pre>
+jobs:
+  - name: atc
+    release: concourse
+    properties:
+      # replace with your CI's externally reachable URL, e.g. https://ci.concourse.com
+      external_url: ((EXTERNAL-URL))
+
+      # Basic Auth is not recommended; please replace with the admin team authentication method of your choice
+      basic_auth_username:
+      basic_auth_password:
+
+      # replace with your SSL cert and key
+      #tls_cert: TLS-CERT
+      #tls_key: TLS-CERT-KEY
+
+      postgresql_database: &atc_db atc
+      # replace with an encryption key in the form of a random 16- or 32-byte character sequence
+      <strong>encryption_key: ENCRYPTION-KEY</strong>
+</pre>
+
+<li>Redeploy.</li> 
+</ol>
 
 ## <a id="rotate-key"></a> Rotating the Encryption Key
 Key rotation is a method of exchanging an outdated encryption key for a new one. Using a supported key rotation process helps preserve access to your data while maintaining consistent security.
@@ -47,6 +71,29 @@ On startup, the ATC decrypts all existing data and re-encrypts it with the new k
 <li>Navigate to your Concourse manifest.</li>
 <li>Rename the <code>encryption_key</code> property to <code>old_encryption_key</code>.</li>
 <li>Add the <code>encryption_key</code> property to the manifest with a random 16- or 32-byte character sequence.</li>
+
+<pre>
+jobs:
+  - name: atc
+    release: concourse
+    properties:
+      # replace with your CI's externally reachable URL, e.g. https://ci.concourse.com
+      external_url: ((EXTERNAL-URL))
+
+      # Basic Auth is not recommended; please replace with the admin team authentication method of your choice
+      basic_auth_username:
+      basic_auth_password:
+
+      # replace with your SSL cert and key
+      #tls_cert: TLS-CERT
+      #tls_key: TLS-CERT-KEY
+
+      postgresql_database: &atc_db atc
+      # replace with an encryption key in the form of a random 16- or 32-byte character sequence
+      <strong>old_encryption_key: OLD-ENCRYPTION-KEY</strong>
+      <strong>encryption_key: NEW-ENCRYPTION-KEY</strong>
+</pre>
+
 <li>Redeploy.</li>
 <li>Delete the <code>old_encryption_key</code> property.</li>
 </ol>
