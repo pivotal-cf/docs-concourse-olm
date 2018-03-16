@@ -7,7 +7,8 @@ Continuous integration and deployment systems are high-value targets for malicio
 
 Concourse lets you encrypt the database information at rest. By using encryption, you ensure that plaintext credentials do not exist in the database in the event of a security incident.
 
-Pivotal strongly recommends that Concourse admins enable encryption. In addition to encrypting the Concourse database, you may want to configure <a href="./credential-management.html">credential management</a> for your pipelines.
+Pivotal strongly recommends that Concourse admins enable encryption.
+In addition to encrypting the Concourse database, you might want to configure <a href="./credential-management.html">credential management</a> for your pipelines.
 
 ## <a id="values-affected"></a> Values Affected by Encryption
 When you encrypt Concourse , it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default.
@@ -30,7 +31,8 @@ The following things are not encrypted:
 
 ## <a id="enable-encryption"></a> Enabling Encryption
 
-<p class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption may cause some downtime. If your deployment uses multiple ATCs, they may not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
+<p class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption might cause some downtime.
+If your deployment uses multiple ATCs, they might not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
 
 On startup, the ATC encrypts all existing plaintext data. After this point, any new data is encrypted before it is sent over the network to the database.
 <ol>
