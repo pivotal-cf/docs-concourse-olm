@@ -12,8 +12,8 @@ Pivotal strongly recommends that Concourse admins enable encryption. In addition
 ## <a id="values-affected"></a> Values Affected by Encryption
 When you encrypt Concourse , it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default.
 
-* **Resources [sources](https://concourse-ci.org/configuring-resources.html#source)** and **resource type [sources](https://concourse-ci.org/configuring-resource-types.html#resource-type-source)**. These sources often contain private keys and other credentials for writing to or accessing the resource.
-* **Task step [parameters](https://concourse-ci.org/task-step.html#task-params)**, **put step [parameters](https://concourse-ci.org/put-step.html#put-params)**, and **get step [parameters](https://concourse-ci.org/get-step.html#get-params)**. Parameters are often used to configure access to an external deployment with which a task is integrating.
+* **Resources [sources](https://concourse-ci.org/resources.html#resource-source)** and **resource type [sources](https://concourse-ci.org/resource-types.html#resource-type-source)**. These sources often contain private keys and other credentials for writing to or accessing the resource.
+* **Task step [parameters](https://concourse-ci.org/tasks.html#task-params)**, **put step [parameters](https://concourse-ci.org/put-step.html#put-step-put)**, and **get step [parameters](https://concourse-ci.org/get-step.html#get-step-get)**. Parameters are often used to configure access to an external deployment with which a task is integrating.
 * **Team auth configurations.** These often contain OAuth client secrets.
 
 The following things are not encrypted:
@@ -21,7 +21,7 @@ The following things are not encrypted:
 <li><strong>Build logs</strong></li>
 <li><strong>Resource versions</strong></li>
 <li><strong>Resource metadata</strong><br/>
-<p class="note"><strong>Note</strong>: If your pipeline is <a href="https://concourse-ci.org/fly-expose-pipeline.html">exposed</a>, resource metadata is publicly visible. It should never contain credentials.
+<p class="note"><strong>Note</strong>: If your pipeline is <a href="https://concourse-ci.org/managing-pipelines.html#fly-expose-pipeline">exposed</a>, resource metadata is publicly visible. It should never contain credentials.
 </p>
 </li>
 <li><strong>Component names</strong>, like pipeline names or job names. Resources and jobs specifically exist in their own tables, with their names in plaintext, and only their config encrypted.
