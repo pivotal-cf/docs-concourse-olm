@@ -43,6 +43,8 @@ instance_groups:
       #tls_key: YOUR-TLS-CERT-KEY
 
       postgresql_database: &atc_db atc
+      # replace with an encryption key in the form of a random 16- or 32-byte character sequence
+      #encryption_key: YOUR-ENCRYPTION-KEY
   - name: tsa
     release: concourse
     properties: {}
