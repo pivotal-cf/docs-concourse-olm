@@ -5,23 +5,23 @@ owner: Concourse
 
 This topic broadly outlines techniques for troubleshooting your Concourse for PCF installation.
 
-## Concourse for PCF Log Collection
+##<a id="logs"></a> Concourse for PCF Log Collection
 
 Find the logs for a specific job in the VM on which that job was running. Those logs are stored at <code>/var/vcap/sys/log/<<span>C</span>ONCOURSE-JOB-NAME>/*.log</code>.
 
-## Troubleshooting With Fly Commands
+##<a id="fly"></a> Troubleshooting with Fly Commands
 
 To get help on all `fly` commands, run: `fly --help`.
 
 The following selected `fly` commands give you useful information to help you troubleshoot Concourse for PCF environments and pipelines.
 
 
-### Troubleshooting Concourse for PCF Environments
+###<a id="environments"></a> Troubleshooting Concourse for PCF Environments
 
 You can use the following `fly` commands to troubleshoot possible environment problems.
 
 <table class="nice">
-<th>fly command</th><th>Description</th>
+<th width=20%>Fly Command</th><th>Description</th>
 <tr>
 <td><code>containers</code></td><td>Lists active containers.
 This confirms which container or task is placed on which worker.</td></tr>
@@ -36,7 +36,7 @@ Stops Concourse for PCF from tracking an out-of-commission worker.</td></tr>
 Checks disk usage across workers.</td></tr>
 </table>
 
-### Troubleshooting Pipelines
+###<a id="pipelines"></a> Troubleshooting Pipelines
 
 You can use the following `fly` commands to troubleshoot possible pipeline problems.
 
@@ -62,7 +62,7 @@ This is useful when developing a new resource.</td></tr>
 This is useful for spinning up a task quickly to test it before putting it in a job.</td></tr>
 </table>
 
-## Common Concourse for PCF Issues
+##<a id="common-issues"></a> Common Concourse for PCF Issues
 
 The following shows some common problems and solutions.
 
@@ -104,7 +104,7 @@ The following shows some common problems and solutions.
   </tr>
 </table>
 
-## Other Troubleshooting Resources
+##<a id="other-resources"></a> Other Troubleshooting Resources
 
 The following links provide other troubleshooting resources.
 
