@@ -11,73 +11,107 @@ Find the logs for a specific job in the VM on which that job was running. Those 
 
 ## Troubleshooting With Fly Commands
 
-### Concourse for PCF environment troubleshooting
-<code>containers</code>: Lists active containers<br/>
-This confirms which container or task got placed on which worker<br/>
-<code>workers</code>: Lists registered workers<br/>
-This helps you verify that the number of containers aren't exceeding maximum allowable number of containers on a worker.<br/>
-<code>prune-worker</code>: Reaps a non-running worker<br/>
-Stops Concourse for PCF from tracking an out-of-commission worker.<br/>
-<code>volumes</code>: Lists active volumes<br/>
-Checks disk usage across workers.<br/>
+To get help on all `fly` commands, run: `fly --help`.
 
-### Pipeline troubleshooting:
-<code>pipelines</code>: Lists configured pipelines<br/>
-<code>builds</code>: Shows build history<br/>
-This is useful for getting build IDs of one-off tasks you've run using <code>execute</code>.<br/>
-<code>validate-pipeline</code>: Validates a pipeline's configuration<br/>
-Checks pipeline for validity without calling <code>set-pipeline</code>.<br/>
-<code>check-resource</code>: Checks for new versions<br/>
-This is useful when developing a new resource.<br/>
-<code>watch</code>: View logs of in-progress builds<br/>
-<code>intercept</code>: Accesses a running or recent build's steps<br/>
-<code>execute</code>: Submits local tasks<br/>
-This is useful for spinning up a task quickly to test before putting it in a job.<br/>
+The following selected `fly` commands give you useful information to help you troubleshoot Concourse for PCF environments and pipelines.
+
+
+### Troubleshooting Concourse for PCF Environments
+
+You can use the following `fly` commands to troubleshoot possible environment problems.
+
+<table class="nice">
+<th>fly command</th><th>Description</th>
+<tr>
+<td><code>containers</code></td><td>Lists active containers.
+This confirms which container or task is placed on which worker.</td></tr>
+<tr>
+<td><code>workers</code></td><td>Lists registered workers.
+This helps you verify that the number of containers does not exceed the maximum number allowable.</td></tr>
+<tr>
+<td><code>prune-worker</code></td><td>Removes a non-running worker.
+Stops Concourse for PCF from tracking an out-of-commission worker.</td></tr>
+<tr>
+<td><code>volumes</code></td><td>Lists active volumes.
+Checks disk usage across workers.</td></tr>
+</table>
+
+### Troubleshooting Pipelines
+
+You can use the following `fly` commands to troubleshoot possible pipeline problems.
+
+<table class="nice">
+<th>fly command</th>
+<th>Description</th>
+<tr>
+<td><code>pipelines</code></td><td>Lists configured pipelines.</td></tr>
+<tr>
+<td><code>builds</code></td><td>Shows build history.
+This is useful for listing build IDs of one-off tasks ran previously using <code>execute</code>.</td></tr>
+<tr>
+<td><code>validate-pipeline</code></td><td>Validates a pipeline's configuration without calling <code>set-pipeline</code>.</td></tr>
+<tr>
+<td><code>check-resource</code></td><td>Checks for new versions.
+This is useful when developing a new resource.</td></tr>
+<tr>
+<td><code>watch</code></td><td>Shows logs of in-progress builds.</td></tr>
+<tr>
+<td><code>intercept</code></td><td>Displays build steps for a running or recent build.</td></tr>
+<tr>
+<td><code>execute</code></td><td>Submits local tasks.
+This is useful for spinning up a task quickly to test it before putting it in a job.</td></tr>
+</table>
 
 ## Common Concourse for PCF Issues
+
+The following shows some common problems and solutions.
+
 <table>
   <th>Problem</th>
-  <th>Error</th>
+  <th>Error Description</th>
   <th>Solution</th>
-  <th>Other information</th>
   <tr>
     <td>The worker is out of disk space</td>
-    <td>An error displays about inability to create volume. It may say permissions are denied.</td>
-    <td>Increase persistent disk for worker or increase number of worker VMs.</td>
-    <td>N/A</td>
+    <td>An error states there is an inability to create a storage volume and may state that permissions are denied.</td>
+    <td>Increase persistent disk size for the worker or increase the number of worker VMs.</td>
   </tr>
   <tr>
-    <td>Container limit reached</td>
-    <td>Cannot create container: limit of 250 containers reached</td>
-    <td>Check fly containers<br/>
-    Increase number of worker VMs<br/>
-    Decrease <code>gc_interval</code> if set to custom value (a large interval could mean that expired containers are kept around long enough that they build up)</td>
-    <td>This error state is unlikely to appear.</td>
+    <td>Container limit is reached</td>
+    <td>Cannot create container: limit of 250 containers reached<br><br>This error state is unlikely to appear.</td>
+    <td><ol><li>Check fly containers.</li>
+    <li>Increase number of worker VMs.</li>
+    <li>Decrease <code>gc_interval</code> if set to custom value. A large interval could mean that there are too many expired containers.</li></td>
   </tr>
   <tr>
-    <td>Job doesn't start</td>
-    <td>This error may present as the build getting stuck in Pending state</td>
-    <td>Restart the ATC job.<br/>
-    To restart the ATC, log in as a root user on Concourse for PCF web VMs (the ones on which ATC job is located), then running <code>monit restart atc</code>.</td>
-    <td>N/A</td>
+    <td>Job does not start</td>
+    <td>This error may present as the build getting stuck in Pending state.</td>
+    <td>Restart the ATC job:<br/>
+    <ol><li>Log in as a root user on Concourse for PCF web VMs where the ATC job is located.</li>
+      <li>Run the <code>monit restart atc</code> command.</td>
   </tr>
   <tr>
-    <td>Updating Concourse for PCF in Concourse for PCF job fails</td>
-    <td>When a build fails after BOSH deploying a Concourse for PCF update from a job running on that Concourse for PCF instance, typically the job will error with "worker for container not found." This is expected behavior; the BOSH Director will recreate the worker VM.</td>
+    <td>Build fails when updating Concourse for PCF from a job on the same instance</td>
+    <td>When a build fails after BOSH deploys a Concourse for PCF update from a job running on that 
+    Concourse for PCF instance, typically the job fails with a "worker for container not found" error.
+  This is expected behavior; the BOSH Director will recreate the worker VM.</td>
     <td>Run the job again.</td>
-    <td>N/A</td>
   </tr>
   <tr>
-    <td>BOSH Can't Finish Worker Upgrade While Tasks Running</td>
-    <td>If you have a long running task, BOSH won't be able to finalize the upgrade by restarting the worker job until all of the work has stopped.</td>
-    <td>Wait for the work to complete.<br/>
-    If you need to accomplish this quickly, cancel running tasks and jobs.</td>
-    <td>N/A</td>
+    <td>BOSH cannot finish worker upgrade while tasks are running</td>
+    <td>BOSH is not able to restart the worker job to finalize the upgrade until all work is completed.  </td>
+    <td>If you have a long-running task, wait for the task to be completed.<br/>
+    If you need to upgrade quickly, cancel running tasks and jobs.</td>
   </tr>
 </table>
 
 ## Other Troubleshooting Resources
 
-For information about metrics for monitoring Concourse, see [Metrics](https://concourse-ci.org/metrics.html).
-For information about enabling syslog forwarding and about getting logs for other Concourse components, see [VM Logs](https://bosh.io/docs/job-logs.html).
-For information about common BOSH issues, see [the BOSH tips](https://bosh.io/docs/tips.html).
+The following links provide other troubleshooting resources.
+
+<table>
+  <th>Topic</th><th>Link</th>
+<tr>
+<tr><td>Enabling syslog forwarding and getting logs for other Concourse components</td><td><a href="https://bosh.io/docs/job-logs.html">VM Logs</a></td></tr>
+<tr>
+<td>Common BOSH issues</td><td><a href="https://bosh.io/docs/tips.html">BOSH tips</a></td></tr>
+</table>
