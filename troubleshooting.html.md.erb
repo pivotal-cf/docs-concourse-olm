@@ -5,9 +5,7 @@ owner: Concourse
 
 This topic broadly outlines techniques for troubleshooting your Concourse for PCF installation.
 
-##<a id="logs"></a> Concourse for PCF Log Collection
 
-Find the logs for a specific job in the VM on which that job was running. Those logs are stored at <code>/var/vcap/sys/log/<<span>C</span>ONCOURSE-JOB-NAME>/*.log</code>.
 
 ##<a id="fly"></a> Troubleshooting with Fly Commands
 
@@ -103,6 +101,17 @@ The following shows some common problems and solutions.
     If you need to upgrade quickly, cancel running tasks and jobs.</td>
   </tr>
 </table>
+
+##<a id="logs"></a> Access Concourse for PCF Logs
+
+You may need to contact Pivotal Support for help identifying a problem. 
+In that case, support may ask you to send log files.
+
+* To display Concourse for PCF logs, run the command: `bosh logs -d DEPLOYMENT-NAME` where `DEPLOYMENT-NAME` is the name of your BOSH deployment.
+
+* To find the logs for a specific job running in a VM, look in the following directory: 
+  <code>/var/vcap/sys/log/<<span>C</span>ONCOURSE-JOB-NAME>/*.log</code>.
+
 
 ##<a id="other-resources"></a> Other Troubleshooting Resources
 
