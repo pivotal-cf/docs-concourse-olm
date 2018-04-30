@@ -6,9 +6,23 @@ continuously deploying and managing Pivotal Cloud Foundry (PCF).
 
 # Book Repo
 
-docs-book-concourse-olm
+https://github.com/pivotal-cf/docs-book-concourse-olm
 
 # Branches
 
 * **master** - Use this one
 * **updates** - DO NOT USE
+
+# Pipeline
+
+There is only one pipeline for this doc at the moment: 
+
+https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services?groups=concourse-olm
+
+# Staging and Production Sites
+
+Changes to the **master** branch in this repo appear here:
+
+Staging: http://docs-pcf-staging.cfapps.io/p-concourse/index.html
+
+Production (public): https://docs.pivotal.io/p-concourse/index.html - Making changes public requires a manual push to production.
