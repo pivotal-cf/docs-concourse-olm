@@ -7,3 +7,8 @@ continuously deploying and managing Pivotal Cloud Foundry (PCF).
 # Book Repo
 
 docs-book-concourse-olm
+
+# Branches
+
+* **master** - Use this one
+* **updates** - DO NOT USE
