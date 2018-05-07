@@ -3,6 +3,57 @@ title: Concourse Release Notes
 owner: Concourse
 ---
 
+## <a id="release-notes"></a> Release Notes for Concourse v3.9.2
+<strong>May 8, 2018</strong>
+
+###<a id="known-issues"></a>Known Issues
+* Certificate propogation breaks Alpine OpenJDK images. See GitHub issue [#2042](https://github.com/concourse/concourse/issues/2042)
+
+###<a id="features"></a> Features
+* Certificates can now be automatically propagated from the worker machine into
+resource containers. This resolves GitHub issue [#1027](https://github.com/concourse/concourse/issues/1027).
+This feature is enabled when you install Concourse v3.9.2. Please refer to the  OSS documentation
+on [Certificate Propagation](https://concourse-ci.org/implementing-resources.html#resource-certs
+) for more details.
+* Concourse Dashboard has been graduated out of beta and can now be found under `dashboard/`
+* Tasks now support [`inputs.optional`](https://concourse-ci.org/tasks.html#input-optional)
+* [CredHub credential manager integration](https://concourse-ci.org/creds.html#credhub) can now
+be configured with mutal TLS based Authentication
+* Teams can now be renamed via the `fly` command [`rename-team`](https://concourse-ci.org/managing-teams.html#fly-rename-team)
+* `fly` target will no longer be deted when running `fly logout`, just the token
+* Resource page on the web UI will now show when it last checked
+* `Docker Image` resource supports loading multiple images at the start via `load_bases` for use in multi-part Dockerfiles
+* When using `fly intercept` with `--url`, the appropriate target will now be auto-detected based on the URL
+* The Prometheus metrics endpoint now includes scheduling and database metrics
+* Added support for NewRelic Insights metric emitter
+* Added support for using AWS SSM for credential management
+* The `CF resource` now has a `show_app_log` config for tailing the app logs while starting it up
+* The `Docker Image` resource will now propagate `http_proxy` and `https_proxy` when building docker images
+* The `Docker Image` resource can now be configured with `max_concurrent_downloads` and `max_concurrent_uploads`
+* The `Github Release` resource will now produce a `commit_sha` file containing the commit sha that the release's tag points to
+* Thet build page on the web UI can now render exotic ANSI text modes (e.g. faint text, framed text, Fraktur)
+
+
+###<a id="bug-fixes"></a>Bug Fixes
+* Modified a configuration on the `btrfs` volume driver, making it much more stable to use
+* `Docker Image` resource now correctly handles complicated build arguments
+* `s3-resource` will now auto-adjust the part size so it can upload files over 50GB
+* Multi-part Dockerfiles with multiple ECR images will now correctly pull each with ECR login support
+* Reduced the throttling when talking to k8s for credential management
+* The Prometheus metrics endpoint no longer breaks HTTP metrics down by path
+* When contacting CredHub, the configured CA cert is now respected. It was ignored in previous releases
+* Fixed HTTP 500 errors when running `fly volumes` as a result of volumes disappearing while the API walks through and gets their info.
+* Fixed missing validation for `on_success`, `on_failure`, and `ensure` when configured on a job
+* Fixed a subtle timing issue that could result in `fly watch` not finding any builds to watch when given a job.
+* We've optimized the rendering of the build page, which got quite a bit slower
+with the introduction of timestamps in v3.6.0
+* Fixed a crash that would occur when a `task` step configured `image` but no `config` or `file`\
+* The `fly` CLI will now buffer output when rendering tables, which should make things a bit faster on Windows.
+* Removed a database constraint `cannot_invalidate_during_initialization`
+* Fixed an issue where builds would occasionally fail with `http2: no cached connection was available` when interacting with Vault
+* Certain ANSI cursor movement escape sequences would wreak havoc on the Concourse build output page because there was no window size set on the TTY, thus defaulting it to 80x24. We've set it to 500x500
+* Fixed an issue where Firefox users couldn't click around on the build page.
+
 ## <a id="release-notes"></a> Release Notes for Concourse v3.8.0
 <strong>February 1, 2018</strong>
 
@@ -12,7 +63,7 @@ If you are currently running a version of Concourse that is older than v3.6.0 an
 ###<a id="known-issues"></a>Known Issues
 * When configuring CredHub to Concourse, you may encounter a `certificate signed by unkown authority` error. Please see [GH Issue #1873](https://github.com/concourse/concourse/issues/1873) for more details
 
-###<a id="features"></a>BREAKING
+###<a id="breaking"></a>BREAKING
 * Concourse now support both up and down migrations. In the future, this will allow you to back out of an upgrade and revert back to a previous version of Concourse. However, this work required us to squash our migrations, so you will need to first upgrade to Concourse v3.6.0 before upgrading to v3.8.0
 * If you are upgrading from v3.6.0 you will be required to execute certain changes to your Concourse BOSH manifest.:
    * New required `atc` property, `token_signing_key`
