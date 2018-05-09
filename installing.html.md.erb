@@ -19,7 +19,7 @@ Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delive
 ## <a id="setup"></a> Setting Up and Installing Concourse
 <ol>
  <li>Configure your IaaS environment by modifying your cloud config for BOSH deployment. </li>
- <li>Prepare the Concourse deployment manifest. You can write your own manifest or <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml">modify a template</a> with your unique configuration. You can read more about BOSH deployment configurations in the `concourse-bosh-deployment` repo for <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md">cluster deployments</a><br/>
+ <li>Prepare the Concourse deployment manifest. You can write your own manifest or <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml">modify a template</a> with your unique configuration. You can read more about BOSH deployment configurations in the <code>concourse-bosh-deployment</code> repo for <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md">cluster deployments</a><br/>
  <p class="note"><strong>Note</strong>: You will also need to configure authentication. Follow the instructions in <a href="./authenticating.html">Authentication</a>.<br/>
 Provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</p></li>
 <li>Prepare the <code>cloud-config.yml</code> file and upload it to your BOSH Director with <code>bosh update-cloud-config</code>.<br/>
