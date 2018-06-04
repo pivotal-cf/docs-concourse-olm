@@ -3,6 +3,121 @@ title: Concourse Release Notes
 owner: Concourse
 ---
 
+## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
+<strong>June 4, 2018</strong>
+
+###<a id="known-issues"></a>Known Issues
+<p class="note"><strong>Warning</strong>
+  A bug in Chrome 67 causes it to crash when loading the Concourse UI.  At the
+  time of this notice (June 4, 2018) the dev/canary versions of Google Chrome
+  should work, as well as other browsers like Firefox and Safari.
+  You can follow along the issue in GitHub issue <a href="https://github.com/concourse/concourse/issues/2236">#2236</a>
+</p>
+
+* This release involves a worker protocol version bump, from 1.3 to 2.0, and
+also switches the default `BaggageClaim` driver back to `btrfs`.
+We recommend spinning up a new pool of worker nodes, upgrading your web nodes,
+and then removing the old workers. Otherwise your workers may get swarmed with containers,
+if only one 2.0 worker is added at a time with the web nodes already upgraded.
+
+###<a id="features"></a> Features
+* Added a new authentication provider for teams using OpenID Connect (OIDC) ([PR #2](https://github.com/concourse/skymarshal/pull/2))
+* Concourse can now emit to Datadog using `statsd` agent
+* The `semver` resource now supports an optional `commit_message` parameter
+* The dashboard now supports the "not" operator for searches. This can be used on pipeline name searches, team searches, and status searches. Here are some examples:
+     * `-main` gives you every pipeline other than the one called main
+     * `team:-main` gives you every team's pipeline other than the ones belonging to main
+     * `status:-paused` gives you all pipelines that are not paused
+* The ATC will now batch-delete containers and volumes, rather than making
+  individual calls out to the worker
+* The ATC can now be configured with a global [`default build_logs_to_retain`](https://concourse-ci.org/jobs.html#job-build-logs-to-retain).
+  This is useful for operators who want more control over their database usage.
+  A maximum value can also be configured to ensure users don't set an unreasonable value.
+  The flags are `--default-build-logs-to-retain` and `--max-build-logs-to-retain`.
+* The `fly set-pipeline` command will no longer prompt `apply configuration?` if there are no changes to apply.
+* There's a `fly order-pipelines` command now, which allows you to set the order of pipelines in the web UI.
+* A `fly status` command has been added for checking whether or not you're logged in to the given target.
+* When `fly check-resource` fails, it'll bubble up the error message rather than just saying `error code 500`.
+* When a previously-created volume disappears from a worker and the ATC tries to
+  use it, the error message will now include the worker name and the volume handle
+* `git-resource` can be configured to disable the fetching of tags; you can do
+   this by configuring `clean_tags: true` in `params`
+* The `/dashboard` page is mobile responsive and looks better on small screens
+* The `/dashboard` page makes way fewer requests now, so it's a lot faster to
+  load and more efficient to periodically refresh.
+* The `fly builds` command can now filter by team (`-t`) or pipeline (`-p`)
+* Concourse now supports [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/)
+  for credential management. Please refer to our docs on [Using Amazon SSM](https://concourse-ci.org/creds.html#ssm)
+* The Vault credential manager can now be configured with a `--vault-auth-backend-max-ttl`,
+  after which it will force a re-login
+* The Vault credential manager will now retry with exponential backoff when
+  logging in, rather than retrying every second.
+* The Git resource will now make the commit message accessible under `.git/commit_message`
+* The web node can now be configured with `--cookie-secure` to force `secure: true` on its cookies.
+* The Github Release resource now supports a `tag_filter` configuration for matching arbitrary semver tags
+* The Docker Image resource now supports configuring `aws_session_token`
+* The Docker Image resource now has a new param, `cache_from`. This new param is
+  like `load_bases` except everything loaded will also be used as a cache during the build.
+* `fly validate-pipeline` with `--strict` will now be more strict with your YAML
+* The CF resource now supports `verbose: true`, which will tell the CLI to dump trace logs to the output.
+* The Docker Image resource now supports a `target_name` param for specifying the
+  target to build in a multi-stage `Dockerfile`.
+* The BOSH release now bakes in the glue code for use with BOSH Backup and Restore.
+  Caveats apply, see [PR #1975](https://github.com/concourse/concourse/pull/1975)
+* The `fly set-pipeline` command can now be given `--no-color` flag to strip out the
+  color from the diffs. Instead of using color, `+` and `-` will be at the start of
+  added and removed lines.
+* Now that we're building with Go 1.10+, `fly` will respect socks5 proxies
+  configured via the "standard" `http_proxy`/`https_proxy` env vars.
+* The concourse worker commands can now be pointed at multiple TSA addresses,
+  rather than one, so that it can retry against a random node each time.
+  As part of this, we've removed the `--tsa-port` flag and changed `--tsa-host`
+  to instead take a `host:port`.
+* We've revamped how `fly execute` gets its inputs and outputs to/from the build,
+  so that configuring the ATC with an external URL is no longer required.
+  See [#2069](http://github.com/concourse/concourse/issues/2069) for the nitty-gritty.
+* We've switched back to `btrfs` as the default driver. This resolves a
+  long-standing performance issue when using privileged tasks or
+  resource types (like the [Docker Image resource](https://github.com/concourse/docker-image-resource)).
+  For more information, see [#1404](https://github.com/concourse/concourse/issues/1404)
+  and [#1966](https://github.com/concourse/concourse/issues/1966). Be sure to use
+  the latest supported stemcell version so that you have a `btrfs` with the latest
+  fixes. We suspect that this will still be an occasional issue, though far less
+  frequent.
+* The Docker Image resource now supports pushing multiple tags
+* When the ATC is streaming data between workers, the stream will now be
+  `gzip`-compressed, which should speed things up quite a bit.
+* The ATC now requires TLS v1.2+ and a [stricter set of cipher suites](https://github.com/concourse/atc/blob/ed08aa96b357a19a6dca08608108cb6e07735aa7/atccmd/command.go#L703-L707).
+
+###<a id="bug-fixes"></a>Bug Fixes
+* Work around an apparent regression/behavior change in recent versions of Chrome
+  that prevented the pipeline UI jobs from being clickable.
+* Fixed a corner case in error handling that could cause a lock to be held
+  forever when detecting new versions of resource types. This could lead
+  to things like builds stuck in "pending" state.
+* When directed to the login page from the resource page, you will now be
+  redirected back to where you were
+* The `concourse web` command is now capable of running the migration flags
+ (`--current-db-version`)
+* The `fly check-resource` command will now fail more clearly when the resource's type is not found.
+* `fly` will once again helpfully instruct you to log in rather than just saying `error: forbidden`.
+* The Time resource will now correctly handle a tricky configurations that span multiple days (e.g. 10AM - 5AM),
+* Added a missing property to the BOSH release for configuring the Generic oAuth provider's CA cert.
+* The Git resource will now recover from a deleted tag when configured with `tag_filter`
+* Previously, tags on a resource type didn't get respected, that's been addressed now.
+* Fixed an ATC crash that would occurn when a `task` step errored with the next step using
+  an `attempts` step modifier
+* Concourse now supports the newer `umask`-hardened BOSH stemcells (v3541.x).
+* Fixed a botched `bash`ism that led to the Docker Image resource to exit early
+  on certain environments (more info [here](https://github.com/concourse/docker-image-resource/issues/170)).
+* Cleaned up a noisy PostgreSQL error that would occur on start when checking
+  for the legacy `migration_version` table.
+* Fixed a UI glitch that caused the last line to be misaligned with the timestamps
+  if it had no trailing linebreak.
+* Fixed a couple migrations that assumed a `public` schema
+* `fly` will no longer repeatedly error when given an invalid token during `fly login`.
+
+
 ## <a id="release-notes"></a> Release Notes for Concourse v3.9.2
 <strong>May 8, 2018</strong>
 
