@@ -6,6 +6,16 @@ owner: Concourse
 ## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
 <strong>June 4, 2018</strong>
 
+###<a id="bosh-release"></a>BOSH Release
+The `groundcrew` job has been renamed to `worker` in this release of Concourse;
+please update your BOSH manifest accordingly.
+
+As always, you can refer to the complete documentation for the
+[3.13.0 release](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0) on [bosh.io](http://bosh.io/docs/).
+
+For usage information and sample manifests, please refer to the ops file in the **Cluster Concourse deployment**
+ [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v3.13.0/cluster) repository.
+
 ###<a id="known-issues"></a>Known Issues
 <p class="note"><strong>Warning</strong>
   A bug in Chrome 67 causes it to crash when loading the Concourse UI.  At the
@@ -13,6 +23,8 @@ owner: Concourse
   should work, as well as other browsers like Firefox and Safari.
   You can follow along the issue in GitHub issue <a href="https://github.com/concourse/concourse/issues/2236">#2236</a>
 </p>
+
+* There have been changes
 
 * This release involves a worker protocol version bump, from 1.3 to 2.0, and
 also switches the default `BaggageClaim` driver back to `btrfs`.
