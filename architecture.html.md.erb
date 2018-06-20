@@ -37,7 +37,7 @@ The following table describes the function of each Concourse component:
     <td><b>TSA</b></td>
     <td>Runs an SSH server that:
       <ul><li>Listens on port 2222.</li>
-      <li>Securely <a href="https://concourse-ci.org/components.html#component-tsa">registers worker VMs</a> for use by the ATC.</li>
+      <li>Securely <a href="https://concourse-ci.org/concepts.html#component-tsa">registers worker VMs</a> for use by the ATC.</li>
       <li>For <a href="#comms-external">external worker</a> VMs, handshakes with Beacon to open a reverse SSH tunnel for ongoing communication between the ATC and the worker.</li>
       <li>Pings workers for heartbeat every 30 seconds, updates ATC with worker metric changes, and,
           if there is no response, notifies ATC that the worker is in a <code>stalled</code> state.</li></ul>
