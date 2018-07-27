@@ -29,6 +29,11 @@ also switches the default `BaggageClaim` driver back to `btrfs`.
 We recommend spinning up a new pool of worker nodes, upgrading your web nodes,
 and then removing the old workers. Otherwise your workers may get swarmed with containers,
 if only one 2.0 worker is added at a time with the web nodes already upgraded.
+* Concourse now defaults the worker `registration_mode` to `direct`. If your
+Concourse installation uses external workers, please verify that your worker
+manifest explicitly specifies `registration_mode:forward`. For more information
+ on this new parameter, please reference the documentation on
+ [bosh.io](https://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0#p%3dtsa.registration_mode).
 
 ###<a id="features"></a> Features
 * Added a new authentication provider for teams using OpenID Connect (OIDC) ([PR #2](https://github.com/concourse/skymarshal/pull/2))
