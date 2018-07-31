@@ -103,17 +103,28 @@ Configure a client for Concourse with your UAA. The callback URL is the external
 An example client is below. This client should be stored under [uaa.clients](http://bosh.io/jobs/uaa?source=github.com/cloudfoundry/uaa-release&version=13#p=uaa.clients):
 
 <pre class="terminal">
-concourse:
-  id: MY-CLIENT-ID
-  secret: MY-CLIENT-SECRET
+uaac client add MY-CLIENT-ID \
+  --name MY-CLIENT-ID \
+  --scope cloud_controller.read \
+  --authorized_grant_types "authorization_code,refresh_token" \
+  --access_token_validity 3600 \
+  --refresh_token_validity 3600 \
+  --secret MY-CLIENT-SECRET \     
+  --redirect_uri https://concourse.example.com/auth/uaa/callback
+</pre>
+
+<pre class="terminal">
   scope: cloud_controller.read
+  client_id: MY-CLIENT-ID
+  resource_ids: none
+  authorized_grant_types: refresh_token authorization_code
+  redirect_uri: https://concourse.example.com/auth/uaa/callback
+  autoapprove:
+  access_token_validity: 3600
+  refresh_token_validity: 3600
   authorities: cloud_controller.admin
-  authorized-grant-types: "authorization_code,client_credentials,refresh_token"
-  access-token-validity: 3600
-  refresh-token-validity: 3600
-  autoapprove: true
-  override: true
-  redirect-uri: https://concourse.EXAMPLE.com/auth/uaa/callback
+  name: MY-CLIENT-ID
+  lastmodified: 1532640432000
 </pre>
 
 ### <a id="team"></a> Configuring the Team
