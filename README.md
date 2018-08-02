@@ -10,7 +10,8 @@ https://github.com/pivotal-cf/docs-book-concourse-olm
 
 # Branches
 
-* **master** - Use this one
+* **master** - In development (4.x)
+* **3.x** - Current published branch
 * **updates** - DO NOT USE
 
 # Pipeline
