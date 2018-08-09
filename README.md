@@ -10,23 +10,25 @@ https://github.com/pivotal-cf/docs-book-concourse-olm
 
 # Branches
 
-* **master** - In development (4.x)
-* **3.x** - Current published branch
-* **updates** - DO NOT USE
+| Branch name | Use for… | Protected? | Currently lives…
+|-------------| ------| ------| ------|
+| master      | In development (4.x) | ? | https://docs-pcf-staging.cfapps.io/p-concourse/4-0/ |
+| 3.x         | Current published branch | ? | https://docs.pivotal.io/p-concourse/3-0/ |
+| updates     | DO NOT USE | ? | ? |
 
 # Pipeline
 
-There is only one pipeline for this doc at the moment: 
+There are two pipelines for this doc at the moment: 
+Edge (Staging):https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-edge?groups=concourse-edge
 
-https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services?groups=concourse-olm
+Production (Public): https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services?groups=concourse-olm
 
 # Staging and Production Sites
 
 Changes to the **master** branch in this repo appear here:
+Staging: http://docs-pcf-staging.cfapps.io/p-concourse/4-0/index.html
 
-Staging: http://docs-pcf-staging.cfapps.io/p-concourse/index.html
-
-Production (public): https://docs.pivotal.io/p-concourse/index.html - Making changes public requires a manual push to production.
+Production (public): https://docs.pivotal.io/p-concourse/3-0/index.html - Making changes public requires a manual push to production.
 
 # How to do a Pull Request (PR)
 
