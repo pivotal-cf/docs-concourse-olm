@@ -4,7 +4,7 @@ owner: Concourse
 ---
 
 ## <a id="release-notes"></a> Release Notes for Concourse v4.0.0
-<strong>Sept 14, 2018</strong>
+<strong>Sept 17, 2018</strong>
 
 Concourse 4.0.0 introduces the concept of user-based team authentication. Previously,
 Concourse required you to log in under a specific team without an association to a user.
@@ -24,7 +24,7 @@ provider. The workaround to this limitation is to deploy multiple Concourse inst
 This may be something we can support in the future.
 
 * BitBucket auth is no longer supported because the underlying authentication library
-does not support it. However, Concourse 4.0.0 now supports generic LDAP, oAuth,
+does not support it. However, Concourse 4.0.0 also supports GitHub, generic LDAP, oAuth,
 and OIDC connectors.
 
 * If you have multiple teams configured with the same basic auth username,
