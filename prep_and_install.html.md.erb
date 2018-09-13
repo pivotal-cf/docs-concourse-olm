@@ -11,11 +11,12 @@ This page includes sample manifest files, references to prerequisite BOSH knowle
   <li>
     <b>Deploying Concourse with an External PostgresDB:</b>
     <div>
-      The default configuration of Concourse will install and connect to an internally
-      managed Postgres database. An operator may wish to instruct Concourse to connect
-      to an externally managed Postgres database instead.
+      Concourse v3.6.0+ no longer manages an internal
+      Postgres database with the BOSH release. An operator will need to instruct
+      Concourse to connect to an externally managed Postgres database or a BOSH
+      managed Cloud Foundry Postgres release (available on <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release">bosh.io</a>).
       The specific configuration changes that you will need to make can be made in the
-      properties of the ATC job <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.3.2#p=postgresql">here</a>.
+      properties of the ATC job <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse#p=postgresql">here</a>.
     </div>
   </li>
   <li>
