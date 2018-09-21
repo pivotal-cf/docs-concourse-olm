@@ -3,8 +3,10 @@ title: Configuring Team Authentication
 owner: Concourse
 ---
 
-This topic describes how to configue your team's authentication using authentication providers and teams.
+This topic describes how to configure your team's authentication using authentication providers and teams.
 
+
+## <a id="overview"></a> Overview
 Continuous Integration servers often contain a considerable number of secrets to let them access source code and deploy applications.
 It is important that those secrets remain well guarded.
 Concourse provides options for both authentication and authorization to give you control over who can access your server and how much they can see.
@@ -13,30 +15,30 @@ Any number of the following providers can be enabled at any one time.
 Users are given a choice when logging in as to which one they want to use.
 
 <p class="note"><strong>Note:</strong>
-If you access your Concourse server over the public internet, then you should
-consider using TLS to secure your connection to the web node.
+If you access your Concourse server over the public internet, then consider using TLS to secure your connection to the web node.
 </p>
 
 Configuring team authentication in Concourse is done in two parts:
 
 1. Configure the allowed authentication providers in the deployment manifest.
+See [Configure Authentication Providers](#configuring) below.
 2. Add users and groups to Concourse teams using `fly set-team`.
-
+See [Add Users and Groups to Teams](#adding) below.
 
 ## <a id="configuring"></a> Configure Authentication Providers
-Concourse can be configured to use local users, GitHub, generic LDAP, Cloud Foundry, oAuth,
+Concourse can be configured to use local users, GitHub, generic LDAP, Cloud Foundry, OAuth,
 and OIDC as authentication providers.
 You must specify the allowed authentication providers before Concourse is deployed.
 
 A Concourse operator needs to provide the following information in their Concourse deployment manifest:
 
 * A list of allowed local users.
-* Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, oAuth, and OIDC).
+* Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, OAuth, and OIDC).
 * Users who should be members of the default `main` team (either local users or users/groups from external authentication providers).
 
 ### <a id="local-users"></a> Local Users
 Local users must be declared in the `add_local_users` of the `atc` job in the deployment manifest.
-Passwords can be supplied in plaintext or as a bcrypted string (minimum 10 rounds)
+Passwords can be supplied in plaintext or as a bcrypted string (minimum 10 rounds).
 
 Example:
 <pre class="code">
@@ -44,12 +46,12 @@ Example:
 - user2:$2y$10$W9542XKXzG5aedX09AlSg.nr0IwejlWosCWXzRKl1eOFzdpgOrGcG
 </pre>
 
-<p class="note"> <code>user1</code> and <code>user2</code> do not yet have access to any teams - they must be granted access on a team-by-team basis (see <a href="authenticating.html#adding">Add Users and Groups to Teams</a>).</p>
+<p class="note"><strong>Note:</strong><code>user1</code> and <code>user2</code> mentioned above do not yet have access to any teams. They must be granted access on a team-by-team basis. For more information, see <a href="authenticating.html#adding">Add Users and Groups to Teams</a> below.</p>
 
 
 ### <a id="config-github"></a> GitHub Authentication
 A Concourse server can authenticate against GitHub to take advantage of their permission model and other security improvements in their infrastructure.
-To do this, you will need to:
+To do this, you need to:
 
 1. Create a GitHub application.
 2. Configure your deployment with the GitHub client details.
@@ -59,31 +61,32 @@ To do this, you will need to:
 You can create an OAuth application on GitHub.
 To do this, see [Register a new OAuth application](https://github.com/settings/applications/new).
 
-The callback URL will be the external URL of your Concourse server with `/sky/issuer/callback` appended.
-For example, Concourse's own CI server's callback URL would be `https://ci.concourse-ci.org/sky/issuer/callback`.
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
+For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-<p class="note"> The application must be created under an organization if you want to authorize users based on organization/team membership. If the application is created under a personal account, only individual users can be authorized.</p>
+<p class="note"><strong>Note: </strong>The application must be created under an organization if you want to authorize users based on organization/team membership. If the application is created under a personal account, only individual users can be authorized.</p>
 
 
 #### Configure the GitHub Client Details
-GitHub will provide a Client ID and a Client Secret for the new application.
-This information needs to be supplied in the `github_auth` `client_id` and `client_secret` fields.
+GitHub provides a Client ID and a Client Secret for the new application.
+Supply this information in the `github_auth`, `client_id`, and `client_secret` fields.
 For more information on these fields, see [github_auth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgithub_auth).
 
 
 ### <a id="config-cf"></a> Cloud Foundry Authentication
-Cloud Foundry Authentication (CF Auth) can be used for operators who wish to authenticate their users configured against their Cloud Foundry instance with the User Account and Authentication (UAA) server.
+Operators can use Cloud Foundry Authentication (CF Auth) to authenticate users against a Cloud Foundry deployment, using the User Account and Authentication (UAA) server.
 
-To do this, you will need to:
+To authenticate users, do the following:
 
 1. Create a UAA Client.
 2. Configure your deployment with the Cloud Foundry client details.
 
 
 #### Create the Client
-A client must be created for Concourse in UAA.
+Create a client for Concourse in UAA.
 
-The callback URL will be the external URL of your Concourse server with `/sky/issuer/callback` appended. For example, Concourse's own CI server's callback URL would be https://ci.concourse-ci.org/sky/issuer/callback.
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
+For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
 The client should look something like this, under `uaa.clients`:
 
@@ -99,76 +102,79 @@ concourse:
 </pre>
 
 
-#### Configure the client
-You will be given a Client ID and a Client Secret for your new application.
-These will then be passed in the `client_id` and `client-secret` fields on the `atc` job.
+#### Configure the Client
+You are given a Client ID and a Client Secret for your new application.
+These are then passed in the `client_id` and `client-secret` fields on the `atc` job.
 For more information on these fields, see [client_id](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.client_id).
 
-You will also need to configure your base API URL for CF in the `api_url` field.
+You also need to configure your base API URL for CF in the `api_url` field.
 To do this, see [api_url](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.api_url).
 
 
 ### <a id="config-oidc"></a> OIDC Authentication
 
-If your authentication provider adheres to the OIDC specification, then you should use this provider.
-Unlike the oAuth provider, you do not need to provide `auth-url`, `token-url` and `userinfo-url`.
-Instead, you can provide an `issuer-url`, and the system will query the `.well-known/openid-configuration` endpoint to discover all of the information it needs.
+If your authentication provider follows the OIDC specification, then use this provider.
+Unlike the OAuth provider, you do not need to provide `auth-url`, `token-url`, and `userinfo-url`.
+Instead, you can provide an `issuer-url`, and the system queries the `.well-known/openid-configuration` endpoint to discover the information it needs.
 
-To add the OIDC authentication provider, you will need to:
+To add the OIDC authentication provider, do the following:
 
 1. Create the OIDC client.
 2. Configure the client.
 
 
 #### Create the OIDC Client
-First you need to create a client with your OIDC provider.
+First, you need to create a client with your OIDC provider.
 
-The callback URL will be the external URL of your Concourse server with `/sky/issuer/callback appended`.
-For example, Concourse's own CI server's callback URL would be `https://ci.concourse-ci.org/sky/issuer/callback`.
-
-
-#### Configure the client
-Configuring generic OIDC will require you to fill in the `generic_oidc` fields in the `atc` job of the manifest.
-For more information on these fields, see [generic_oidc](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oidc).
-
-
-### <a id="config-oauth"></a>  oAuth Authentication
-If your authentication provider supports oAuth2 but doesn't adhere to the OIDC specification, then you should be using this provider.
-This provider gives you slightly more control over the OIDC provider by letting operators specify the full set of authorization endpoints (`auth-url`, `token-url`).
-
-To add the oAuth provider you will need to:
-
-1. Create the OIDC client
-2. Configure the client
-
-
-#### Create the oAuth Client
-You will first need to create a client with your oAuth provider.
-
-The callback URL will be the external URL of your Concourse server with `/sky/issuer/callback appended`.
-For example, Concourse's own CI server's callback URL would be `https://ci.concourse-ci.org/sky/issuer/callback`.
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
+For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
 
 #### Configure the Client
-Configuring the oAuth provider will require you to fill in the `generic_oauth` fields in the `atc` job of the manifest.
+To configure the generic OIDC, fill in the `generic_oidc` fields in the `atc` job of the manifest.
+For more information on these fields, see [generic_oidc](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oidc).
+
+
+### <a id="config-oauth"></a>  OAuth Authentication
+If your authentication provider supports OAuth2 but does not follow the OIDC specification,
+then use this provider.
+This provider gives you more control over the OIDC provider by letting operators specify the full set of authorization endpoints (`auth-url`, `token-url`).
+
+To add the OAuth provider, do the following:
+
+1. Create the OIDC client.
+2. Configure the client.
+
+
+#### Create the OAuth Client
+First, you need to create a client with your OAuth provider.
+
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
+For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
+
+
+#### Configure the Client
+To configure the OAuth provider, fill in the `generic_oauth` fields in the `atc` job of the manifest.
 For more information on these fields, see [generic_oauth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oauth).
 
 
-### <a id="config-main"></a> The Main team
+### <a id="config-main"></a> The Main Team
 By default, Concourse comes with a single team called `main`.
-The `main` team is an admin team, meaning it can create and update other teams.
+The `main` team is an admin team.
+This means it can create and update other teams.
 Currently there is no way to promote a team to become an admin team,
-so `main` is a special case.
+so `main` is a special team.
 
 Concourse requires you to specify at least one user/group to be a member of the `main`
-team on deployment.
+team during deployment.
 The list of allowed users, groups, and orgs are managed through the `main_team` property in the ATC job.
 For more information on this property, see [main_team](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dmain_team).
 
 An example of adding a local user to the main team can be found in the `add-local-users.yml` file in the [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/operations/add-local-users.yml) repository.
 
 The values set in the authentication flags take effect whenever the ATC starts up.
-This is done so that you cannot get locked out, and you can have Concourse sanely configured as soon as it comes up.
+This allows Concourse to be deployed against declared configurations.
+It also makes sure that members of the `main` team do not get locked out of their Concourse.
 
 
 ## <a id="adding"></a>Add Users and Groups to Teams
@@ -181,51 +187,50 @@ With this command, users and groups can be:
 
 For more information on this command, see [fly set-team](https://concourse-ci.org/creating-and-updating-teams.html#fly-set-team).
 
-<p class="note">
+<p class="note"><strong>Note: </strong>
 The exception to this is the <code>main</code> team. Members of the <code>main</code> team are configured as part of the initial deployment and cannot be changed after the deployment. For more information on the <code>main</code> team, see <a href="https://concourse-ci.org/main-team.html">The <code>main</code> team</a>.
 </p>
 
 
 ### <a id="add-basic-auth"></a> Local Users
-You can grant local users access to a team via the `--local-user` flag:
+You can grant local users access to a team using the `--local-user` flag:
 
 <ol>
 <li>Open a terminal window.</li>
-<li>Enter the following commands:<br/>
+<li>Enter the following command:<br/>
 <pre class="code">
-$  fly set-team -n YOUR_TEAM \
-      --local-user USERNAME
+$  fly set-team -n YOUR-TEAM --local-user USERNAME
 </pre>
 </li>
 </ol>
 
 
-### <a id="add-github"></a> GitHub Users, Teams and Orgs
+### <a id="add-github"></a> GitHub Users, Teams, and Orgs
 Add GitHub users, teams, or organizations to a Concourse team.
 
-* `--github-user=LOGIN` Authorize an individual user.
-* `--github-org=ORG_NAME` Authorize an entire organization's members.
-* `--github-team=ORG_NAME:TEAM_NAME` Authorize a team's members within an organization.
+* Use `--github-user=LOGIN` to authorize an individual user.
+* Use `--github-org=ORG-NAME` to authorize an entire organization's members.
+* Use `--github-team=ORG-NAME:TEAM-NAME` to authorize a team's members within an organization.
 
 For example:
 <pre class="code">
 $ fly set-team -n my-team \
     --github-user my-github-login \
     --github-org my-org \
-    --github-team my-other-org:my-team
+    --github-team my-org:my-team 1
 </pre>
 
 <p class="note"><strong>Note:</strong>
-  <code>:</code> is used as the separator when adding GitHub teams.
+  <code>:</code> is used as the separator when adding GitHub teams instead of <code>/</code>. If multiple teams are added, the flag must be repeated.<br> For example:<br> -\-github-team my-org:my-team 1 <br> -\-github-team my-org:my-team 2
 </p>
 
 
-### <a id="add-cf"></a> CF Auth Users, Space and Orgs
-Add users, space and org members from a CF deployment to a Concourse team.
+### <a id="add-cf"></a> CF Auth Users, Spaces, and Orgs
+Add users, spaces, and org members from a CF deployment to a Concourse team.
 
-* `--cf-user=USERNAME` Authorize an individual user.
-* `--cf-org=ORG_NAME` Authorize an entire organization's members.
-* `--cf-space=ORG_NAME:SPACE_NAME` Authorize the members of a space within an organization.
+* Use `--cf-user=USERNAME` to authorize an individual user.
+* Use `--cf-org=ORG-NAME` to authorize an entire organization's members.
+* Use `--cf-space=ORG-NAME:SPACE-NAME` to authorize the members of a space within an organization.
 
 For example:
 
@@ -233,23 +238,23 @@ For example:
 $ fly set-team -n my-team \
     --cf-user my-username \
     --cf-org my-org \
-    --cf-space my-other-org:my-space
+    --cf-space my-org:my-space
 </pre>
 
 <p class="note"><strong>Note:</strong>
-  <code>:</code> is used as the separator when adding members from a CF space.
+  <code>:</code> is used as the separator when adding members from a CF space instead of <code>/</code>. If multiple spaces are added, the flag must be repeated.<br> For example:<br> -\-github-team my-org:my-space 1 <br> -\-github-team my-org:my-space 2
 </p>
 
 
-### <a id="add-oauth"></a> oAuth Users and Groups
-Configure users and groups from a generic oAuth provider.
+### <a id="add-oauth"></a> OAuth Users and Groups
+Configure users and groups from a generic OAuth provider.
 
-You may only configure groups if the authentication provider exposes this information in either the token itself, or in the contents of the userinfo endpoint.
-You can configure which claim points to the groups information by specifying the groups-key at startup.
+You may only configure groups if the authentication provider exposes this information in either the token itself, or in the contents of the `userinfo` endpoint.
+You can configure which claim points to the group's information by specifying the `groups-key` at startup.
 
-* `--cf-user=USERNAME` Authorize an individual user.
-* `--cf-org=ORG_NAME` Authorize an entire organization's members.
-* `--cf-space=ORG_NAME:SPACE_NAME` Authorize the members of a space within an organization.
+* Use `--cf-user=USERNAME` to authorize an individual user.
+* Use `--cf-org=ORG-NAME` to authorize an entire organization's members.
+* Use `--cf-space=ORG_NAME:SPACE-NAME` to authorize the members of a space within an organization.
 
 For example:
 
@@ -262,15 +267,15 @@ $ fly set-team -n my-team \
 
 ### <a id="add-oidc"></a> OIDC Users and Groups
 Team members can configure users and groups from a generic OIDC provider.
-This is very similar to the oAuth connector.
-The main difference being that OIDC providers must adhere to the OIDC specification,
-whereas generic oAuth providers can be a little more flexible.
+This is very similar to the OAuth connector.
+The main difference is that OIDC providers must follow the OIDC specification,
+while generic OAuth providers can be a little more flexible.
 
 You may only configure groups if the authentication provider exposes this information in the contents of the userinfo endpoint.
 You can configure which claim points to the groups information by specifying the `groups-key` at startup.
 
-* `--oidc-user=USERNAME` Authorize an individual user.
-* `--oidc-group=GROUP_NAME` Authorize anyone from the group.
+* Use `--oidc-user=USERNAME` to authorize an individual user.
+* Use `--oidc-group=GROUP-NAME` to authorize anyone from the group.
 
 For example:
 
@@ -282,3 +287,14 @@ $ fly set-team -n my-team \
 
 ### <a id="team-config"></a> Team Configuration Details
 Team members can view the authentication settings of the teams they belong to by using the `fly teams -d` command.
+
+For example, the command below:
+<pre class="code">
+$ fly -t prod teams -d
+</pre>
+
+Will result in something like the following:
+<pre class="terminal">
+<strong>name</strong>     <strong>users</strong>          <strong>groups</strong>
+main     github:User    github:Organization
+</pre>
