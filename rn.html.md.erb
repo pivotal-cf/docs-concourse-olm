@@ -3,92 +3,78 @@ title: Concourse Release Notes
 owner: Concourse
 ---
 
-## <a id="release-notes"></a> Release Notes for Concourse v4.0.0
-<strong>Sept 17, 2018</strong>
+## <a id="release-notes"></a> Release Notes for Concourse v5.0.0
 
-Concourse 4.0.0 introduces the concept of user-based team authentication. Previously,
-Concourse required you to log in under a specific team without an association to a user.
-In this version of Concourse, users can authenticate into teams as specific users. Users
-can be added to a team by configuring the team's whitelist as described in
-<a href="authenticating.html">Configuring Team Authentication</a>.
+<strong><%= modified_date %></strong>
 
-###<a id="breaking-changes"></a> Breaking Changes
-* The BOSH deployment of Concourse 4.0.0 will require manifest changes.
-Consult the `operations` section [Concourse BOSH deployment repo](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations)
-for examples.
+## <a id="500"></a> v5.0.0
 
-* There is no support for configuring the same provider multiple times
-e.g. multiple GitHub Enterprise instances. The migration will fail when trying
-to upgrade an instance with teams having different configurations for the same
-provider. The workaround to this limitation is to deploy multiple Concourse instances.
-This may be something we can support in the future.
+**Release Date: MMMM XX, 201X
+ 
+### Features
 
-* BitBucket auth is no longer supported because the underlying authentication library
-does not support it. However, Concourse 4.0.0 also supports GitHub, generic LDAP, oAuth,
-and OIDC connectors.
+New features and changes in this release:
 
-* If you have multiple teams configured with the same basic auth username,
-the migration will fail. This is because "basic auth" is now gone and in its p
-lace is local user configuration. Logging in with basic auth is now actually
-logging in as the configured user, so there can't be multiple.
+* 
 
-* The team authentication flags for `fly set-team` have been split between `set-team`
-and concourse `web` module. You can find the specific changes in <a href="authenticating.html">Configuring Team Authentication</a>
-and further examples of this in the `operations` section [Concourse BOSH deployment repo](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations).
+* 
+[//]: # (if there are no new features - only fixes - omit features section?)
 
-* `fly sync` may not be able to update a 3.x version of `fly` to 4.0.0 due to the
-new auth mechanisms. The workaround is to download and install the latest 4.0.0 `fly` CLI binary.
+### Security Fixes
 
-###<a id="features"></a> Features
+This release includes the following security fixes:
 
-* Concourse now supports user authentication into teams. Supported Auth providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and oAuth
-* The `fly teams` command only lists teams of which you are a member (or all teams, if you're a member of the admin team `main`).
-* `fly teams` has a new flag `-d/--details` that will display each team's auth configuration
-* The interval on which resource types are checked for new versions can now be set globally via [`default_resource_type_check_interval`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval), or per-resource-type in a pipeline via check_every.
-* General optimizations to reduce load off the database. You should see improvements in garbage collection efficiency and web UI response time.
-* Container and volume Garbage Collection will now be performed in parallel across the worker cluster. The ATC is still the source of truth for knowing when containers and volumes are to be removed, but will no longer be responsible for performing the actual "destroy" API calls. This should make large-scale Concourse deployments much more efficient, removing a ton of network and CPU overhead from the ATC.
+[//]: # (List CVEs and USNs here along with links to pivotal security site. See wiki for examples.)
 
-* The main page (`/`) now shows the dashboard instead of a random pipeline configured by the first team on the instance.
-* The dashboard page now has "Dashboard" in the title
-* Concourse Dashboard allows you to pause and re-order pipelines. We hope you like it because we've removed the sidebar from the pipeline view...it's just cleaner.
-* The dashboard will now indicate when a pipeline has a resource that is failing to check, by drawing a little orange triangle on the pipeline.
-* Build page load performance has been significantly improved
-* Concourse pipeline view now has breadcrumbs to indicate what pipeline, job, or resource that you're looking at.
-* Pipeline groups navigation has been re-designed to better display lots of groups and/or long group names
-* The ATC will no longer fail to start if configured with CredHub and CredHub isn't running. It'll just try and reach it later instead.
+* 
+*
+*
 
-* `fly` now supports `--json` on most commands to dump info in JSON format, rather than the human-friendly table format.
-* The `S3 resource` now supports `skip_download: true`.
-* The Prometheus metrics will now automatically prune stale workers
-* The Prometheus metrics for pipeline scheduling are now counters instead of gauges
-* There are now metrics emitted for peridoc resource checking
-* The `CF resource` now supports `no_start: true`
-* The `Docker Image` resource now has a tag_file param which deprecates the old tag command which does the same thing. This is in the interest of clearer naming.
-* The `Git resource` now has `git-crypt v0.6.0`
-* The Prometheus metric emitter has seen some spring cleaning
-* The fly execute command with -j will now use the job's pipeline's resource_types.
-* fly login can now be invoked with -b to auto-launch a browser to do the oAuth dance
-* The S3 resource now supports configuring an initial version & content, which can be useful for bootstrapping state.
-* The webhook_token property can now be interpolated using a credential manager
-* The Pool resource now supports an atomic metadata update operation
-* The Git resource now supports two new parameters: submodule_recursive: false, to disable the default recursive fetching, and submodule_remote: true to fetch submodules with --remote
-* The `CF resource` now supports client credentials-based auth
+### Fixed Issues
 
+This release fixes the following issue:
 
-###<a id="bug-fixes"></a>Bug Fixes
-* Previously, if a resource was only ever used as an explicit output of a job, it would always show up as black even if it was erroring. It will now show up as orange, like the other resources.
-* We've updated some of the messaging in the UI to be less confusing. When viewing a build that has not been made public it'll now say you're not authorized, rather than telling you to log in, only to tell you to log in again, because that didn't change anything.
-* We fixed a regression with the CredHub integration that caused very high CPU usage on the ATC. In addition, we've bumped our CredHub client to include a crucial fix
-* We fixed a couple situations in the UI where jobs or pipelines with spaces in their name would render incorrectly. In general, we do not advise users to use whitespaces in pipeline names.
-* Repeated team and pipeline creation and destruction would leave a few tables around: `team_build_events_XXX` and `pipeline_build_events_XXX`. This would cause the database to increase in CPU usage over time. We now ensure these tables get cleaned up via database triggers on pipeline/team deletion. However, we decided against writing a migration to automatically clean up existing orphaned tables because, well, it felt scary and dangerous. If you are seeing symptoms of this problem, it should be safe to manually drop the tables that have no corresponding pipeline or team. We just didn't want to be responsible for a migration that had a high chance of data bloodlust. This way it can be your fault instead of ours!
-* When running on Windows, we will no longer shell out to tar for performing volume streaming operations, since it seems to be pretty unreliable. A native Go implementation will be used instead.
-* Recent versions of Docker introduced an issue where `dockerd` could fail to start if the worker was under load. This resulted in an infinite loop in the Docker Image resource. We've made the resource more resilient to this - it'll detect a failure to start and keep resuscitating dockerd until it starts, giving up after 2 minutes.
-* The BOSH release now has properties for configuring the DataDog metrics emitter
-* Fixed handling of `no_proxy` in concourse worker
-* The `Docker Image resource` now includes support for fetching and extracting xz packages in ADD commands
-* The build number in the `<title>` when viewing a one-off build in your browser is now consistent with the number reflected on the page.
-* Fixed up a few API endpoints so that they correctly return `Content-Type: application/json`
-* Publishing draft releases with the `Github Release resource` will no longer error
-* Any errors when checking for a resource's type to have new versions will be bubbled up as resource checking errors. This includes failure to fetch credentials.
-* Fixed an "Aw, snap!" browser crash that affected some versions of Chrome when viewing the pipeline page.
-* The ATC will now fail gracefully early if no session signing key is specified, rather than failing ungracefully and late. In addition, one will be generated automatically if not given to concourse web. Don't do this forever, though, since users will be logged out whenever you restart the instance, and things won't work at all if you're running a cluster of many web nodes (they all need to have the same session signing key).
+* 
+
+### Known Issues
+
+[//]: # (If all known issues were fixed so we can say...)
+There are no known issues for this release.
+
+### Compatibility
+
+[//]: # (This table is optional)
+
+The following components are compatible with this release:
+
+<table border="1" class="nice">
+<tr>
+    <th>Component</th>
+    <th>Version</th>
+</tr>
+<tr>
+    <td>Stemcell</td>
+    <td></td>
+</tr>
+<tr>
+    <td>PCF</td>
+    <td></td>
+</tr>
+<tr>
+    <td></td>
+    <td>vX.X</td>
+</tr>
+<tr>
+    <td></td>
+    <td>vX.XX.X</td>
+</tr>
+<tr>
+    <td></td>
+    <td>vXXX.X.X</td>
+</tr>
+<tr>
+    <td></td>
+    <td>vX.XXX.X</td>
+</tr>
+</table>
+
