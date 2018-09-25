@@ -57,10 +57,10 @@ New features and changes in this release:
 
 * Concourse now supports user authentication into teams. Supported Auth providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and oAuth.
 * The `fly teams` command only lists teams of which you are a member (or all teams, if you're a member of the admin team `main`).
-* `fly teams` has a new flag `-d/--details` that will display each team's auth configuration
-* The interval on which resource types are checked for new versions can now be set globally via [`default_resource_type_check_interval`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval), or per-resource-type in a pipeline via check_every.
-* General optimizations to reduce load off the database. You should see improvements in garbage collection efficiency and web UI response time.
-* Container and volume Garbage Collection will now be performed in parallel across the worker cluster. The ATC is still the source of truth for knowing when containers and volumes are to be removed, but will no longer be responsible for performing the actual "destroy" API calls. This should make large-scale Concourse deployments much more efficient, removing a ton of network and CPU overhead from the ATC.
+* `fly teams` has a new flag `-d/--details` that displays each team's auth configuration.
+* The interval on which resource types are checked for new versions can now be set globally using `default_resource_type_check_interval`, or per-resource-type in a pipeline using `check_every`. See [default_resource_type_check_interval](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval) in the BOSH documentation.
+* General optimizations to reduce the load on the database. You should see improvements in garbage collection efficiency and web UI response time.
+* Container and volume Garbage Collection is now performed in parallel across the worker cluster. The ATC is still the source of truth for knowing when containers and volumes are to be removed, but is no longer responsible for performing the actual "destroy" API calls. This should make large-scale Concourse deployments much more efficient, removing a ton of network and CPU overhead from the ATC.
 
 * The main page (`/`) now shows the dashboard instead of a random pipeline configured by the first team on the instance.
 * The dashboard page now has "Dashboard" in the title
