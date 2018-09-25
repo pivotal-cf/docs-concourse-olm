@@ -3,19 +3,28 @@ title: Concourse Release Notes
 owner: Concourse
 ---
 
-## <a id="release-notes"></a> Release Notes for Concourse v4.0.0
-<strong>Sept 17, 2018</strong>
+<strong><%= modified_date %></strong>
 
-Concourse 4.0.0 introduces the concept of user-based team authentication. Previously,
+
+## <a id="release-notes"></a> v4.0.0
+
+<strong>Release Date: September X, 2018</strong>
+
+Concourse v4.0.0 introduces the concept of user-based team authentication. Previously,
 Concourse required you to log in under a specific team without an association to a user.
 In this version of Concourse, users can authenticate into teams as specific users. Users
 can be added to a team by configuring the team's whitelist as described in
 <a href="authenticating.html">Configuring Team Authentication</a>.
 
-###<a id="breaking-changes"></a> Breaking Changes
-* The BOSH deployment of Concourse 4.0.0 will require manifest changes.
-Consult the `operations` section [Concourse BOSH deployment repo](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations)
-for examples.
+
+### Breaking Changes
+
+This release has the following breaking changes:
+
+* The BOSH deployment for Concourse v4.0.0 requires manifest changes.
+For examples, see the `operations` folder in the
+[Concourse BOSH deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations)
+GitHub repository.
 
 * There is no support for configuring the same provider multiple times
 e.g. multiple GitHub Enterprise instances. The migration will fail when trying
@@ -24,7 +33,7 @@ provider. The workaround to this limitation is to deploy multiple Concourse inst
 This may be something we can support in the future.
 
 * BitBucket auth is no longer supported because the underlying authentication library
-does not support it. However, Concourse 4.0.0 also supports GitHub, generic LDAP, oAuth,
+does not support it. However, Concourse v4.0.0 supports GitHub, generic LDAP, oAuth,
 and OIDC connectors.
 
 * If you have multiple teams configured with the same basic auth username,
@@ -33,15 +42,20 @@ lace is local user configuration. Logging in with basic auth is now actually
 logging in as the configured user, so there can't be multiple.
 
 * The team authentication flags for `fly set-team` have been split between `set-team`
-and concourse `web` module. You can find the specific changes in <a href="authenticating.html">Configuring Team Authentication</a>
-and further examples of this in the `operations` section [Concourse BOSH deployment repo](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations).
+and concourse `web` module. For the specific changes, see <a href="authenticating.html">Configuring Team Authentication</a>.
+For further examples, see the `operations` folder in the
+[Concourse BOSH deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations)
+GitHub repository.
 
-* `fly sync` may not be able to update a 3.x version of `fly` to 4.0.0 due to the
-new auth mechanisms. The workaround is to download and install the latest 4.0.0 `fly` CLI binary.
+* `fly sync` may not be able to update a v3.x version of `fly` to v4.0.0 due to the
+new auth mechanisms. The workaround is to download and install the latest v4.0.0 `fly` CLI binary.
 
-###<a id="features"></a> Features
 
-* Concourse now supports user authentication into teams. Supported Auth providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and oAuth
+### Features
+
+New features and changes in this release:
+
+* Concourse now supports user authentication into teams. Supported Auth providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and oAuth.
 * The `fly teams` command only lists teams of which you are a member (or all teams, if you're a member of the admin team `main`).
 * `fly teams` has a new flag `-d/--details` that will display each team's auth configuration
 * The interval on which resource types are checked for new versions can now be set globally via [`default_resource_type_check_interval`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval), or per-resource-type in a pipeline via check_every.
@@ -75,7 +89,10 @@ new auth mechanisms. The workaround is to download and install the latest 4.0.0 
 * The `CF resource` now supports client credentials-based auth
 
 
-###<a id="bug-fixes"></a>Bug Fixes
+### Fixed Issues
+
+Fixed issues in this release:
+
 * Previously, if a resource was only ever used as an explicit output of a job, it would always show up as black even if it was erroring. It will now show up as orange, like the other resources.
 * We've updated some of the messaging in the UI to be less confusing. When viewing a build that has not been made public it'll now say you're not authorized, rather than telling you to log in, only to tell you to log in again, because that didn't change anything.
 * We fixed a regression with the CredHub integration that caused very high CPU usage on the ATC. In addition, we've bumped our CredHub client to include a crucial fix
