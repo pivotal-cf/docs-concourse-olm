@@ -6,11 +6,11 @@ owner: Concourse
 <strong><%= modified_date %></strong>
 
 
-## <a id="release-notes"></a> v4.0.0
+## <a id="release-notes"></a> v4.2.1
 
-<strong>Release Date: September X, 2018</strong>
+<strong>Release Date: October 5, 2018</strong>
 
-Concourse v4.0.0 introduces the concept of user-based team authentication. Previously,
+Concourse v4.2.1 introduces the concept of user-based team authentication. Previously,
 Concourse required you to log in under a specific team without an association to a user.
 In this version of Concourse, users can authenticate into teams as specific users. Users
 can be added to a team by configuring the team's whitelist as described in
@@ -50,6 +50,7 @@ GitHub repository.
 * `fly sync` may not be able to update a v3.x version of `fly` to v4.0.0 due to the
 new auth mechanisms. The workaround is to download and install the latest v4.0.0 `fly` CLI binary.
 
+* The [`bosh-deployment-resource`](https://github.com/concourse/bosh-deployment-resource) has been deprecated and removed from this release. Please use the updated [`cloudfoundry/bosh-deployment-resource`](https://github.com/cloudfoundry/bosh-deployment-resource) instead
 
 ### Features
 
@@ -61,7 +62,6 @@ New features and changes in this release:
 * The interval on which resource types are checked for new versions can now be set globally using `default_resource_type_check_interval`, or per-resource-type in a pipeline using `check_every`. See [default_resource_type_check_interval](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval) in the BOSH documentation.
 * General optimizations to reduce the load on the database. You should see improvements in garbage collection efficiency and web UI response time.
 * Container and volume Garbage Collection is now performed in parallel across the worker cluster. The ATC is still the source of truth for knowing when containers and volumes are to be removed, but is no longer responsible for performing the actual "destroy" API calls. This should make large-scale Concourse deployments much more efficient, removing a ton of network and CPU overhead from the ATC.
-
 * The main page (`/`) now shows the dashboard instead of a random pipeline configured by the first team on the instance.
 * The dashboard page now has "Dashboard" in the title
 * Concourse Dashboard allows you to pause and re-order pipelines. We hope you like it because we've removed the sidebar from the pipeline view...it's just cleaner.
@@ -88,11 +88,28 @@ New features and changes in this release:
 * The Git resource now supports two new parameters: submodule_recursive: false, to disable the default recursive fetching, and submodule_remote: true to fetch submodules with --remote
 * The `CF resource` now supports client credentials-based auth
 
+* Task caches can now be cleared via `fly clear-task-cache` command
+* Concourse workers can now be registered with the [`ephemeral`](https://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=4.2.1#p%3dephemeral) parameter. When specified, the worker will be immediately removed once it stalls
+* Users can now force an immediate check of a resource type via `fly check-resource-type` command
+* Resources can be pinned across the pipeline as part of the pipeline config by specifying [`version`](https://concourse-ci.org/resources.html#resource-version) on the resource definition in the pipeline. This is analogous to setting [`version`](https://concourse-ci.org/resources.html#resource-version) on every [`get` step](https://concourse-ci.org/get-step.html) that references the resource
+* Pipeline credentials can now be verified via a new `--check-creds` flag available on `fly set-pipeline`. This command will attempt to fetch values from the configured credential manager and let you know which values couldn't be interpolated.
+* The `git-resource` now supports shallow clones by configuring `depth: 1`
+* The ATC now exposes an API endpoint for performing a health-check against the configured credential manager, at /api/v1/info/creds. It'll propagate whatever information may be useful, depending on your credential manager backend. Note that this endpoint is only accessible by admin users (members of the main team).
+* Concourse emits warnings in the task logs when it detects that params are declared but not configured
+* Dashboard searches update the URL, making it easy to bookmark and share specific dashboard views
+* The `fly validate-pipeline` command can now be instructed to print the interpolated pipeline config via `--output` flag
+* The Docker Image resource now supports interpolating the Concourse-provided env vars in build args,
+* The Git resource now uses the latest version of Git LFS
+* The Git resource will now emit a short SHA to `.git/short_ref`, which can be useful for dynamic tagging
+* The S3 resource now supports `skip_download: true` in params
+* The dashboard view will now indicate whether you are a member of each team or whether you're only seeing it because it has exposed pipelines.
+* The ATC can now be configured to periodically emit build logs to a syslog endpoint! This is configured [`syslog` parameters](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.2.1#p%3dsyslog) on the ATC job. When enabled, build logs will be shipped off in batch as builds complete.
 
 ### Fixed Issues
 
 This release fixes the following issues:
 
+* Fixed a container failure mode that occurs when `check` containers fail to create
 * Previously, if a resource was only ever used as an explicit output of a job, it would always show up as black even if it was erroring. It will now show up as orange, like the other resources.
 * We've updated some of the messaging in the UI to be less confusing. When viewing a build that has not been made public it'll now say you're not authorized, rather than telling you to log in, only to tell you to log in again, because that didn't change anything.
 * We fixed a regression with the CredHub integration that caused very high CPU usage on the ATC. In addition, we've bumped our CredHub client to include a crucial fix
@@ -110,11 +127,22 @@ This release fixes the following issues:
 * Fixed an "Aw, snap!" browser crash that affected some versions of Chrome when viewing the pipeline page.
 * The ATC will now fail gracefully early if no session signing key is specified, rather than failing ungracefully and late. In addition, one will be generated automatically if not given to concourse web. Don't do this forever, though, since users will be logged out whenever you restart the instance, and things won't work at all if you're running a cluster of many web nodes (they all need to have the same session signing key).
 
+* The TSA will now respect the configured log level for worker heartbeating logs
+* Removed superfluous log messages from the TSA
+* Docker Image resource fails gracefully when `build_args_file` can't be parsed
+* Docker Image resource will forgoe starting the Docker daemon if `skip_download: true` is set
+* The Docker Image resource will now fail with a clearer error when your ECR credentials are incorrect
+* The S3 resource can now be used with Dell's EMC ECS object store
+* The `fly intercept` command will no longer list containers that are still being created and are not yet interceptible, which would lead to a `websocket: bad handshake error`.
+* Fixed a potential panic in the 'delete worker' API endpoint, which is used internally as part of the worker draining lifecycle.
+* The BOSH release now respects the configured `postgresql.client_cert property`
+* Removed an artificial limit to the garbage collector that was originally to prevent a stampede of work on a single worker. Now that workers garbage-collect themselves, this was no longer necessary, and only slowed down the database side of the garbage collection lifecycle.
+* Fixed a bug that caused the Vault login retry logic to go into a fast loop if retrying failed for long enough to exceed the maximum retry backoff.
 
 ### Known Issues
 
-There are no known issues for this release.
-
+* User Authentication flows aginst UAA with external identity providers (e.g. SAML) via the
+Concourse `cf connector` cannot be completed due to a mismatch in service URLs.
 
 ## <a id="view"></a> View Release Notes for Another Version
 
