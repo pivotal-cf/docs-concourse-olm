@@ -113,7 +113,14 @@ This release fixes the following issues:
 
 ### Known Issues
 
-There are no known issues for this release.
+Upgrading from Concourse 3.x to 4.2.1 may result in the following JSON exception `json: cannot unmarshal object into Go value of type []string` when attempting to start the web node. This is caused by a failing migration during the upgrade processs. You can recover from this erro state by:
+
+1. Accessing the Concourse database
+2. Go to the `teams` table
+3. Set the `auth` field on the `main` team to the empty string `''`
+4. Re-attempt the upgrade
+
+This will force the `ATC` component of the `web` node to set the `main` team's auth to the parameters supplied in your manifest. You can find more details about this known issue in GitHub issue [#2595](https://github.com/concourse/concourse/issues/2595)
 
 
 ## <a id="view"></a> View Release Notes for Another Version
