@@ -156,6 +156,23 @@ and only slowed down the database side of the garbage collection lifecycle.
 
 ### Known Issues
 
+This release has the following issues:
+
++ Upgrading from Concourse v3.x to v4.2.1 can result in the following JSON exception
+  `json: cannot unmarshal object into Go value of type []string` when attempting to start the web node.
+  This is caused by a failing migration during the upgrade processs.
+  To recover from this error state, do the following:
+      1. Access the Concourse database.
+      2. Go to the `teams` table.
+      3. Set the `auth` field on the `main` team to the empty string `''`.
+      4. Attempt the upgrade again.
+
+       This forces the `ATC` component of the `web` node to set the `main` team's auth
+       to the parameters supplied in your manifest.
+       For more information about this issue,
+       see [Upgrading concourse from 3.10 to 4.10 results in json exception on starting web nodes
+       #2595](https://github.com/concourse/concourse/issues/2595) in GitHub.
+
 * User Authentication flows aginst UAA with external identity providers, such as SAML,
 using the Concourse `cf connector` command cannot be completed due to a mismatch in service URLs.
 
