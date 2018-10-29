@@ -159,9 +159,12 @@ and only slowed down the database side of the garbage collection lifecycle.
 This release has the following issues:
 
 + Upgrading from Concourse v3.x to v4.2.1 can result in the following JSON exception
-  `json: cannot unmarshal object into Go value of type []string` when attempting to start the web node.
-  This is caused by a failing migration during the upgrade processs.
-  To recover from this error state, do the following:
+  when attempting to start the web node: 
+  `json: cannot unmarshal object into Go value of type []string`. 
+
+    This is caused by a failing migration during the upgrade processs.
+
+    To recover from this error state, do the following:
       1. Access the Concourse database.
       2. Go to the `teams` table.
       3. Set the `auth` field on the `main` team to the empty string `''`.
