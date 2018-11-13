@@ -32,6 +32,11 @@ Please use the updated [`cloudfoundry/bosh-deployment-resource`](https://github.
 
 
 #### Teams
+* If you have multiple teams configured with the same basic auth username,
+the migration will fail.
+This is because "basic auth" is now gone and in its place is local user configuration.
+Logging in with basic auth is now actually logging in as the configured user, so there cannot be multiple.
+
 * There is no support for configuring the same provider multiple times,
 for example, multiple GitHub Enterprise instances.
 The migration will fail when trying to upgrade an instance with teams having different configurations for the same provider.
@@ -40,11 +45,6 @@ The workaround to this limitation is to deploy multiple Concourse instances.
 * BitBucket auth is no longer supported because the underlying authentication library
 does not support it. However, Concourse v4.0.0 supports GitHub, generic LDAP, oAuth,
 and OIDC connectors.
-
-* If you have multiple teams configured with the same basic auth username,
-the migration will fail.
-This is because "basic auth" is now gone and in its place is local user configuration.
-Logging in with basic auth is now actually logging in as the configured user, so there cannot be multiple.
 
 
 #### Fly
@@ -98,49 +98,54 @@ New features and changes in this release:
 
 
 #### Runtime
-* The interval on which resource types are checked for new versions can now be set globally using `default_resource_type_check_interval`, or per-resource-type in a pipeline using `check_every`. See [default_resource_type_check_interval](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval) in the BOSH documentation.
+* The interval on which resource types are checked for new versions can now be:
+    * Set globally using `default_resource_type_check_interval`
+    * Set `per-resource-type` in a pipeline using `check_every`.<br>
+    For more information, see [default\_resource\_type\_check\_interval](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3ddefault_resource_type_check_interval) in the BOSH documentation.
 * Task caches can now be cleared using `fly clear-task-cache`.
-* The ATC can now be configured to periodically emit build logs to a syslog endpoint!
-This is configured using [`syslog`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.2.1#p%3dsyslog) parameters on the ATC job.
-When enabled, build logs will be shipped off in a batch as builds complete.
+* The ATC can now be configured to periodically emit build logs to a `syslog` endpoint.
+    * This is configured using [`syslog`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.2.1#p%3dsyslog) parameters on the ATC job.
+    * When enabled, build logs will be shipped off in a batch as builds complete.
 * The ATC now exposes an API endpoint for performing a health-check against the configured credential manager, at `/api/v1/info/creds`.
-It will propagate whatever information may be useful,
+    * This propagates whatever information may be useful,
 depending on your credential manager backend.
-
-
-<p class="note"><strong>Note:</strong> This endpoint is only accessible by admin users (members of the `main` team).
-
-* General optimizations to reduce the load on the database. You should see improvements in garbage collection efficiency and web UI response time.
-* Container and volume Garbage Collection is now performed in parallel across the worker cluster. The ATC is still the source of truth for knowing when containers and volumes are to be removed, but is no longer responsible for performing the actual "destroy" API calls. This should make large-scale Concourse deployments much more efficient, removing a ton of network and CPU overhead from the ATC.
+    <p class="note"><strong>Note:</strong> This endpoint is only accessible by admin users (members of the `main` team).
+* General optimizations to reduce the load on the database.
+    * You should see improvements in garbage collection efficiency and web UI response time.
+* Container and volume Garbage Collection is now performed in parallel across the worker cluster.
+    * The ATC is still the source of truth for knowing when containers and volumes are to be removed, but is no longer responsible for performing the actual "destroy" API calls.
+    * This should make large-scale Concourse deployments much more efficient, removing a ton of network and CPU overhead from the ATC.
 * Concourse workers can now be registered with the [`ephemeral`](https://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=4.2.1#p%3dephemeral) parameter.
-When specified, the worker will be immediately removed once it stalls.
-* The ATC will no longer fail to start if configured with CredHub and CredHub isn't running. It'll just try and reach it later instead.
+    * When specified, the worker will be immediately removed once it stalls.
+* The ATC will no longer fail to start if it is configured with CredHub and CredHub isn't running. It will ll just try and reach it later instead.
 
 
 #### Core Functionality
+* Concourse now supports user authentication into teams.
+    * Supported Auth providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and oAuth.
 * Concourse emits warnings in the task logs when it detects that params are declared but not configured.
 * Pipeline credentials can now be verified using a new `--check-creds` flag available on `fly set-pipeline`.
 This command will attempt to fetch values from the configured credential manager and let you know which values could not be interpolated.
-* Concourse now supports user authentication into teams. Supported Auth providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and oAuth.
 
 
 #### Web UI
-* Concourse pipeline view now has breadcrumbs to indicate what pipeline, job, or resource that you're looking at.
-* Pipeline groups navigation has been re-designed to better display lots of groups and/or long group names
+* The dashboard page now has "Dashboard" in the title
+* Concourse pipeline view now has breadcrumbs to indicate which pipeline, job, or resource you are looking at.
+* Pipeline groups navigation has been redesigned to better display lots of groups and/or long group names.
 * Dashboard searches update the URL, making it easy to bookmark and share specific dashboard views.
 * The main page (`/`) now shows the dashboard instead of a random pipeline configured by the first team on the instance.
-* Concourse Dashboard allows you to pause and re-order pipelines. We hope you like it because we've removed the sidebar from the pipeline view...it's just cleaner.
+* Concourse Dashboard allows you to pause and reorder pipelines.
+    * As part of this change, the sidebar has been removed from the pipeline view.
 * The dashboard will now indicate when a pipeline has a resource that is failing to check, by drawing a little orange triangle on the pipeline.
-* The dashboard page now has "Dashboard" in the title
-* Build page load performance has been significantly improved
-* The dashboard view will now indicate whether you are a member of each team, or whether you are only seeing it because it has exposed pipelines.
+* Build page load performance has been significantly improved.
+* The dashboard view will now indicate whether you are a `member` of each team, or whether you are only seeing it because it has `exposed` pipelines.
 
 
 #### Metrics
-* The Prometheus metrics will now automatically prune stale workers
-* The Prometheus metrics for pipeline scheduling are now counters instead of gauges
-* There are now metrics emitted for peridoc resource checking
-* The Prometheus metric emitter has seen some spring cleaning
+* The Prometheus metrics will now automatically prune stale workers.
+* The Prometheus metrics for pipeline scheduling are now counters instead of gauges.
+* There are now metrics emitted for periodic resource checking.
+* The Prometheus metric emitter has seen some spring cleaning.
 
 
 ### <a id="fixed-issues"></a> Fixed Issues
@@ -152,26 +157,38 @@ This release fixes the following issues:
 
 
 #### Resources
-* Previously, if a resource was only ever used as an explicit output of a job, it would always show up as black even if it was erroring. It will now show up as orange, like the other resources.
-* Recent versions of Docker introduced an issue where `dockerd` could fail to start if the worker was under load. This resulted in an infinite loop in the Docker Image resource. We've made the resource more resilient to this - it'll detect a failure to start and keep resuscitating dockerd until it starts, giving up after 2 minutes.
-* Docker Image resource will skip starting the Docker daemon if `skip_download: true` is set.
-* The `Docker Image resource` now includes support for fetching and extracting xz packages in ADD commands
-* Publishing draft releases with the `Github Release resource` will no longer error
-* Docker Image resource fails gracefully when `build_args_file` cannot be parsed.
-* The S3 resource can now be used with Dell's EMC ECS object store.
-* The Docker Image resource will now fail with a clearer error when your ECR credentials are incorrect.
+* Previously, if a resource was only ever used as an explicit output of a job, it would always show up as black even if it was erroring.
+    * It will now show up as orange, like the other resources.
+* The `s3-resource` can now be used with Dell's EMC ECS object store.
+* Publishing draft releases with the `github-release-resource` will no longer error
+* Recent versions of Docker introduced an issue where `dockerd` could fail to start if the worker was under load.
+    * This resulted in an infinite loop in the `docker-image-resource`.
+    * Resource are now more resilient to this - they will detect a failure to start and keep resuscitating `dockerd` until it starts, giving up after 2 minutes.
+* `docker-image-resource`
+    * Skips starting the Docker daemon if `skip_download: true` is set.
+    * Includes support for fetching and extracting xz packages in `ADD` commands
+    * Fails gracefully when `build_args_file` cannot be parsed.
+    * Fails with a clearer error when your ECR credentials are incorrect.
 
 
 #### Runtime
 * Fixed handling of `no_proxy` in concourse worker
-* The ATC will now fail gracefully early if no session signing key is specified, rather than failing ungracefully and late. In addition, one will be generated automatically if not given to concourse web. Don't do this forever, though, since users will be logged out whenever you restart the instance, and things won't work at all if you're running a cluster of many web nodes (they all need to have the same session signing key).
+* The ATC will now fail gracefully early if no session signing key is specified, rather than failing ungracefully and late.
+    * In addition, one will be generated automatically if not given to concourse web.
+    <p class="note warning"><strong>Warning:</strong> Do not do this forever. Users will be logged out whenever you restart the instance, and things will not work at all if you are running a cluster of many web nodes (they all need to have the same session signing key).
 * Removed an artificial limit to the garbage collector that was originally to prevent a stampede of work on a single worker.
-Now that workers garbage-collect themselves, this was no longer necessary,
+    * Now that workers garbage-collect themselves, this was no longer necessary,
 and only slowed down the database side of the garbage collection lifecycle.
 * Fixed a container failure mode that occurs when `check` containers fail to create.
+* Repeated team and pipeline creation and destruction would leave a few tables around: `team_build_events_XXX` and `pipeline_build_events_XXX`.
+    * This would cause the database to increase in CPU usage over time.
+    * We now ensure these tables get cleaned up via database triggers on pipeline/team deletion.
+      * If you are seeing symptoms of this problem, it should be safe to manually drop the tables that have no corresponding pipeline or team.
 
-(EDIT) - Make more professional
-* Repeated team and pipeline creation and destruction would leave a few tables around: `team_build_events_XXX` and `pipeline_build_events_XXX`. This would cause the database to increase in CPU usage over time. We now ensure these tables get cleaned up via database triggers on pipeline/team deletion. However, we decided against writing a migration to automatically clean up existing orphaned tables because, well, it felt scary and dangerous. If you are seeing symptoms of this problem, it should be safe to manually drop the tables that have no corresponding pipeline or team. We just didn't want to be responsible for a migration that had a high chance of data bloodlust. This way it can be your fault instead of ours!
+* Tables now get cleaned up via database triggers on pipeline/team deletion
+  * Previously, repeated team and pipeline creation and destruction would leave a few tables around: `team_build_events_XXX` and `pipeline_build_events_XXX`.
+    * This would cause the database to increase in CPU usage over time.
+    * If you are see symptoms of this problem, it should be safe to manually drop the tables that have no corresponding pipeline or team.
 
 
 #### Installation
@@ -180,46 +197,41 @@ and only slowed down the database side of the garbage collection lifecycle.
 
 
 #### Web UI
-* We've updated some of the messaging in the UI to be less confusing. When viewing a build that has not been made public it'll now say you're not authorized, rather than telling you to log in, only to tell you to log in again, because that didn't change anything.
+* We have updated some of the messaging in the UI to be less confusing.
+    * When viewing a build that has not been made public, it will now say you are not authorized.
+      * Previously, it would tell you to log in, only to tell you to log in again, because that didn't change anything.
 * The build number in the `<title>` when viewing a one-off build in your browser is now consistent with the number reflected on the page.
 * We fixed a couple situations in the UI where jobs or pipelines with spaces in their name would render incorrectly. In general, we do not advise users to use whitespaces in pipeline names.
-
-(EDIT) - Aw, snap! ????
 * Fixed an "Aw, snap!" browser crash that affected some versions of Chrome when viewing the pipeline page.
 
 
 #### Core Functionality
-* We fixed a regression with the CredHub integration that caused very high CPU usage on the ATC. In addition, we've bumped our CredHub client to include a crucial fix
-* When running on Windows, we will no longer shell out to tar for performing volume streaming operations, since it seems to be pretty unreliable. A native Go implementation will be used instead.
-* Fixed a potential panic in the 'delete worker' API endpoint,
+* Fixed a regression with the CredHub integration that caused very high CPU usage on the ATC.
+    * In addition, the CredHub client has been bumped to include a crucial fix.
+* When running on Windows, we will no longer shell out to tar for performing volume streaming operations, since it seems to be pretty unreliable.
+    * A native Go implementation will be used instead.
+* Fixed a potential panic in the delete worker API endpoint,
 which is used internally as part of the worker draining lifecycle.
 * The TSA will now respect the configured log level for worker heartbeating logs.
 * Fixed up a few API endpoints so that they correctly return `Content-Type: application/json`
 * Fixed a bug that caused the Vault login retry logic to go into a fast loop if retrying failed for long enough to exceed the maximum retry backoff.
 * Removed unnecessary log messages from the TSA.
-* Any errors when checking for a resource's type to have new versions will be bubbled up as resource checking errors. This includes failure to fetch credentials.
+* Any errors when checking for a resource's type to have new versions will be bubbled up as resource checking errors.
+    * This includes failure to fetch credentials.
 
 
 ### <a id="known-issues"></a> Known Issues
 This release has the following issues:
 
-+ Upgrading from Concourse v3.x to v4.2.1 can result in the following JSON exception
-  when attempting to start the web node: 
-  `json: cannot unmarshal object into Go value of type []string`. 
-
-    This is caused by a failing migration during the upgrade processs.
-
-    To recover from this error state, do the following:
+* Upgrading from Concourse v3.x to v4.2.1 can result in the following JSON exception when attempting to start the web node: `json: cannot unmarshal object into Go value of type []string`.
+    * This is caused by a failing migration during the upgrade processs.
+    * To recover from this error state, do the following:
       1. Access the Concourse database.
       2. Go to the `teams` table.
       3. Set the `auth` field on the `main` team to the empty string `''`.
       4. Attempt the upgrade again.
-
-       This forces the `ATC` component of the `web` node to set the `main` team's auth
-       to the parameters supplied in your manifest.
-       For more information about this issue,
-       see [Upgrading concourse from 3.10 to 4.10 results in json exception on starting web nodes
-       #2595](https://github.com/concourse/concourse/issues/2595) in GitHub.
+    This forces the `ATC` component of the `web` node to set the `main` team's auth to the parameters supplied in your manifest.
+    * For more information about this issue, see [Upgrading concourse from 3.10 to 4.10 results in json exception on starting web nodes #2595](https://github.com/concourse/concourse/issues/2595) in GitHub.
 
 * User Authentication flows aginst UAA with external identity providers, such as SAML,
 using the Concourse `cf connector` command cannot be completed due to a mismatch in service URLs.
