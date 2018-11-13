@@ -183,7 +183,7 @@ and only slowed down the database side of the garbage collection lifecycle.
 * Tables now get cleaned up via database triggers on pipeline/team deletion
   * Previously, repeated team and pipeline creation and destruction would leave a few tables around: `team_build_events_XXX` and `pipeline_build_events_XXX`.
     * This would cause the database to increase in CPU usage over time.
-    * If you are see symptoms of this problem, it should be safe to manually drop the tables that have no corresponding pipeline or team.
+    * If you see symptoms of this problem, it should be safe to manually drop the tables that have no corresponding pipeline or team.
 
 
 #### Installation
