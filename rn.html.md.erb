@@ -66,9 +66,9 @@ New features and changes in this release:
 * The `fly teams` command only lists teams of which you are a member (or all teams, if you're a member of the admin team `main`).
 * `fly teams` has a new flag `-d/--details` that displays each team's auth configuration.
 * The fly execute command with -j will now use the job's pipeline's resource_types.
-* fly login can now be invoked with -b to auto-launch a browser to do the oAuth dance
+* fly login can now be invoked with -b to auto-launch a browser to do the oAuth dance.
 * `fly` now supports `--json` on most commands to dump info in JSON format, rather than the human-friendly table format.
-* `fly validate-pipeline` can now be instructed to print the interpolated pipeline config using the `--output` flag
+* `fly validate-pipeline` can now be instructed to print the interpolated pipeline config using the `--output` flag.
 * Users can now force an immediate check of a resource type using `fly check-resource-type`.
 
 
@@ -129,7 +129,7 @@ This command will attempt to fetch values from the configured credential manager
 
 
 #### Web UI
-* The dashboard page now has "Dashboard" in the title
+* The dashboard page now has "Dashboard" in the title.
 * Concourse pipeline view now has breadcrumbs to indicate which pipeline, job, or resource you are looking at.
 * Pipeline groups navigation has been redesigned to better display lots of groups and/or long group names.
 * Dashboard searches update the URL, making it easy to bookmark and share specific dashboard views.
@@ -153,22 +153,23 @@ This release fixes the following issues:
 
 
 #### Fly
-* The `fly intercept` command will no longer list containers that are still being created, and are not yet interceptible. Previously, this would lead to a `websocket: bad handshake` error.
+* The `fly intercept` command will no longer list containers that are still being created, and are not yet interceptable.
+  Previously, this would lead to a `websocket: bad handshake` error.
 
 
 #### Resources
 * Previously, if a resource was only ever used as an explicit output of a job, it would always show up as black even if it was erroring.
     * It will now show up as orange, like the other resources.
 * The `s3-resource` can now be used with Dell's EMC ECS object store.
-* Publishing draft releases with the `github-release-resource` will no longer error
+* Publishing draft releases with the `github-release-resource` will no longer error.
 * Recent versions of Docker introduced an issue where `dockerd` could fail to start if the worker was under load.
     * This resulted in an infinite loop in the `docker-image-resource`.
-    * Resource are now more resilient to this - they will detect a failure to start and keep resuscitating `dockerd` until it starts, giving up after 2 minutes.
+    * Resource are now more resilient to this---they detect a failure to start and keep resuscitating `dockerd` until it starts, giving up after 2 minutes.
 * `docker-image-resource`
-    * Skips starting the Docker daemon if `skip_download: true` is set.
+    * Skips starting the Docker daemon if `skip_download: true` is set
     * Includes support for fetching and extracting xz packages in `ADD` commands
-    * Fails gracefully when `build_args_file` cannot be parsed.
-    * Fails with a clearer error when your ECR credentials are incorrect.
+    * Fails gracefully when `build_args_file` cannot be parsed
+    * Fails with a clearer error when your ECR credentials are incorrect
 
 
 #### Runtime
@@ -187,17 +188,18 @@ and only slowed down the database side of the garbage collection lifecycle.
 
 
 #### Installation
-* The BOSH release now has properties for configuring the DataDog metrics emitter
+* The BOSH release now has properties for configuring the DataDog metrics emitter.
 * The BOSH release now respects the configured `postgresql.client_cert` property.
 
 
 #### Web UI
-* We have updated some of the messaging in the UI to be less confusing.
+* Updated messaging in the UI to be less confusing
     * When viewing a build that has not been made public, it will now say you are not authorized.
       * Previously, it would tell you to log in, only to tell you to log in again, because that didn't change anything.
 * The build number in the `<title>` when viewing a one-off build in your browser is now consistent with the number reflected on the page.
-* We fixed a couple situations in the UI where jobs or pipelines with spaces in their name would render incorrectly. In general, we do not advise users to use whitespaces in pipeline names.
-* Fixed an "Aw, snap!" browser crash that affected some versions of Chrome when viewing the pipeline page.
+* A couple situations in the UI where jobs or pipelines with spaces in their name would render incorrectly are now fixed.
+  In general, Pivotal does not recommend whitespaces in pipeline names.
+* Fixed an "Aw, snap!" browser crash that affected some versions of Chrome when viewing the pipeline page
 
 
 #### Core Functionality
@@ -210,7 +212,7 @@ which is used internally as part of the worker draining lifecycle.
 * The TSA will now respect the configured log level for worker heartbeating logs.
 * Fixed up a few API endpoints so that they correctly return `Content-Type: application/json`
 * Fixed a bug that caused the Vault login retry logic to go into a fast loop if retrying failed for long enough to exceed the maximum retry backoff.
-* Removed unnecessary log messages from the TSA.
+* Removed unnecessary log messages from the TSA
 * Any errors when checking for a resource's type to have new versions will be bubbled up as resource checking errors.
     * This includes failure to fetch credentials.
 
@@ -219,7 +221,7 @@ which is used internally as part of the worker draining lifecycle.
 This release has the following issues:
 
 * Upgrading from Concourse v3.x to v4.2.1 can result in the following JSON exception when attempting to start the web node: `json: cannot unmarshal object into Go value of type []string`.
-    * This is caused by a failing migration during the upgrade processs.
+    * This is caused by a failing migration during the upgrade process.
     * To recover from this error state, do the following:
       1. Access the Concourse database.
       2. Go to the `teams` table.
@@ -228,7 +230,7 @@ This release has the following issues:
     This forces the `ATC` component of the `web` node to set the `main` team's auth to the parameters supplied in your manifest.
     * For more information about this issue, see [Upgrading concourse from 3.10 to 4.10 results in json exception on starting web nodes #2595](https://github.com/concourse/concourse/issues/2595) in GitHub.
 
-* User Authentication flows aginst UAA with external identity providers, such as SAML,
+* User Authentication flows against UAA with external identity providers, such as SAML,
 using the Concourse `cf connector` command cannot be completed due to a mismatch in service URLs.
 
 ## <a id="rn-other-version"></a> View Release Notes for Another Version
