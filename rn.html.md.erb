@@ -30,8 +30,13 @@ GitHub repository.
 * The [`concourse/bosh-deployment-resource`](https://github.com/concourse/bosh-deployment-resource) has been deprecated and removed from this release.
 Please use the updated [`cloudfoundry/bosh-deployment-resource`](https://github.com/cloudfoundry/bosh-deployment-resource) instead.
 
-* If you are currently on v3.6.0 and looking to upgrade to v4.2.1, you must first upgrade to one of: Concourse v3.8.0, v3.9.2 or v3.13.0 
-before upgrading to 4.2.1
+* If you are currently on v3.6.0 and are looking to upgrade to v4.2.1, you must first upgrade to one of the following Concourse versions before upgrading to 4.2.1:
+    * v3.8.0
+    * v3.9.2
+    * v3.13.0
+    
+    This is because v4.2.1 requires a code change for migration that is available in v3.8 and later.
+
 
 #### Teams
 * If you have multiple teams configured with the same basic auth username,
