@@ -51,9 +51,9 @@ Use the updated [`cloudfoundry/bosh-deployment-resource`](https://github.com/clo
 
 #### Teams
 * If you have multiple teams configured with the same basic authentication username,
-the migration will fail.
+the migration <!-- what migration? --> will fail.
 This is because "basic auth" is gone and in its place is local user configuration.
-Loggin in with basic authentication now actually means logging in as the configured user.
+Logging in with basic authentication now means logging in as the configured user.
 
 * There is no support for configuring the same provider multiple times,
 such as for multiple GitHub Enterprise instances.
@@ -110,7 +110,7 @@ New features and changes in this release:
     * Supports configuration of an initial version and content, which can be useful for bootstrapping state.
 * `docker-image-resource`
     * Has a tag_file parameter which replaces the old tag command <!-- What command would that be?--> that does the same thing. This is in the interest of clearer naming.
-    * Now supports interpolating the Concourse-provided env vars in build args <!-- Arguments? -->.
+    * Now supports interpolating the Concourse-provided env vars in build arguments.
 * `cf-resource`
     * Now supports client credentials-based authentication.
 
@@ -125,24 +125,24 @@ New features and changes in this release:
   This is configured using [`syslog`](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.2.1#p%3dsyslog) parameters on the ATC job.
   When enabled, build logs ship off in a batch as builds complete.
 * The ATC now exposes an API endpoint for performing a health check against the configured credential manager, at `/api/v1/info/creds`.
-  This propagates whatever information might be useful, depending on your credential manager backend.
+  This propagates useful information, depending on your credential manager backend.
     <p class="note"><strong>Note:</strong> This endpoint is only accessible by admin users (members of the `main` team).
-* Runtime has been generally optimized to reduce the load on the database, improving garbage collection efficiency and web UI response time.
+* Runtime has been improved to reduce the load on the database, improving garbage collection efficiency and web UI response time.
 * Container and volume garbage collection are now performed in parallel across the worker cluster.
-  The ATC is still the source of truth for knowing when containers and volumes are
-  to be removed, but is no longer responsible for performing the actual "destroy" API calls.
+  The ATC still displays when containers and volumes are to be removed, but is no
+  longer responsible for performing the actual "destroy" API calls.
   This can make large-scale Concourse deployments much more efficient due to the
   removal of network and CPU overhead from the ATC.
 * Concourse workers can now be registered with the [`ephemeral`](https://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=4.2.1#p%3dephemeral) parameter.
   When specified, the worker will immediately be removed after it stalls.
-* The ATC no longer fails to start if it is configured with CredHub and CredHub is not running. It will just try to reach it later instead.
+* The ATC no longer fails to start if it is configured with CredHub and CredHub is not running. It will try to reach CredHub later instead.
 
 
 #### Core Functionality
 * Concourse now supports user authentication into teams.
-    * Supported authorization providers include: Basic Auth, GitHub Auth, CF Auth, OIDC and OAuth.
+    * Supported authorization providers include: Basic Auth, GitHub Auth, CF Auth, OIDC, and OAuth.
 * Concourse emits warnings in the task logs when it detects that parameters are declared but not configured.
-* Pipeline credentials can now be verified using a new `--check-creds` flag available on `fly set-pipeline`. This command attempts to fetch values from the configured credential manager and tell you which values could not be interpolated.
+* Pipeline credentials can now be verified using a new `--check-creds` flag available on `fly set-pipeline`. This command fetches values from the configured credential manager and tells you which values could not be interpolated.
 
 
 #### Web UI
@@ -151,10 +151,11 @@ New features and changes in this release:
 * Pipeline groups navigation has been redesigned to better display lots of groups and long group names.
 * Dashboard searches update the URL, making it easier to bookmark and share specific dashboard views.
 * The main page (`/`) now shows the dashboard instead of a pipeline configured by the first team on the instance.
-* Concourse Dashboard allows you to pause and reorder pipelines. As part of this change, the sidebar has been removed from the pipeline view.
-* The dashboard now draws a little orange triangle on a pipeline that has a resource that is failing to check.
-* Build page load performance is significantly improved.
-* The dashboard view now indicates whether you are a member of a team, or whether you are only seeing it because it has exposed pipelines.
+* Concourse Dashboard allows you to pause and reorder pipelines.
+* The sidebar has been removed from the pipeline view.
+* The dashboard now displays an orange triangle on a pipeline that has a resource that is failing to check.
+* Build page load performance is improved.
+* The dashboard view now indicates whether you are a member of a team, or whether you are only seeing the dashboard view because it has exposed pipelines.
 
 
 #### Metrics
