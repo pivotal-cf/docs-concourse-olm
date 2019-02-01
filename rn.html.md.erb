@@ -51,7 +51,7 @@ Use the updated [`cloudfoundry/bosh-deployment-resource`](https://github.com/clo
 
 #### Teams
 * If you have multiple teams configured with the same basic authentication username,
-the migration <!-- what migration? --> will fail.
+the migration [//]: # ( what migration? ) will fail.
 This is because "basic auth" is gone and in its place is local user configuration.
 Logging in with basic authentication now means logging in as the configured user.
 
@@ -108,7 +108,7 @@ New features and changes in this release:
     * Supports configuration of an initial version and content, which can be useful
       for bootstrapping state.
 * `docker-image-resource`
-    * The tag_file parameter replaces the old tag command <!-- What command would that be?--> that does the same thing. This is in the interest of clearer naming.
+    * The tag_file parameter replaces the old tag command <%# What command would that be? %> that does the same thing. This is in the interest of clearer naming.
     * Now supports interpolating the Concourse-provided env vars in build arguments
 * `cf-resource`
     * Now supports client credentials-based authentication
@@ -161,7 +161,7 @@ New features and changes in this release:
 * The Prometheus metrics now automatically prune stale workers.
 * The Prometheus metrics for pipeline scheduling are now counters instead of gauges.
 * There are now metrics emitted for periodic resource checking.
-* The Prometheus metric emitter has been generally improved <!-- How?-->.
+* The Prometheus metric emitter has been generally improved <%# How? %>.
 
 
 ### <a id="fixed-issues"></a> Fixed Issues
@@ -184,16 +184,16 @@ This release fixes the following issues:
   keep resuscitating `dockerd` until it starts, giving up after two minutes.
 * `docker-image-resource`
     * Skips starting the Docker daemon if `skip_download: true` is set
-    * Includes support for fetching and extracting xz <!-- genuine name? --> packages in `ADD` commands
+    * Includes support for fetching and extracting xz <%# genuine name? %> packages in `ADD` commands
     * Fails gracefully when `build_args_file` cannot be parsed
     * Fails with a clearer error when your ECR credentials are incorrect
 
 
 #### Runtime
-* Fixed handling of `no_proxy` in Concourse worker <!-- all workers or just one? -->
+* Fixed handling of `no_proxy` in Concourse worker <%# all workers or just one? %>
 * The ATC now fails gracefully and early if no session signing key is specified,
-  rather than ungracefully and late. In addition, one <!-- one what? A session signing key? --> generates automatically if not given to Concourse Web.
-    <p class="note warning"><strong>Warning:</strong> Do not do this <!-- do what? Fail to assign session keys? --> forever. Users
+  rather than ungracefully and late. In addition, one <%# one what? A session signing key? %> generates automatically if not given to Concourse Web.
+    <p class="note warning"><strong>Warning:</strong> Do not do this <%# do what? Fail to assign session keys? %> forever. Users
       are logged out whenever you restart the instance, and things will not work
       at all if you are running a cluster of many web nodes (they all need to have
       the same session signing key).
@@ -206,13 +206,13 @@ This release fixes the following issues:
   Previously, repeated team and pipeline creation and destruction would leave a
   few tables around, such as `team_build_events_XXX` and `pipeline_build_events_XXX`.
   This would cause the database to increase in CPU usage over time. If you see
-  symptoms of this problem, it is likely safe <!-- is more detail needed here to assuage fears? --> to manually drop the tables that
+  symptoms of this problem, it is likely safe <%# is more detail needed here to assuage fears? %> to manually drop the tables that
   have no corresponding pipeline or team.
 
 
 #### Installation
 * The BOSH release now has properties for configuring the DataDog metrics emitter.
-* The BOSH release now respects <!-- respects? --> the configured `postgresql.client_cert` property.
+* The BOSH release now respects <%# respects? %> the configured `postgresql.client_cert` property.
 
 
 #### Web UI
@@ -231,12 +231,12 @@ This release fixes the following issues:
 #### Core Functionality
 * A CredHub integration that caused very high CPU usage on the ATC is fixed. In
   addition, the CredHub client has been bumped to include a crucial fix.
-* When running on Windows, we <!-- Pivotal? --> no longer shell out to TAR for
+* When running on Windows, we <%# Pivotal? %> no longer shell out to TAR for
   performing volume streaming operations as doing so is unreliable. A native Go
   implementation will be used instead.
-* Fixed a potential problem <!-- more specificity needed?--> in the `delete worker` API endpoint.
+* Fixed a potential problem <%# more specificity needed? %> in the `delete worker` API endpoint.
   This endpoint is used internally as part of the worker draining lifecycle.
-* The TSA now respects <!-- respects? --> the configured log level for worker heartbeating logs.
+* The TSA now respects <%# respects? %> the configured log level for worker heartbeating logs.
 * Fixed a few API endpoints so that they correctly return `Content-Type: application/json`
 * Fixed an issue that caused the Vault login retry logic to go into a fast loop if
   retrying failed for long enough to exceed the maximum retry backoff
