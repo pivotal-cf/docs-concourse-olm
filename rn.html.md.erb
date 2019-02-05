@@ -19,7 +19,7 @@ This release contains the following security fix:
 
 <strong>Release Date: October 5, 2018</strong>
 
-Concourse v4.2.1 introduces the concept of user-based team authentication.
+Concourse for PCF v4.2.1 introduces the concept of user-based team authentication.
 
 Previously, Concourse required you to log in under a specific team without an
 association to a user.
@@ -33,7 +33,7 @@ This release has the following breaking changes:
 
 
 #### Installation
-* The BOSH deployment for Concourse v4.0.0 requires manifest changes.
+* The BOSH deployment for Concourse for PCF v4.0.0 requires manifest changes.
 For examples, see the `operations` directory in the
 [Concourse BOSH deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v4.0.0/cluster/operations)
 GitHub repository.
@@ -61,7 +61,7 @@ The migration fails when trying to upgrade an instance with teams that have diff
 The workaround to this limitation is to deploy multiple Concourse instances.
 
 * BitBucket authentication is no longer supported because the underlying authentication library
-does not support it. However, Concourse v4.0.0 supports GitHub, generic LDAP, OAuth,
+does not support it. However, Concourse for PCF v4.0.0 supports GitHub, generic LDAP, OAuth,
 and OIDC connectors.
 
 
@@ -250,7 +250,7 @@ This release fixes the following issues:
 ### <a id="known-issues"></a> Known Issue
 This release has the following issue:
 
-Upgrading from Concourse v3.x to v4.2.1 can result in the following JSON exception
+Upgrading from Concourse for PCF v3.x to v4.2.1 can result in the following JSON exception
 when attempting to start the web node:
 <pre class="terminal">json: cannot unmarshal object into Go value of type []string</pre>
 This is caused by a failing migration during the upgrade process. To recover from
