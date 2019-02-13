@@ -5,6 +5,23 @@ owner: Concourse
 
 <strong><%= modified_date %></strong>
 
+## <a id="rn-423"></a> v4.2.3
+
+<strong>Release Date: Febuary 13, 2018</strong>
+
+###<a id="security-422"></a> Security Fix
+Compatible with Garden RunC 1.18.2 to address [CVE 2019-5736](https://cve.mitre.org/cgi-bin/cvename.cgi?name=CVE-2019-5736)
+
+### <a id="fixed-issues"></a> Fixed Issues
+This release fixes the following issues:
+
+#### Core Functionality
+* Previously, authentication flows with the `cf` auth connector
+would fail whenever a third-party SAML redirect is required. The `cf` auth
+connector has been updated to use the `authorization_endpoint` so that the
+authentication flow can be completed successfully.
+
+
 ## <a id="rn-422"></a> v4.2.2
 
 <strong>Release Date: December 12, 2018</strong>
