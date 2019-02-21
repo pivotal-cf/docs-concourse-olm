@@ -5,18 +5,14 @@ owner: Concourse
 
 <strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.13.2
-<strong>Release Date: February 20, 2019</strong>
+## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
+<strong>Release Date: June 4, 2018</strong>
 
 ###<a id="security-3132"></a> Security Fixes
 This release contains the following security fix:
 
 * High [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736)
-  * Added compatibility with Garden RunC v1.18.2 to address this.
-
-
-## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
-<strong>Release Date: June 4, 2018</strong>
+  * Update Garden RunC to v1.18.2 and bump your stemcells to xenial 250.x to address this.
 
 ###<a id="bosh-release"></a>BOSH Release
 The `groundcrew` job has been renamed to `worker` in this release of Concourse;
