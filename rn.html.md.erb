@@ -8,40 +8,56 @@ owner: Concourse
 ## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
 <strong>Release Date: June 4, 2018</strong>
 
-###<a id="security-3132"></a> Security Fixes
-This release contains the following security fix:
+###<a id="security-3130"></a> Security Fix: Action Required
 
-* High [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736)
-  * Update Garden RunC to v1.18.2 and bump your stemcells to xenial 250.x to address this.
+To protect against the runC container breakout CVE, you must do the following:
+
++ Update Garden RunC to v1.18.2
+[//]: # (HOW? Can you give us a link to instructions on how to do this?)
+
++ Update your stemcell to Xenial v250.x.
+
+[//]: # ( HOW? We need a link to the instructions. Do we have to download it from PivNet? and then upload it https://bosh.io/docs/cli-v2/ ?  )
+
+For more information about this CVE,
+see [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736).
+  
 
 ###<a id="bosh-release"></a>BOSH Release
-The `groundcrew` job has been renamed to `worker` in this release of Concourse;
-please update your BOSH manifest accordingly.
 
-As always, you can refer to the complete documentation of the
-[3.13.0 release](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0) at [bosh.io](http://bosh.io/docs/).
+The `groundcrew` job has been renamed to `worker` in this release of Concourse.
+Update your BOSH manifest.
+For more information, see [worker job from concourse/3.13.0](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0)
+in the BOSH documentation. 
 
-For additional usage information and sample manifests you can refer to the ops file in the **Cluster Concourse deployment**
-section of the [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v3.13.0/cluster) repository.
+For additional usage information and sample manifests,
+see the ops file in the **Cluster Concourse deployment**
+section of [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v3.13.0/cluster) in GitHub.
+
+[//]: # (Where is this ops file? We didn't find it in this repo.)
 
 ###<a id="known-issues"></a>Known Issues
-<p class="note"><strong>Warning</strong>
+<p class="note warning"><strong> Warning:</strong> 
   A bug in Chrome 67 causes it to crash when loading the Concourse UI.  At the
-  time of this notice (June 4, 2018) the dev/canary versions of Google Chrome
-  should work, as well as other browsers like Firefox and Safari.
-  You can follow along the issue in GitHub issue <a href="https://github.com/concourse/concourse/issues/2236">#2236</a>
+  time of this notice (June 4, 2018), Chrome Dev and Chrome Canary versions probably work
+  as well as other browsers like Firefox and Safari.
+  You can follow issue <a href="https://github.com/concourse/concourse/issues/2236">#2236</a> in GitHub.
 </p>
 
-* This release involves a worker protocol version bump, from 1.3 to 2.0, and
-also switches the default `BaggageClaim` driver back to `btrfs`.
-We recommend spinning up a new pool of worker nodes, upgrading your web nodes,
-and then removing the old workers. Otherwise your workers may get swarmed with containers,
-if only one 2.0 worker is added at a time with the web nodes already upgraded.
+* This release involves a worker protocol version bump, from v1.3 to v2.0, and
+it switches the default `BaggageClaim` driver back to `btrfs`.
+
+    Pivotal recommends spinning up a new pool of worker nodes, upgrading your web nodes,
+and then removing the old workers.
+Otherwise your workers might get swarmed with containers,
+because only one 2.0 worker is added at a time with the web nodes already upgraded.
+
 * Concourse now defaults the worker `registration_mode` to `direct`. If your
-Concourse installation uses external workers, please verify that your worker
-manifest explicitly specifies `registration_mode:forward`. For more information
- on this new parameter, please reference the documentation on
- [bosh.io](https://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0#p%3dtsa.registration_mode).
+Concourse installation uses external workers, verify that your worker
+manifest explicitly specifies `registration_mode:forward`. For information
+about this new parameter, see
+[registration_mode](https://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0#p%3dtsa.registration_mode)
+in the BOSH documentation.
 
 ###<a id="features"></a> Features
 * Added a new authentication provider for teams using OpenID Connect (OIDC) ([PR #2](https://github.com/concourse/skymarshal/pull/2))
