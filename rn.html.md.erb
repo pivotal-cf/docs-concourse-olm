@@ -12,28 +12,29 @@ owner: Concourse
 
 To protect against the runC container breakout CVE, you must do the following:
 
-+ Update Garden RunC to v1.18.2.
-To do this, see [garden-runc/1.18.2](https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2) in the BOSH documentation.
+* Update Garden RunC to v1.18.2.
 
-+ Update your stemcell to Xenial v250.x.
-To do this, see [Stemcells](https://bosh.io/stemcells/) and [Uploading Stemcells](https://bosh.io/docs/uploading-stemcells/) in the BOSH documentation.
+    For more information, see [garden-runc/1.18.2](https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2) in the BOSH documentation.
+
+* Update your stemcell to Xenial v250.x.
+
+    For more information, see [Stemcells](https://bosh.io/stemcells/) and [Uploading Stemcells](https://bosh.io/docs/uploading-stemcells/) in the BOSH documentation.
 
 For more information about this CVE,
 see [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736).
 
 
 ###<a id="bosh-release"></a>BOSH Release
+* The `groundcrew` job has been renamed to `worker` in this release of Concourse.
+  Update your BOSH manifest.<br><br>
+  For more information, see
+  [worker job from concourse/3.13.0](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0)
+  in the BOSH documentation.
+  For additional usage information and sample manifests,
+  see the `operations` directory in the
+  [Concourse BOSH deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v3.13.0/cluster/operations)
+  GitHub repository.
 
-The `groundcrew` job has been renamed to `worker` in this release of Concourse.
-Update your BOSH manifest.
-For more information, see [worker job from concourse/3.13.0](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0)
-in the BOSH documentation.
-
-For additional usage information and sample manifests,
-see the ops file in the **Cluster Concourse deployment**
-section of [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/tree/v3.13.0/cluster) in GitHub.
-
-[//]: # (Where is this ops file? We didn't find it in this repo.)
 
 ###<a id="known-issues"></a>Known Issues
 <p class="note warning"><strong> Warning:</strong>
