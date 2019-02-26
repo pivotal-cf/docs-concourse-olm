@@ -12,23 +12,22 @@ owner: Concourse
 
 To protect against the runC container breakout CVE, you must do the following:
 
-+ Update Garden RunC to v1.18.2
-[//]: # (HOW? Can you give us a link to instructions on how to do this?)
++ Update Garden RunC to v1.18.2.
+To do this, see [garden-runc/1.18.2](https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2) in the BOSH documentation.
 
 + Update your stemcell to Xenial v250.x.
-
-[//]: # ( HOW? We need a link to the instructions. Do we have to download it from PivNet? and then upload it https://bosh.io/docs/cli-v2/ ?  )
+To do this, see [Stemcells](https://bosh.io/stemcells/) and [Uploading Stemcells](https://bosh.io/docs/uploading-stemcells/) in the BOSH documentation.
 
 For more information about this CVE,
 see [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736).
-  
+
 
 ###<a id="bosh-release"></a>BOSH Release
 
 The `groundcrew` job has been renamed to `worker` in this release of Concourse.
 Update your BOSH manifest.
 For more information, see [worker job from concourse/3.13.0](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0)
-in the BOSH documentation. 
+in the BOSH documentation.
 
 For additional usage information and sample manifests,
 see the ops file in the **Cluster Concourse deployment**
@@ -37,7 +36,7 @@ section of [concourse-bosh-deployment](https://github.com/concourse/concourse-bo
 [//]: # (Where is this ops file? We didn't find it in this repo.)
 
 ###<a id="known-issues"></a>Known Issues
-<p class="note warning"><strong> Warning:</strong> 
+<p class="note warning"><strong> Warning:</strong>
   A bug in Chrome 67 causes it to crash when loading the Concourse UI.  At the
   time of this notice (June 4, 2018), Chrome Dev and Chrome Canary versions probably work
   as well as other browsers like Firefox and Safari.
