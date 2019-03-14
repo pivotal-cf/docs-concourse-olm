@@ -3,30 +3,48 @@ title: Installing Concourse
 owner: Concourse
 ---
 
-Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery tool that lets you build and monitor scalable pipelines seamlessly. This topic describes how to install Concourse and what you need to install it successfully.
+<strong><%= modified_date %></strong>
+
+Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and
+delivery tool that lets you build and monitor scalable pipelines seamlessly.
+This topic describes how to install Concourse and what you need to install it successfully.
 
 ## <a id="prereqs"></a> Prerequisites
-<ul>
-<li>A supported IaaS provider: AWS, Azure, GCP, or vSphere</li>
-<li>A <a href="http://bosh.io/docs/init.html">BOSH Director</a>. Do not use the BOSH Director associated with an existing PCF deployment.</li>
-<li><a href="http://bosh.io/docs/cli-v2.html#install">BOSH CLI v2</a></li>
-<li>Concourse + Garden Run-C BOSH releases downloaded from Pivotal Network</li>
-<li>The stemcell for your IaaS, for when you create your Concourse deployment manifest.
+
+* A supported IaaS provider: AWS, Azure, GCP, or vSphere
+* A BOSH Director. For more information about the BOSH Director, see
+[Deploying BOSH with create-env](http://bosh.io/docs/init.html) in the BOSH documentation.
+<p class="note warning"><strong>Warning: </strong>It is not recommended to use a
+  BOSH Director associated with an existing PCF deployment. BOSH-deployed Concourse
+  on an existing PCF deployment may conflict with the common configuration of
+  Ops Manager for tiles being installed at the time of deployment.</p>
+* BOSH CLI v2. For more information, see
+[Deploying BOSH with create-env](https://bosh.io/docs/cli-v2-install/) in the BOSH documentation.
+* [Concourse](https://network.pivotal.io/products/p-concourse/) and Garden Run-C
+BOSH releases downloaded from Pivotal Network
+* The stemcell for your IaaS, for when you create your Concourse deployment manifest.
   To download an Ubuntu Xenial stemcell from Pivotal Network, see
-  <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial/">Stemcells for PCF (Ubuntu Xenial)</a></li>
-<li>PostgreSQL 9.5+. Concourse can be configured to connect to an external PostgreSQL database or a BOSH managed Cloud Foundry Postgres release (available on <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release">bosh.io</a>). <b>NOTE:</b> As of Concourse 3.6.0 the Concourse BOSH release no longer supplies an internal postgres. <em>You must</em> provide your own postgres database as of 3.6.0</li>
-</ul>
+  [Stemcells for PCF (Ubuntu Xenial)](https://network.pivotal.io/products/stemcells-ubuntu-xenial/).
+* PostgreSQL 9.5 or later.
+Concourse can be configured to connect to an external PostgreSQL database or a
+BOSH-managed Cloud Foundry Postgres release (available on [bosh.io](http://bosh.io/releases/github.com/cloudfoundry/postgres-release)).
+<p class="note"><strong>Note: </strong> As of Concourse v3.6.0 the Concourse BOSH release no longer supplies an internal postgres.
+  You must provide your own postgres database as of 3.6.0.
+
 
 ## <a id="setup"></a> Setting Up and Installing Concourse
-<ol>
- <li>Configure your IaaS environment by modifying your cloud config for BOSH deployment. </li>
- <li>Prepare the Concourse deployment manifest. You can write your own manifest or <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml">modify a template</a> with your unique configuration. You can read more about BOSH deployment configurations in the <code>concourse-bosh-deployment</code> repo for <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md">cluster deployments</a><br/>
- <p class="note"><strong>Note</strong>: You will also need to configure authentication. Follow the instructions in <a href="./authenticating.html">Authentication</a>.<br/>
-Provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</p></li>
-<li>Prepare the <code>cloud-config.yml</code> file and upload it to your BOSH Director with <code>bosh update-cloud-config</code>.<br/>
-<li>Deploy Concourse with <code>bosh deploy</code>.
-    For more information,
-    see the <a href="https://bosh.io/docs/cli-v2.html">BOSH CLI documentation</a> for more information.
-    After Concourse deploys, a success message displays.</li>
-</ol>
-<br/>
+
+1. Configure your IaaS environment by modifying your cloud config for BOSH deployment.
+1. Prepare the Concourse deployment manifest.
+You can write your own manifest or
+[modify a template](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml)
+with your unique configuration.
+You can read more about BOSH deployment configurations in the `concourse-bosh-deployment`
+repo for [cluster deployments](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md)
+<p class="note"><strong>Note: </strong> You will also need to configure authentication.
+   Follow the instructions in [Authentication](./authenticating.html).
+   Provide `tls_cert` and `tls_key` values in the manifest.</p>
+1. Prepare the `cloud-config.yml` file and upload it to your BOSH Director with `bosh update-cloud-config`.
+1. Deploy Concourse with `bosh deploy`. For more information,
+    see [Deploying](https://bosh.io/docs/deploying/) in the BOSH documentation.
+    After Concourse deploys, a success message is displayed.
