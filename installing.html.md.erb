@@ -11,7 +11,9 @@ Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delive
 <li>A <a href="http://bosh.io/docs/init.html">BOSH Director</a>. Do not use the BOSH Director associated with an existing PCF deployment.</li>
 <li><a href="http://bosh.io/docs/cli-v2.html#install">BOSH CLI v2</a></li>
 <li>Concourse + Garden Run-C BOSH releases downloaded from Pivotal Network</li>
-<li>The stemcell for your IaaS downloaded from Pivotal Network</li>
+<li>The stemcell for your IaaS, for when you create your Concourse deployment manifest.
+  To download an Ubuntu Xenial stemcell from Pivotal Network, see
+  <a href="https://network.pivotal.io/products/stemcells-ubuntu-xenial/">Stemcells for PCF (Ubuntu Xenial)</a></li>
 <li>PostgreSQL 9.5+. Concourse can be configured to connect to an external PostgreSQL database or a BOSH managed Cloud Foundry Postgres release (available on <a href="http://bosh.io/releases/github.com/cloudfoundry/postgres-release">bosh.io</a>). <b>NOTE:</b> As of Concourse 3.6.0 the Concourse BOSH release no longer supplies an internal postgres. <em>You must</em> provide your own postgres database as of 3.6.0</li>
 </ul>
 
