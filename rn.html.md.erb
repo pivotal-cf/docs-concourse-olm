@@ -8,6 +8,15 @@ owner: Concourse
 ## <a id="rn-423"></a> v4.2.3
 <strong>Release Date: February 13, 2019</strong>
 
+###<a id="security-click-jack"></a> Security Fix: Action Required
+Please configure `x_frame_options` property for the web/atc job to `deny` or `sameorigin`
+
+This prevents the Concourse UI from being embedded as an iframe and utilized for clickjacking exploits. 
+
+<strong>Note:</strong> If setting the value to `allow-from`, please note that not all browsers support this value and when not supported the header is ignored by the browser. 
+
+For more information about this CVE, see: 
+
 ###<a id="security-423"></a> Security Fixes
 This release contains the following security fix:
 
