@@ -19,17 +19,19 @@ This topic describes how to install Concourse and what you need to install it su
   on an existing PCF deployment may conflict with the common configuration of
   Ops Manager for tiles being installed at the time of deployment.</p>
 * BOSH CLI v2. For more information, see
-[Deploying BOSH with create-env](https://bosh.io/docs/cli-v2-install/) in the BOSH documentation.
-* [Concourse](https://network.pivotal.io/products/p-concourse/) and Garden Run-C
-BOSH releases downloaded from Pivotal Network
+[Installing the CLI](https://bosh.io/docs/cli-v2-install/) in the BOSH documentation.
+* Concourse and Garden Run-C BOSH releases. Download these from
+[Pivotal Network](https://network.pivotal.io/products/p-concourse/).
 * The stemcell for your IaaS, for when you create your Concourse deployment manifest.
   To download an Ubuntu Xenial stemcell from Pivotal Network, see
   [Stemcells for PCF (Ubuntu Xenial)](https://network.pivotal.io/products/stemcells-ubuntu-xenial/).
-* PostgreSQL 9.5 or later.
+* PostgreSQL v9.5 and later.
 Concourse can be configured to connect to an external PostgreSQL database or a
-BOSH-managed Cloud Foundry Postgres release (available on [bosh.io](http://bosh.io/releases/github.com/cloudfoundry/postgres-release)).
-<p class="note"><strong>Note: </strong> As of Concourse v3.6.0 the Concourse BOSH release no longer supplies an internal postgres.
-  You must provide your own postgres database as of 3.6.0.
+BOSH-managed Cloud Foundry Postgres release.
+For more information, see [postgres/36](http://bosh.io/releases/github.com/cloudfoundry/postgres-release))
+in the BOSH documentation.
+<p class="note"><strong>Note: </strong> As of Concourse v3.6.0 the Concourse BOSH release no longer supplies an internal Postgres.
+  You must provide your own Postgres database as of 3.6.0.
 
 
 ## <a id="setup"></a> Setting Up and Installing Concourse
@@ -39,8 +41,9 @@ BOSH-managed Cloud Foundry Postgres release (available on [bosh.io](http://bosh.
 You can write your own manifest or
 [modify a template](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml)
 with your unique configuration.
-You can read more about BOSH deployment configurations in the `concourse-bosh-deployment`
-repo for [cluster deployments](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md)
+For more information about `Cluster Concourse deployment`, see
+[concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md)
+in the GitHub repo.
 <p class="note"><strong>Note: </strong> You will also need to configure authentication.
    Follow the instructions in [Authentication](./authenticating.html).
    Provide `tls_cert` and `tls_key` values in the manifest.</p>
