@@ -11,13 +11,16 @@ This topic describes how to install Concourse and what you need to install it su
 
 ## <a id="prereqs"></a> Prerequisites
 
+Before you install Concourse for PCF, you must have the following:
+
 * A supported IaaS provider: AWS, Azure, GCP, or vSphere
 * A BOSH Director. For more information about the BOSH Director, see
 [Deploying BOSH with create-env](http://bosh.io/docs/init.html) in the BOSH documentation.
 <p class="note warning"><strong>Warning: </strong>It is not recommended to use a
-  BOSH Director associated with an existing PCF deployment. BOSH-deployed Concourse
-  on an existing PCF deployment may conflict with the common configuration of
-  Ops Manager for tiles being installed at the time of deployment.</p>
+  BOSH Director associated with an existing PCF deployment.
+  This is because Concourse for PCF can conflict
+  with other tiles deploying on Ops Manager at the same time.</p>
+
 * BOSH CLI v2. For more information, see
 [Installing the CLI](https://bosh.io/docs/cli-v2-install/) in the BOSH documentation.
 * Concourse and Garden Run-C BOSH releases. Download these from
@@ -27,26 +30,30 @@ This topic describes how to install Concourse and what you need to install it su
   [Stemcells for PCF (Ubuntu Xenial)](https://network.pivotal.io/products/stemcells-ubuntu-xenial/).
 * PostgreSQL v9.5 and later.
 Concourse can be configured to connect to an external PostgreSQL database or a
-BOSH-managed Cloud Foundry Postgres release.
+BOSH-managed Cloud Foundry PostgreSQL release.
 For more information, see [postgres/36](http://bosh.io/releases/github.com/cloudfoundry/postgres-release))
 in the BOSH documentation.
-<p class="note"><strong>Note: </strong> As of Concourse v3.6.0 the Concourse BOSH release no longer supplies an internal Postgres.
-  You must provide your own Postgres database as of 3.6.0.
+<p class="note"><strong>Note: </strong> As of Concourse v3.6.0,
+  the Concourse BOSH release no longer supplies an internal PostgreSQL.
+  You must provide your own PostgreSQL database as of v3.6.0.
 
 
-## <a id="setup"></a> Setting Up and Installing Concourse
+## <a id="setup"></a> Set Up and Install Concourse
 
-1. Configure your IaaS environment by modifying your cloud config for BOSH deployment.
+To configure and deploy Concourse for PCF, do the following:
+
+1. Modify the `cloud-config.yml` file according to your IaaS environment.
+   For information, see [Updating Cloud Config](Updating Cloud Config) in the BOSH documentation.
 1. Prepare the Concourse deployment manifest.
-You can write your own manifest or
-[modify a template](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml)
-with your unique configuration.
+  You can write your own manifest or modify a template
+  with your unique configuration. For an example of a manifest template,
+  see the [concourse.yml](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml) file
+  in GitHub.
 For more information about `Cluster Concourse deployment`, see
 [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md)
-in the GitHub repo.
-<p class="note"><strong>Note: </strong> You will also need to configure authentication.
-   Follow the instructions in [Authentication](./authenticating.html).
-   Provide `tls_cert` and `tls_key` values in the manifest.</p>
+in GitHub.
+1. Configure authentication in your deployment manifest by providing `tls_cert` and `tls_key` values.
+   For instructions, see [Authentication](./authenticating.html).
 1. Prepare the `cloud-config.yml` file and upload it to your BOSH Director with `bosh update-cloud-config`.
 1. Deploy Concourse with `bosh deploy`. For more information,
     see [Deploying](https://bosh.io/docs/deploying/) in the BOSH documentation.
