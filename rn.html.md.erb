@@ -11,17 +11,34 @@ owner: Concourse
 ###<a id="security-click-jack"></a> Security Fix: Action Required
 Please configure `x_frame_options` property for the web/atc job to `deny` or `sameorigin`
 
-This prevents the Concourse UI from being embedded as an iframe and utilized for clickjacking exploits. 
+This prevents the Concourse UI from being embedded as an iframe and utilized for clickjacking exploits.
 
-<strong>Note:</strong> If setting the value to `allow-from`, please note that not all browsers support this value and when not supported the header is ignored by the browser. 
+<strong>Note:</strong> If setting the value to `allow-from`, please note that not all browsers support this value and when not supported the header is ignored by the browser.
 
-For more information about this CVE, see: 
+For more information about this CVE, see:
 
 ###<a id="security-423"></a> Security Fixes
-This release contains the following security fix:
+This release contains the following security fixes:
 
-* High [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736)
-  * Added compatibility with Garden RunC v1.18.2 to address this.
+* High [CVE 2019-3791: clickjacking](https://pivotal.io/security/cve-2019-3791) (**Action Required**).
+
+    To protect against the clickjacking CVE, you must do the following:
+
+    * Configure the `x_frame_options` property for the web/atc job to `deny` or `sameorigin`.
+        This prevents the Concourse UI from being embedded as an iframe and utilized for clickjacking exploits.
+        For more information, see [garden-runc/1.18.2](https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2) in the BOSH documentation.
+        <p class='note'><strong>Note: </strong>If setting the value to `allow-from`,
+          please note that not all browsers support this value and when not supported the header is ignored by the browser.
+
+* High [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736) (**Action Required**).
+
+      To protect against the runC container breakout CVE, you must do the following:
+
+      * Update Garden RunC to v1.18.2.
+          For more information, see [garden-runc/1.18.2](https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2) in the BOSH documentation.
+
+      * Update your stemcell to Xenial v250.x.
+          For more information, see [Stemcells](https://bosh.io/stemcells/) and [Uploading Stemcells](https://bosh.io/docs/uploading-stemcells/) in the BOSH documentation.
 
 ### <a id="fixed-issues"></a> Fixed Issues
 This release fixes the following issue:
