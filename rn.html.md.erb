@@ -6,7 +6,9 @@ owner: Concourse
 <strong><%= modified_date %></strong>
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
-<strong>Release Date: June 4, 2018</strong>
+**Release Date: June 4, 2018**
+
+<p class="note warning"><strong>Warning: </strong>There is a potential vulnerability in the Concourse UI that can be used for clickjacking exploits. To protect against clickjacking, you must configure the <code>x_frame_options</code> property for the web/atc job to <code>deny</code> or <code>sameorigin</code>.<br><br><strong>Note: </strong>If setting the value to <code>allow-from</code>, please note that not all browsers support this value and when not supported the header is ignored by the browser.</p>
 
 ###<a id="security-3130"></a> Security Fix: Action Required
 
@@ -158,7 +160,7 @@ in the BOSH documentation.
 
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.9.2
-<strong>May 8, 2018</strong>
+**May 8, 2018**
 
 ###<a id="known-issues"></a>Known Issues
 * Certificate propogation breaks Alpine OpenJDK images. See GitHub issue [#2042](https://github.com/concourse/concourse/issues/2042)
@@ -209,7 +211,7 @@ with the introduction of timestamps in v3.6.0
 * Fixed an issue where Firefox users couldn't click around on the build page.
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.8.0
-<strong>February 1, 2018</strong>
+**February 1, 2018**
 
 ###<a id="breaking-changes"></a> WARNING
 If you are currently running a version of Concourse that is older than v3.6.0 and are planning to upgrade to v3.8.0, <strong>you must first upgrade to v3.6.0 before upgrading past it!</strong>
@@ -265,7 +267,7 @@ Please also refer to Concourse BOSH release documentation on [`bosh.io`](http://
 * Fixed an issue with the CredHub integration that made it necessary to configure `--insecure-skip-verify`
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.6.0
-<strong>November 9, 2017</strong>
+**November 9, 2017**
 
 ###<a id="breaking-changes"></a> BREAKING CHANGES
 
@@ -316,7 +318,7 @@ and `file`, which has been depracated.
 
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.5.0
-<strong>September 25, 2017</strong>
+**September 25, 2017**
 
 ### <a id="features"></a> Features
 
@@ -362,7 +364,7 @@ and `file`, which has been depracated.
 * A migration introduced in `v3.3.0` would load all the builds into memory and then process them, causing a lot of issues when upgrading. We optimized this migration to migrate build plans in batches, rather than all at once.
 
 ## <a id="release-notes"></a> Release Notes for Concourse v3.3.3
-<strong>July 31, 2017</strong>
+**July 31, 2017**
 
 Concourse for PCF is the first version of Concourse that is eligible for
 Pivotal Support. Concourse v3.3.3 was selected for this release because it
