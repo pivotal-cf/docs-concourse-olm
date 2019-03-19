@@ -6,29 +6,21 @@ owner: Concourse
 <strong><%= modified_date %></strong>
 
 ## <a id="rn-423"></a> v4.2.3
-<strong>Release Date: February 15, 2019</strong>
+**Release Date: February 15, 2019**
 
-###<a id="security-click-jack"></a> Security Fix: Action Required
-Please configure `x_frame_options` property for the web/atc job to `deny` or `sameorigin`
-
-This prevents the Concourse UI from being embedded as an iframe and utilized for clickjacking exploits.
-
-<strong>Note:</strong> If setting the value to `allow-from`, please note that not all browsers support this value and when not supported the header is ignored by the browser.
-
-For more information about this CVE, see:
+<p class="note warning"><strong>Warning: </strong>To protect against clickjacking,
+you must configure the <code>x_frame_options</code> property for the web/atc job to
+<code>deny</code> or <code>sameorigin</code>.<br>
+This prevents the Concourse UI from being embedded as an iframe and utilized
+for clickjacking exploits.<br>
+For more information, see
+<a href="https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2">garden-runc/1.18.2</a>
+in the BOSH documentation.<br><br>
+<strong>Note: </strong>If setting the value to <code>allow-from</code>,
+please note that not all browsers support this value and when not supported the header is ignored by the browser.</p>
 
 ###<a id="security-423"></a> Security Fixes
-This release contains the following security fixes:
-
-* High [CVE 2019-3791: clickjacking](https://pivotal.io/security/cve-2019-3791) (**Action Required**).
-
-    To protect against the clickjacking CVE, you must do the following:
-
-    * Configure the `x_frame_options` property for the web/atc job to `deny` or `sameorigin`.
-        This prevents the Concourse UI from being embedded as an iframe and utilized for clickjacking exploits.
-        For more information, see [garden-runc/1.18.2](https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2) in the BOSH documentation.
-        <p class='note'><strong>Note: </strong>If setting the value to `allow-from`,
-          please note that not all browsers support this value and when not supported the header is ignored by the browser.
+This release contains the following security fix:
 
 * High [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-2019-5736) (**Action Required**).
 
@@ -51,7 +43,7 @@ whenever a third-party SAML redirect is required.
 
 
 ## <a id="rn-422"></a> v4.2.2
-<strong>Release Date: December 12, 2018</strong>
+**Release Date: December 12, 2018**
 
 ###<a id="security-422"></a> Security Fixes
 This release contains the following security fix:
@@ -60,7 +52,7 @@ This release contains the following security fix:
 
 
 ## <a id="release-notes"></a> v4.2.1
-<strong>Release Date: October 5, 2018</strong>
+**Release Date: October 5, 2018**
 
 Concourse for PCF v4.2.1 introduces the concept of user-based team authentication.
 
