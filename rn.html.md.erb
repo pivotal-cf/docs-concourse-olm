@@ -8,14 +8,11 @@ owner: Concourse
 ## <a id="rn-423"></a> v4.2.3
 **Release Date: February 15, 2019**
 
-<p class="note warning"><strong>Warning: </strong>To protect against clickjacking,
-you must configure the <code>x_frame_options</code> property for the web/atc job to
-<code>deny</code> or <code>sameorigin</code>.<br>
-This prevents the Concourse UI from being embedded as an iframe and utilized
-for clickjacking exploits.<br>
-For more information, see
-<a href="https://bosh.io/releases/github.com/cloudfoundry/garden-runc-release?version=1.18.2">garden-runc/1.18.2</a>
-in the BOSH documentation.<br><br>
+<p class="note warning"><strong>Warning: </strong>There is a potential vulnerability
+in the Concourse UI that can be used for clickjacking exploits.
+To protect against clickjacking, you must configure the
+<code>x_frame_options</code> property for the web/atc job to
+<code>deny</code> or <code>sameorigin</code>.<br><br>
 <strong>Note: </strong>If setting the value to <code>allow-from</code>,
 please note that not all browsers support this value and when not supported the header is ignored by the browser.</p>
 
