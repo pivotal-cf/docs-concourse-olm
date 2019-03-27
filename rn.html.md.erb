@@ -8,7 +8,13 @@ owner: Concourse
 ## <a id="rn-423"></a> v4.2.3
 **Release Date: February 15, 2019**
 
-<p class="note warning"><strong>Warning: </strong>There is a potential vulnerability in the Concourse UI that can be used for clickjacking exploits. To protect against clickjacking, you must configure the <code>x_frame_options</code> property for the atc job to <code>deny</code> or <code>sameorigin</code>.<br>For more information, see <a href="https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=3.13.0#p%3dx_frame_options">x_frame_options</a> in the BOSH documentation.<br><br><strong>Note: </strong>If setting the value to <code>allow-from</code>, please note that not all browsers support this value. When it is not supported, the header is ignored by the browser.</p>
+<p class="note warning"><strong>Warning: </strong>To protect against clickjacking,
+  set the <code>x_frame_options</code> property for the atc job to <code>deny</code>
+  or <code>sameorigin</code> instead of <code>allow-from</code>.<br>
+  For more information, see
+  <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a>
+  in the Mozilla documentation.</p>
+
 
 ###<a id="security-423"></a> Security Fixes
 This release contains the following security fix:
