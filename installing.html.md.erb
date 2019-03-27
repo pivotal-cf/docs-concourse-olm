@@ -21,7 +21,7 @@ Before you install Concourse for PCF, you must have the following:
   This is because Concourse for PCF can conflict
   with other tiles deploying on Ops Manager at the same time.</p>
 
-* BOSH CLI v2. For more information, see
+* BOSH CLI v5.x and earlier. For more information, see
 [Installing the CLI](https://bosh.io/docs/cli-v2-install/) in the BOSH documentation.
 * Concourse and Garden Run-C BOSH releases. Download these from
 [Pivotal Network](https://network.pivotal.io/products/p-concourse/).
@@ -43,7 +43,7 @@ in the BOSH documentation.
 To configure and deploy Concourse for PCF, do the following:
 
 1. Modify the `cloud-config.yml` file according to your IaaS environment.
-   For information, see [Updating Cloud Config](https://bosh.io/docs/update-cloud-config/)
+   For information, see [Usage](https://bosh.io/docs/cloud-config/)
    in the BOSH documentation.
 1. Prepare the Concourse deployment manifest.
   You can write your own manifest or modify a template
