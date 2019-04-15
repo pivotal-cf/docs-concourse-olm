@@ -12,8 +12,8 @@ https://github.com/pivotal-cf/docs-book-concourse-olm
 
 | Branch name | Use for… | Currently lives… |
 |-------------| ------| ------|
-| master      | Not yet being worked on (5.x) | https://docs-pcf-staging.cfapps.io/p-concourse/5-n/ |
-| 4.x      | In development (4.0.0) | https://docs-pcf-staging.cfapps.io/p-concourse/4-x/ |
+| master      | Next version in development (5.x) | https://docs-pcf-staging.cfapps.io/p-concourse/5-n/ |
+| 4.x      | Current published branch (4.0.0) | https://docs.pivotal.io/p-concourse/4-x/ |
 | 3.x         | Current published branch | https://docs.pivotal.io/p-concourse/3-x/ |
 
 # Pipeline
