@@ -10,15 +10,15 @@ https://github.com/pivotal-cf/docs-book-concourse-olm
 
 # Branches
 
-| Branch name | Use for… | Protected? | Currently lives…
-|-------------| ------| ------| ------|
-| master      | In development (4.x) | ? | https://docs-pcf-staging.cfapps.io/p-concourse/4-0/ |
-| 3.x         | Current published branch | ? | https://docs.pivotal.io/p-concourse/3-0/ |
-| updates     | DO NOT USE | ? | ? |
+| Branch name | Use for… | Currently lives… |
+|-------------| ------| ------|
+| master      | Next version in development (5.x) | https://docs-pcf-staging.cfapps.io/p-concourse/5-n/ |
+| 4.x      | Current published branch (4.0.0) | https://docs.pivotal.io/p-concourse/4-x/ |
+| 3.x         | Current published branch | https://docs.pivotal.io/p-concourse/3-x/ |
 
 # Pipeline
 
-There are two pipelines for this doc at the moment: 
+There are two pipelines for this doc at the moment:
 Edge (Staging):https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services-edge?groups=concourse-edge
 
 Production (Public): https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf-services?groups=concourse-olm
@@ -89,7 +89,7 @@ In Terminal window:
     ```
     $ ssh-keygen
     Generating public/private rsa key pair.
-    Enter file in which to save the key (/Users/pspinrad/.ssh/id_rsa): 
+    Enter file in which to save the key (/Users/pspinrad/.ssh/id_rsa):
     ```
 
 1. Get a [Github](http://github.com) account.
@@ -147,7 +147,7 @@ In Terminal window:
 1. Run `bundle exec bookbinder watch` to build the book on your machine.
 
    `$ bundle exec bookbinder watch`
-   
+
 1. Browse to `localhost:4567` to view the book locally and "watch" any changes that you make to source `html.md.erb` files. As you make and save changes to the local source files for your site, you will see them in your browser after a slight delay.
 
 1. After each session of writing or revising your docs source files, commit and push them to your github repo.
