@@ -88,7 +88,7 @@ Concourse sets up secure communications from the ATC to worker VMs in two ways, 
 
 Concourse sets up communications between the ATC and internal worker VMs as follows:
 
-1. The worker's Beacon connects to the TSA via SSH and runs the `register-worker` command to the TSA, passing in the worker [payload](https://github.com/concourse/atc/blob/master/worker.go).
+1. The worker's Beacon connects to the TSA via SSH and runs the `register-worker` command to the TSA, passing in the worker [payload](https://github.com/concourse/concourse/blob/master/atc/worker.go).
 
 1. The TSA starts heartbeating every 30 seconds, pinging the worker for its current number of Garden containers and Baggageclaim volumes, and sending updated information to the ATC. If the worker fails to respond, the TSA notifies ATC that worker is <code>stalled</code>.
 
@@ -98,7 +98,7 @@ Concourse sets up communications between the ATC and internal worker VMs as foll
 
 Concourse sets up communications between the ATC and external worker VMs as follows:
 
-1. The worker's Beacon connects to the TSA via SSH and runs the `forward-worker` command to the TSA, passing in the worker [payload](https://github.com/concourse/atc/blob/master/worker.go).
+1. The worker's Beacon connects to the TSA via SSH and runs the `forward-worker` command to the TSA, passing in the worker [payload](https://github.com/concourse/concourse/blob/master/atc/worker.go).
 
 1. The `forward-worker` command establishes two unique hidden local ports on the web VM, and creates a reverse-SSH tunnel from these local ports to the external worker's Garden and Baggageclaim ports.
 
