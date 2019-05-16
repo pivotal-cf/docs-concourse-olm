@@ -22,7 +22,7 @@ This release contains the following security fixes:
   If you run Concourse in an iframe, you'll notice that it doesn't work anymore.
 
 
-###<a id="security-520"></a> Breaking Changes
+###<a id="breaking-520"></a> Breaking Changes
 This release has the following breaking changes:
 
 #### Installation
@@ -31,208 +31,283 @@ For manifest examples, see [operations directory](GITHUB) in the Concourse
 BOSH deployment GitHub repository.
 
 #### Release
-The Concourse BOSH release has been redesigned and is now centered around the concourse binary.
-Warning: Be sure to recreate your workers after or during the deploy, as the location that the worker stores volumes has changed and the old volume directory will not be cleaned up, effectively leaking disk usage.
-Warning: The `additional_resource_types` property can no longer be configured. Another mechanism for co-located resources is planned for future releases.
-The Concourse release no longer needs to be deployed alongside a Garden-runC BOSH release, and instead embeds the gdn binary directly.
-Concourse has adopted BPM and now use it for deploying the web node. This enforces a higher nofile limit which should help optimize large-scale deployments.
+
+* The Concourse BOSH release has been redesigned and is now centered around the concourse binary.
+
+<p class="note warning"><strong>Warning:</strong> Recreate your workers during or after the deploy. The location where the worker stores volumes has changed and the old volume directory is not cleaned up. This will leak disk usage.</p>
+<p class="note warning"><strong>Warning:</strong> The `additional_resource_types` property can no longer be configured.</p>
+
+* The Concourse release no longer needs to be deployed alongside a Garden-runC BOSH release, and instead embeds the gdn binary directly.
+* Concourse has adopted BPM and now use it for deploying the web node.
+  This enforces a higher nofile limit which helps optimize large-scale deployments.
+  For more information on BPM, see [BPM]().
 
 
 #### Binary
-The Concourse binary distribution has been reformatted. Rather than a self-contained binary, it is now shipped as a .tgz containing the binary and its dependencies pre-extracted. If you have been passing esoteric flags to Garden, you’ll have to switch to using a config file via --garden-config instead, or pass them as env vars (e.g. `CONCOURSE_GARDEN_FOO_BAR`).
-Flags are no longer supported as they relied on directly embedding their code. The advantages of this include:
-Simpler and faster startup. The Concourse worker command no longer needs to extract resource types/etc. on start.
-The Concourse binary no longer directly embeds Garden-runC code, and instead ships alongside the gdn binary, copied from their releases. This simplifies the interface for configuring Garden and allows Concourse to leverage their build process rather than risking deviation.
+* The Concourse binary distribution has been reformatted.
+  Instead of a self-contained binary, it is now shipped as a .tgz containing the
+  binary and its dependencies pre-extracted.
+  If you have been passing esoteric flags to Garden, you must switch to using a
+  config file through `--garden-config` instead, or pass them as `env vars` (e.g. `CONCOURSE_GARDEN_FOO_BAR`).
+* Flags are no longer supported because they relied on directly embedding their code.
+  The advantages of this include:
+  * Simpler and faster startup. The Concourse worker command no longer needs to
+    extract resource types/etc. on start.
+  * The Concourse binary no longer directly embeds Garden-runC code,
+    and instead ships alongside the gdn binary, copied from their releases.
+    This simplifies the interface for configuring Garden and allows Concourse to
+    leverage their build process rather than risking deviation.
 
 
 #### Core
-As a result of internal refactoring and decoupling between various components, the web nodes no longer need to stream user artifacts to one another. This was the only reason the concourse web `--peer-url` flag was needed. As such, it has been removed. However, the SSH gateways which also run on the web node  still need their address for the forwarded worker connections advertised to other web nodes. This value used to be inferred by ‘--peer-url’, so a new `--peer-address` flag has been added for it.
-Two flags have been modified to be more consistent with other flag syntax:
-concourse web --vault-auth-param foo=bar is now specified as concourse web --vault-auth-param foo:bar
-concourse web --tsa-team-authorized-keys team=path/to/key is now specified as concourse web --tsa-team-authorized-keys team:path/to/key
+* As a result of internal refactoring and decoupling between various components,
+  web nodes no longer need to stream user artifacts to one another.
+  This was the only reason the `concourse web --peer-url` flag was needed.
+  As such, it has been removed. However, the SSH gateways which also run on the web node
+  still need their address for the forwarded worker connections advertised to other web nodes.
+  This value used to be inferred by ‘--peer-url’, so a new `--peer-address` flag has been added for it.
+* Two flags have been modified to be more consistent with other flag syntax:
+  `concourse web --vault-auth-param foo=bar` is now `concourse web --vault-auth-param foo:bar`
+  `concourse web --tsa-team-authorized-keys team=path/to/key` is now
+  `concourse web --tsa-team-authorized-keys team:path/to/key`.
 
 
 #### Resources
-There has been major internal overhaul on how resource versions are stored. As a result, the version history for each resource across your pipelines is reset upon upgrading to v5.2.
-The upgrade preserves the state of which versions are disabled.
-The upgrade also preserves the data that relates to which versions of which builds they are inputs to and outputs of.
-With v5.2.0, resource versions are tied directly to an anonymous "resource config". Pipeline resources instead point to a config. If their `source:` or `type:` changes, they point to a new config with its own version history.
-Before v5.2.0, resource version history was associated to a pipeline resource by name. This meant that if you changed a resource's configuration or type, those old versions would persist, even though they may technically no longer be appropriate.
-This improves the correctness of the system as a whole, eliminating the need to ever "purge" the history of a resource.
-In addition, now that versions are tied directly to their configs, check containers are also shared across teams. This should reduce the overall container count. As a result however, team members who can `fly intercept` check containers has been limited to `admin` users.
+* As a result of major changes to how resource versions are stored,
+the version history for each resource across your pipelines is reset upon upgrading
+to Concourse for PCF v5.2.0
+  * The upgrade preserves the state of which versions are disabled.
+  * The upgrade preserves the data of what versions of which builds they are inputs to and outputs of.
+  * With v5.2.0, resource versions are tied directly to an anonymous "resource config".
+    Pipeline resources instead point to a config. If their `source:` or `type:` changes,
+    they point to a new config with its own version history.
+  * Before v5.2.0, resource version history was associated to a pipeline resource by name.
+    This meant that if you changed a resource's configuration or type,
+    those old versions would persist, even though they may no longer be appropriate.
+  * This improves the accuracy of the system as a whole, removing the need to "purge" the history of a resource.
+  * Now that versions are tied directly to their configs,
+    check containers are also shared across teams.
+    This reduces the overall container count.
+
+<p class="note"><strong>Note:</strong> As a result of the change to check containers, team members who can `fly intercept` check containers is limited to `admin` users.</p>
 
 
 #### Teams
-`--allow-all-users` has been removed as it was often misused. You must now configure users explicitly.
-After upgrading, any teams that had `--allow-all-users` configured will preserve the behavior and continue to allow all users. The next time teams are configured, you will have to specify something else, as the CLI no longer has the flag.
+* `--allow-all-users` has been removed as it was often misused.
+  You must now configure users explicitly.
+* After upgrading, any teams that have `--allow-all-users` configured will preserve
+  the behavior and continue to allow all users.
+  The next time a team is configured, you will have to specify something else,
+  as the CLI no longer has the flag.
 
 
 #### Runtime
-Workers can be configured to periodically rebalance so that they do not all forward through a single web node. To do this, set the `--rebalance-interval` flag on the concourse worker. The rebalancing drains in-flight connections and should not disrupt any in-flight builds.
-As a result of this change, support for direct worker registration has been removed. The `--peer-ip` flag is no longer available on concourse workers. To transition to 5.2.0, remove the flag as the worker will register through forwarding instead. Forwarding is more secure because it does not require you to open your workers to inbound traffic.
+* Support for direct worker registration has been removed.
+  The `--peer-ip` flag is no longer available on concourse workers.
+  When updating to v5.2.0, remove this flag because the worker will register through forwarding instead.
+  Forwarding is more secure because it does not require you to open your workers to inbound traffic.
+
 
 ###<a id="features-520"></a> Features
 Features and changes in this release:
 
 #### Fly
-`fly set-pipeline` now prints a copy-pasteable `fly unpause-pipeline` command after creating a pipeline. This will make it easier to unpause new pipelines as they are set to paused by default.
-A new `fly-delete-target` command has been added. This command removes targets from ~/.flyrc
-A new `fly-edit-target` command has been added. This command will edit a target’s name, team, or URL.
-The `fly intercept` command can now be given a specific container --handle to intercept
-The `fly prune-worker` command can now be given an `--all-stalled` or `-a` flag to prune all the stalled workers
-`fly execute` will now upload inputs and download outputs in parallel.
-`fly execute` can now specify input mappings with `-m`, which is useful when running with --inputs-from-job when the job renames some inputs.
-The `fly login` workflow has been reworked to better support logging in to a remote session. There is now an improved landing page that detects when the token transfer fails by allowing you to copy the token to your clipboard instead.
-The auto-login prompt will also no longer ask for the token, as it disrupts the normal flow of the command.
-A new `fly-land-worker` command has been added for landing workers remotely. This initiates the “landing” process via the API and will ultimately result in the worker process exiting.
-`fly watch` can be called with `--timestamps` to show per-line timestamps in the build output.
-A new `fly curl` command has been added to assist with manual API requests to Concourse.
-A new `fly userinfo` command has been added which will let you know which teams you are logged in to and which roles you have in each team.
+* `fly login` workflow has been reworked to better support logging in to a remote session.
+  There is now an improved landing page that detects when the token transfer fails
+  by allowing you to copy the token to your clipboard instead.
+  * The auto-login prompt will also no longer ask for the token, as it disrupts
+    the normal flow of the command.
+* `fly set-pipeline` now prints a copy-pasteable `fly unpause-pipeline` command
+  after creating a pipeline.
+  This will make it easier to unpause new pipelines as they are set to paused by default.
+* `fly intercept` can now be given a specific container --handle to intercept
+* `fly prune-worker` command can now be given an `--all-stalled` or `-a` flag to
+  prune all the stalled workers
+* `fly execute` will now upload inputs and download outputs in parallel.
+* `fly execute` can now specify input mappings with `-m`, which is useful when
+  running with ``--inputs-from-job` when the job renames some inputs.
+* `fly watch` can be called with `--timestamps` to show per-line timestamps in the build output.
+* Added new `fly` commands:
+  * `fly curl` assists with manual API requests to Concourse.
+  * `fly userinfo` lets you know which teams you are logged in to and which roles you have in each team.
+  * `fly-land-worker` lands workers remotely.
+    This initiates the “landing” process through the API and results in the worker process exiting.
+  * `fly-edit-target` edits a target’s name, team, or URL.
+  * `fly-delete-target` removes targets from `~/.flyrc`.
 
 
 #### Resources
-`Concourse BOSH Release`
-Now packages Ubuntu-flavored images for each core resource type instead of Alpine. This change has been made for compliance reasons.
-`registry-image resource`
-This is a new resource that has been added to the core. This resource is intended to replace the `docker-image resource` image for image pulling and pushing (but not building).
-This resource improves on the `docker-image` resource in multiple ways:
-It doesn't run Docker to fetch the image - it's written in pure Go, using the google/go-containerregistry package. This makes the implementation much less error-prone.
-Because it doesn't run Docker, it doesn't need a privileged container. The fewer privileged containers in your cluster, the better - especially in light of [v4.2.3](https://github.com/concourse/recent CVE fixes/releases/tag/v4.2.3).
-By focusing solely on fetching and pushing, the resource is smaller and simpler.
-The resource has test coverage
-These enhancements should result in much faster, efficient, and resilient image fetching. We recommend users try to switch their `image_resources` and `Resource Types` over to the new resource type - in most cases this is just a matter of replacing `type: docker-image` with `type: registry-image`.
-We intend to eventually deprecate and phase out support for the `docker-image resource` in favor of the registry-image resource.
+* `Concourse BOSH Release`
+  * Now packages Ubuntu-flavored images for each core resource type instead of Alpine.
+    This change has been made for compliance reasons.
+* `registry-image resource`
+* This is a new resource that has been added to the core.
+  This resource is intended to replace the `docker-image resource` image for
+  image pulling and pushing (but not building).
+* This resource improves on the `docker-image` resource in multiple ways:
+  * It does not run Docker to fetch the image - it is written in pure Go,
+    using the `go-containerregistry` package.
+    This makes the implementation much less error-prone.
+    For more information, see [go-containerregistry](LINK) in the Google GitHub repo.
+  * Because it doesn't run Docker, it doesn't need a privileged container.
+    The fewer privileged containers in your cluster, the better - especially in light of
+    [v4.2.3](https://github.com/concourse/recent CVE fixes/releases/tag/v4.2.3).
+  * By focusing solely on fetching and pushing, the resource is smaller and simpler.
+  * The resource has test coverage
+* These enhancements result in much faster, efficient, and resilient image fetching.
+  Pivotal recommends that users try to switch their `image_resources` and `Resource Types`
+  to the new resource type.
+  In most cases this is just a matter of replacing `type: docker-image` with `type: registry-image`.
+* We intend to eventually deprecate and phase out support for the
+  `docker-image resource` in favor of the registry-image resource.
 
 
 #### Runtime
-Containers and volumes are now garbage-collected in parallel to each other, with a default max-in-flight of 5 containers and 5 volumes at a time.
-Previously, workers would garbage collect containers in volumes sequentially, destroying containers first and then volumes. This meant that if a worker had thousands of volumes to remove, it would go through and destroy them one by one - meanwhile, containers were not being garbage-collected.
-This speeds up garbage-collection overall and prevents an imbalance in volume/container counts from slowing each other down. This is especially important as workers are typically capped at 250 containers, but may have thousands of volumes and may even have a slow disk.
-The web node can now be configured with a fewest-build-containers strategy, which will place containers on workers that have the fewest build containers.
-Any volumes or containers that disappeared from their worker will now be automatically reaped from the database. This makes it easier for Concourse to recover from this situation rather than erroring with file not found or unknown handle errors.
-Tasks are now permitted to have `inputs`, `outputs`, and `caches` with overlapping paths.
-The error message when a task's `file` refers to an unknown artifact source has been made more descriptive.
-
+* Containers and volumes are now garbage-collected in parallel to each other,
+  with a default max-in-flight of 5 containers and 5 volumes at a time.
+  * Previously, workers would garbage collect containers in volumes sequentially,
+    destroying containers first and then volumes.
+    This meant that if a worker had thousands of volumes to remove,
+    it would go through and destroy them one by one - meanwhile,
+    containers were not being garbage-collected.
+  * This speeds up garbage-collection overall and prevents an imbalance in
+    volume/container counts from slowing each other down.
+    This is especially important as workers are typically capped at 250 containers,
+    but may have thousands of volumes and may even have a slow disk.
+* The web node can now be configured with a fewest-build-containers strategy,
+  which will place containers on workers that have the fewest build containers.
+* Any volumes or containers that disappeared from their worker will now be
+  automatically reaped from the database.
+  This makes it easier for Concourse to recover from this situation rather than
+  erroring with file not found or unknown handle errors.
+* Tasks are now permitted to have `inputs`, `outputs`, and `caches` with overlapping paths.
+* The error message when a task's `file` refers to an unknown artifact source
+  has been made more descriptive.
+* Workers can be configured to periodically rebalance so that they do not all
+  forward through a single web node.
+  To do this, set the `--rebalance-interval` flag on the concourse worker.
+  The rebalancing drains in-flight connections and should not disrupt any in-flight builds.
 
 #### Core Functionality
-The Vault credential manager can now be configured with a global shared path for credential lookup. This should make sharing credentials between teams easier to manage. Please use with caution as all teams will be able to access it.
-‘Steps’ can now be annotated with an ‘on_error’ step hook whose value is a second step to execute only if the parent step errors.
-Task ((vars)) received a large overhaul:
-Values for task ((vars)) can now be provided during `fly execute`
-Values may be provided to a task step in a pipeline via `vars`.
-Tasks can now have ((vars)) almost anywhere in their config, as opposed to just in `image_resource`.
-For the sake of consistency, pipeline ((params)) will now be referred to as pipeline ((vars)) instead.
-Concourse will now automatically retry fetching credentials when the request to the credential manager fails.
-By default Concourse will retry 5 times, waiting 1 second between each attempt. This can be adjusted with the `--secret-retry-attempts` and `--secret-retry-interval` flags on concourse web.
-The `put step` can now be explicitly given a list of `inputs` to use, rather than using all of them. This can be used to dramatically speed up builds that have a large amount of artifacts prior to a put.
-The concourse worker command can now be given a `--garden-use-houdini` flag on Linux to use the "no-op" Houdini Garden backend for cases where you don't really want containerization.
-Logs emitted by Concourse components are now more readable.
-If you're using anything to parse your logs, please make sure to update it accordingly
+* The `Vault credential manager` can now be configured with a global shared path for credential lookup. This should make sharing credentials between teams easier to manage. Please use with caution as all teams will be able to access it.
+* ‘Steps’ can now be annotated with an ‘on_error’ step hook whose value is a second step to execute only if the parent step errors.
+* Task ((vars)) received a large overhaul:
+  * Values for task ((vars)) can now be provided during `fly execute`
+  * Values may be provided to a task step in a pipeline via `vars`.
+  * Tasks can now have ((vars)) almost anywhere in their config, as opposed to just in `image_resource`.
+  * For the sake of consistency, pipeline ((params)) will now be referred to as pipeline ((vars)) instead.
+* Concourse will now automatically retry fetching credentials when the request to the credential manager fails.
+  * By default Concourse will retry 5 times, waiting 1 second between each attempt. This can be adjusted with the `--secret-retry-attempts` and `--secret-retry-interval` flags on concourse web.
+* The `put step` can now be explicitly given a list of `inputs` to use, rather than using all of them. This can be used to dramatically speed up builds that have a large amount of artifacts prior to a put.
+* The concourse worker command can now be given a `--garden-use-houdini` flag on Linux to use the "no-op" Houdini Garden backend for cases where you don't really want containerization.
+* Logs emitted by Concourse components are now more readable.
+  * If you're using anything to parse your logs, please make sure to update it accordingly
 
 
 #### Web UI
-A new animation has been added to running builds in the build number list to help differentiate between errored and running builds.
-Concourse is now using Material Design icons everywhere in the UI
-URLs in resource metadata are now clickable
-Pipelines now have a play/pause button at the top bar. This will allow you to not have to go back to the dashboard to use the play/pause button.
-Each step in the build log will now show how long it took to initialize and run when hovering over the icon to the right of the header.
-Resources can now be annotated with `icon` which will allow you to place icons in your pipeline. This will make distinguishing different resource types easier.
-We have replaced resource pausing with resource pinning.
-Resource pausing had the effect of disabling the periodic checking for the paused resource. However we found that in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
-However, with Concourse’s global resource versions functionality, each resource actually points to a shared history, so pausing checking wouldn't be enough - if any other pipelines had the same resource, new versions would still arrive!
-Instead, versions can now be pinned individually via the web UI or via the pipeline config (see version). Pinned resources will also skip periodic checking, but now even if the checking still happens (because some other pipeline had it un-pinned), the resource will stay pinned to the desired version.
-A comment can also be left on pinned versions for explaining to your team-mates why you decided to pin the resource.
-During the 5.1 upgrade, paused resources will be automatically transitioned to their pinned equivalent, by pinning the resource to the most recent available version. A comment will be left on any resources that are migrated so that it's clear to pipeline users.
-The timestamps shown in the build header will now transition to absolute instead of relative when the build is over 24 hours old.
-The web UI now explains why some get steps have a yellow icon, via a tooltip. The dashboard page will now indicate whether you are seeing a pipeline because it's exposed through an "eye" icon.
+* A new animation has been added to running builds in the build number list to help differentiate between errored and running builds.
+* Concourse is now using Material Design icons everywhere in the UI
+* URLs in resource metadata are now clickable
+* Pipelines now have a play/pause button at the top bar. This will allow you to not have to go back to the dashboard to use the play/pause button.
+* Each step in the build log will now show how long it took to initialize and run when hovering over the icon to the right of the header.
+* Resources can now be annotated with `icon` which will allow you to place icons in your pipeline. This will make distinguishing different resource types easier.
+* We have replaced resource pausing with resource pinning.
+  * Resource pausing had the effect of disabling the periodic checking for the paused resource. However we found that in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
+  * However, with Concourse’s global resource versions functionality, each resource actually points to a shared history, so pausing checking wouldn't be enough - if any other pipelines had the same resource, new versions would still arrive!
+  * Instead, versions can now be pinned individually via the web UI or via the pipeline config (see version). Pinned resources will also skip periodic checking, but now even if the checking still happens (because some other pipeline had it un-pinned), the resource will stay pinned to the desired version.
+  * A comment can also be left on pinned versions for explaining to your team-mates why you decided to pin the resource.
+  * During the 5.1 upgrade, paused resources will be automatically transitioned to their pinned equivalent, by pinning the resource to the most recent available version. A comment will be left on any resources that are migrated so that it's clear to pipeline users.
+* The timestamps shown in the build header will now transition to absolute instead of relative when the build is over 24 hours old.
+* The web UI now explains why some get steps have a yellow icon, via a tooltip. The dashboard page will now indicate whether you are seeing a pipeline because it's exposed through an "eye" icon.
 
 
 #### Teams
-Generic oAuth can now be configured with different user ID/name keys.
-Generic OIDC auth can now be configured with a different user name key.
-BitBucket auth support has been re-introduced.
+* `Generic oAuth` can now be configured with different user ID/name keys.
+* `Generic OIDC auth` can now be configured with a different user name key.
+* BitBucket auth support has been re-introduced.
 
 
 ###<a id="fixed-520"></a> Fixed Issues
 This release fixes the following issues:
 
 #### Fly
-`fly execute` will now print the correct URL for the build when running with the `-j` flag.
-`fly login` will now create ~/.flyrc with stricter permissions (0600).
-`fly intercept` will now provide clearer error messaging when it fails to execute the command.
-Running `fly execute` with the `--include-ignored` flag will no longer error when files are removed locally.
-`fly set-pipeline` will now notice when the order of Grouping Jobs has changed and show it in the diff.
-`fly get-pipeline` will now throw an error if the specified pipeline does not exist, rather than returning an empty pipeline config.
-`fly login` will no longer prompt for your auth method when a username/password are given via flags. It'll deduce that you're trying to do local auth.
-The resources and resource types returned by `fly get-pipeline` will now be sorted in a deterministic order
-The `fly status` command will now let you know if your token has expired.
+* `fly execute` will now print the correct URL for the build when running with the `-j` flag.
+* `fly login` will now create ~/.flyrc with stricter permissions (0600).
+* `fly intercept` will now provide clearer error messaging when it fails to execute the command.
+* Running `fly execute` with the `--include-ignored` flag will no longer error when files are removed locally.
+* `fly set-pipeline` will now notice when the order of Grouping Jobs has changed and show it in the diff.
+* `fly get-pipeline` will now throw an error if the specified pipeline does not exist, rather than returning an empty pipeline config.
+* `fly login` will no longer prompt for your auth method when a username/password are given via flags. It'll deduce that you're trying to do local auth.
+* The resources and resource types returned by `fly get-pipeline` will now be sorted in a deterministic order
+* The `fly status` command will now let you know if your token has expired.
 
 
 #### Core
-Fixed a bug that caused credential managers to be instantiated twice, resulting in two auth loops.
-Fixed a crash that would occur when a build finished that produced outputs for a resource that had been un-configured from the pipeline in the meantime.
-Fixed an internal bug that made UNIQUE constraints for resource_configs ineffective (#2509). This was fairly low-impact, but database integrity matters!
-The /api/v1/resources and /api/v1/jobs endpoints will now return [] instead of null when there are no resources or jobs, thanks to a PR by @pivotal-kahin-ng.
-Fixed handling of auth configs set from empty env vars - previously this would result in bogus Dex configuration (e.g. github:, with no org or team) and sometimes cause things to misbehave.
-Concourse will now send TCP keepalives for connections to the database. This will allow it to detect when the connection has been interrupted ungracefully. Thanks for the PR, @SimonXming!
-The --tsa-authorized-keys flag is now optional, for situations where all authorized keys are associated to teams (via --tsa-team-authorized-keys). Thanks for the fix, @tlwr!
-The web node used to leak both a connection and a goroutine for each build that completed when configured to drain build logs to syslog. This is now fixed. Sorry about that!
-version on a get step will now take precedence over versions pinned via the web UI or via version on a resource definition.
+* Fixed a bug that caused credential managers to be instantiated twice, resulting in two auth loops.
+* Fixed a crash that would occur when a build finished that produced outputs for a resource that had been un-configured from the pipeline in the meantime.
+* Fixed an internal bug that made UNIQUE constraints for resource_configs ineffective (#2509). This was fairly low-impact, but database integrity matters!
+* The /api/v1/resources and /api/v1/jobs endpoints will now return [] instead of null when there are no resources or jobs, thanks to a PR by @pivotal-kahin-ng.
+* Fixed handling of auth configs set from empty env vars - previously this would result in bogus Dex configuration (e.g. github:, with no org or team) and sometimes cause things to misbehave.
+* Concourse will now send TCP keepalives for connections to the database. This will allow it to detect when the connection has been interrupted ungracefully. Thanks for the PR, @SimonXming!
+* The --tsa-authorized-keys flag is now optional, for situations where all authorized keys are associated to teams (via --tsa-team-authorized-keys). Thanks for the fix, @tlwr!
+* The web node used to leak both a connection and a goroutine for each build that completed when configured to drain build logs to syslog. This is now fixed. Sorry about that!
+* version on a get step will now take precedence over versions pinned via the web UI or via version on a resource definition.
 
 
 #### Resources
-We have fixed a resource error that sporadically caused this error to appear:  worker_resource_config_check__resource_config_check_sessio_fkey references unreticulated spline.
+* Fixed a resource error that occasionally caused this error to appear:
+`worker_resource_config_check__resource_config_check_sessio_fkey references unreticulated spline`.
 
 
 #### Runtime
-The web node will now retry on unexpected end-of-file errors which can occur when a worker was restarted while a build was running a container on it.
-The scheduler will no longer start a manually triggered build until the “last checked” timestamp of each of its resources is after the build’s “created at” timestamp. Previously, manually-triggered builds would cause resource checking to be performed in the job scheduling loop. This ensured that manually triggered builds ran with the latest versions available, but it also slowed down scheduling for every other job in the pipeline, because they're all scheduled one-by-one.
-The above refactoring also fixed a race condition that could result in inputs configured with `version:` every having versions skipped when a build is manually triggered.
-Task caches are now supported on Windows
+* The web node will now retry on unexpected end-of-file errors which can occur when a worker was restarted while a build was running a container on it.
+* The scheduler will no longer start a manually triggered build until the “last checked” timestamp of each of its resources is after the build’s “created at” timestamp. Previously, manually-triggered builds would cause resource checking to be performed in the job scheduling loop. This ensured that manually triggered builds ran with the latest versions available, but it also slowed down scheduling for every other job in the pipeline, because they're all scheduled one-by-one.
+* The above refactoring also fixed a race condition that could result in inputs configured with `version:` every having versions skipped when a build is manually triggered.
+* Task caches are now supported on Windows
 
 
 #### Web UI
-The dashboard will no longer crash when a pipeline is configured with a circular dependency.
-Improved rendering for pipeline groups.
-Made improvements to the dashboard search, including:
-Team name autocomplete will now work even if you're not logged in.
-Fixed the unstyled autosuggest menu in Chrome.
-Hitting the escape key will now un-focus the search field.
-The search autocomplete will now only appear if you press a key with the search field focused.
-Typing ‘?’ into the search field will no longer bring up the hotkey help pane.
-The HD dashboard view got a little weird in the last couple releases - it's fixed now.
-Fixed the spacing of the pipeline view so tall pipelines no longer get clipped by the top bar.
-Fixed the status:running search functionality on the dashboard view
-When viewing a pipeline build by ID, the top bar will show the breadcrumb for its pipeline and job whereas before it was empty.
-The breadcrumb in the top bar now uses hyperlinks, so they can be middle-clicked and right-clicked and result in standard, predictable browser behavior.
-The groups bar on the pipeline view now has hover states for each group.
-When viewing a one-off build in the web UI, the build will now render whereas before it was sending errors.
-The web UI is now using Elm version 0.19
-Fixed an issue where when the dashboard is more than one page, using the vertical scroll produces a horizontal scroll that continually grows.
-Fixed a mobile issue where the black header bar wouldn’t remain sticky.
-The legibility and anti-aliasing of text in the web UI has been improved.
-Cleaned up some dashboard behavior when there are no pipelines:
-You can now see which team you're a member of, rather than one big 'no pipelines set' page
-The bar along the bottom will now show up
-The search function is no longer shown
-The HD view has been disabled and redirects instead, since there was nothing for it show
-The username part of the top bar will now display correctly when viewed on a tiny mobile browser.
-When a resource's metadata is super wide, it will remain cordoned off to the side rather than being squeezed into  the resource's get output.
-Fixed an issue where the manifest.json href in the web UI was relative to the URL, meaning it was broken on any page except /.
-The positioning of the "no results" text when searching on the dashboard has been fixed.
-When viewing a build for a job that has a ton of builds, only the first batch of builds will be fetched and rendered instead of all of them. Older builds will be automatically loaded if the build being viewed is old, or as the user scrolls to see them.
+* The dashboard will no longer crash when a pipeline is configured with a circular dependency.
+* Improved rendering for pipeline groups.
+* Made improvements to the dashboard search, including:
+  * Team name autocomplete will now work even if you're not logged in.
+  * Fixed the unstyled autosuggest menu in Chrome.
+  * Hitting the escape key will now un-focus the search field.
+  * The search autocomplete will now only appear if you press a key with the search field focused.
+  * Typing ‘?’ into the search field will no longer bring up the hotkey help pane.
+* The HD dashboard view got a little weird in the last couple releases - it's fixed now.
+* Fixed the spacing of the pipeline view so tall pipelines no longer get clipped by the top bar.
+* Fixed the status:running search functionality on the dashboard view
+* When viewing a pipeline build by ID, the top bar will show the breadcrumb for its pipeline and job whereas before it was empty.
+* The breadcrumb in the top bar now uses hyperlinks, so they can be middle-clicked and right-clicked and result in standard, predictable browser behavior.
+* The groups bar on the pipeline view now has hover states for each group.
+* When viewing a one-off build in the web UI, the build will now render whereas before it was sending errors.
+* The web UI is now using Elm version 0.19
+* Fixed an issue where when the dashboard is more than one page, using the vertical scroll produces a horizontal scroll that continually grows.
+* Fixed a mobile issue where the black header bar wouldn’t remain sticky.
+* The legibility and anti-aliasing of text in the web UI has been improved.
+* Cleaned up some dashboard behavior when there are no pipelines:
+  * You can now see which team you're a member of, rather than one big 'no pipelines set' page
+  * The bar along the bottom will now show up
+  * The search function is no longer shown
+  * The HD view has been disabled and redirects instead, since there was nothing for it show
+* The username part of the top bar will now display correctly when viewed on a tiny mobile browser.
+* When a resource's metadata is super wide, it will remain cordoned off to the side rather than being squeezed into  the resource's get output.
+* Fixed an issue where the manifest.json href in the web UI was relative to the URL, meaning it was broken on any page except /.
+* The positioning of the "no results" text when searching on the dashboard has been fixed.
+* When viewing a build for a job that has a ton of builds, only the first batch of builds will be fetched and rendered instead of all of them. Older builds will be automatically loaded if the build being viewed is old, or as the user scrolls to see them.
 
 
 #### Teams
-With Concourse 4.x configured with an oAuth provider such as GitHub, a user could log in via GitHub even if they weren't technically a member of any team. They couldn't do anything once logged in, but they shouldn’t have been allowed to log in in the first place. This is no longer permitted.
-Similarly, `fly login` will also check to make sure you've successfully logged in to the target team and return an error if the team isn't in your token.
+* With Concourse 4.x configured with an oAuth provider such as GitHub, a user could log in via GitHub even if they weren't technically a member of any team. They couldn't do anything once logged in, but they shouldn’t have been allowed to log in in the first place. This is no longer permitted.
+  * Similarly, `fly login` will also check to make sure you've successfully logged in to the target team and return an error if the team isn't in your token.
 
 
 #### Creds
-The AWS SSM credential manager and the AWS SecretsManager credential manager had an issue with the  AWS_REGION environment variable where they would both declared it as their own. This meant that if you set it, they would both try to be configured, which would fail. They now have separately namespaced env vars instead.
-Fixed a bug with the Vault login retry logic that caused it to go into a fast loop after reaching the maximum interval. It will now stay at the maximum interval.
+* The AWS SSM credential manager and the AWS SecretsManager credential manager had an issue with the  AWS_REGION environment variable where they would both declared it as their own. This meant that if you set it, they would both try to be configured, which would fail. They now have separately namespaced env vars instead.
+* Fixed a bug with the Vault login retry logic that caused it to go into a fast loop after reaching the maximum interval. It will now stay at the maximum interval.
 
 
 #### Installation
-The BOSH release now sets file permissions for its config values as 0600, which fixes Postgres certificate configuration.
-The BOSH release now correctly handles array-values for authorized worker keys.
+* The BOSH release now sets file permissions for its config values as 0600, which fixes Postgres certificate configuration.
+* The BOSH release now correctly handles array-values for authorized worker keys.
