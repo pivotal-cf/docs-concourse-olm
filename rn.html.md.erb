@@ -227,31 +227,50 @@ Features and changes in this release:
 * BitBucket auth support has been re-introduced.
 
 
-###<a id="fixed-520"></a> Fixed Issues
+###<a id="fixed-520"></a> Resolved Issues
+
 This release fixes the following issues:
 
 #### Fly
-* `fly execute` will now print the correct URL for the build when running with the `-j` flag.
-* `fly login` will now create ~/.flyrc with stricter permissions (0600).
-* `fly intercept` will now provide clearer error messaging when it fails to execute the command.
-* Running `fly execute` with the `--include-ignored` flag will no longer error when files are removed locally.
-* `fly set-pipeline` will now notice when the order of Grouping Jobs has changed and show it in the diff.
-* `fly get-pipeline` will now throw an error if the specified pipeline does not exist, rather than returning an empty pipeline config.
-* `fly login` will no longer prompt for your auth method when a username/password are given via flags. It'll deduce that you're trying to do local auth.
-* The resources and resource types returned by `fly get-pipeline` will now be sorted in a deterministic order
-* The `fly status` command will now let you know if your token has expired.
+* `fly execute` with the `j` flag now prints the correct build URL.
+* `fly login` now creates `~/.flyrc` with chmod `0600` file system permissions.
+* `fly intercept` now prints clearer error messages when it fails to execute.
+* `fly execute` with the `--include-ignored` flag no longer errors when files are removed locally.
+* `fly set-pipeline` now prints changes in the order of Grouping Jons in the diff.
+* `fly get-pipeline` now throws an error if the given pipeline does not exist.
+   Before, the command returned an empty pipeline config.
+* `fly login` no longer prompts you for your authentication method when
+    a username and password are given using flags.
+    The command assumes that you are using local authentication.
+* `fly get-pipeline` now prints resources and resource types in a deterministic order.
+* `fly status` now prints a message if your token has expired.
 
 
 #### Core
-* Fixed a bug that caused credential managers to be instantiated twice, resulting in two auth loops.
-* Fixed a crash that would occur when a build finished that produced outputs for a resource that had been un-configured from the pipeline in the meantime.
-* Fixed an internal bug that made UNIQUE constraints for resource_configs ineffective (#2509). This was fairly low-impact, but database integrity matters!
-* The /api/v1/resources and /api/v1/jobs endpoints will now return [] instead of null when there are no resources or jobs, thanks to a PR by @pivotal-kahin-ng.
-* Fixed handling of auth configs set from empty env vars - previously this would result in bogus Dex configuration (e.g. github:, with no org or team) and sometimes cause things to misbehave.
-* Concourse will now send TCP keepalives for connections to the database. This will allow it to detect when the connection has been interrupted ungracefully. Thanks for the PR, @SimonXming!
-* The --tsa-authorized-keys flag is now optional, for situations where all authorized keys are associated to teams (via --tsa-team-authorized-keys). Thanks for the fix, @tlwr!
-* The web node used to leak both a connection and a goroutine for each build that completed when configured to drain build logs to syslog. This is now fixed. Sorry about that!
-* version on a get step will now take precedence over versions pinned via the web UI or via version on a resource definition.
+* Credential managers no longer are instantiated twice.
+This resulted in two auth loops.
+* When a resource has been un-configured from a pipeline while a build is running, the build
+no longer crashes when it finishes.
+* `UNIQUE` constraints for resource_configs are no longer ineffective.
+For more information, see the
+[`resource_configs` unique constraint is ineffective #2509](https://github.com/concourse/concourse/issues/2509(#2509)
+issue in GitHub.
+* The `/api/v1/resources` and `/api/v1/jobs` endpoints now return `[]`
+instead of `null` when there are no resources or jobs.
+* Auth configs set from empty environment variables no longer result in incorrect
+Dex configurations that can cause errors.
+* Concourse now sends TCP keepalives for connections to the database.
+This allows Concourse to detect when the connection has been interrupted ungracefully.
+* The `--tsa-authorized-keys` flag is now optional.
+You can use this flag when all authorized keys are associated to teams
+through `--tsa-team-authorized-keys`.
+* The web node no longer leaks both a connection and a goroutine for each build that
+completed when configured to drain build logs to syslog.
+* `version` in a `get` step now takes precedence over `version` pinned through the
+ web UI or `version` in a resource definition. For information about `version`
+ in `get` steps, [get step](https://concourse-ci.org/get-step.html).
+ For information about `version` in resource definitions,
+ see [Resources](https://concourse-ci.org/resources.html#resource-version).
 
 
 #### Resources
@@ -260,54 +279,78 @@ This release fixes the following issues:
 
 
 #### Runtime
-* The web node will now retry on unexpected end-of-file errors which can occur when a worker was restarted while a build was running a container on it.
-* The scheduler will no longer start a manually triggered build until the “last checked” timestamp of each of its resources is after the build’s “created at” timestamp. Previously, manually-triggered builds would cause resource checking to be performed in the job scheduling loop. This ensured that manually triggered builds ran with the latest versions available, but it also slowed down scheduling for every other job in the pipeline, because they're all scheduled one-by-one.
-* The above refactoring also fixed a race condition that could result in inputs configured with `version:` every having versions skipped when a build is manually triggered.
-* Task caches are now supported on Windows
+* The web node now retries on unexpected end-of-file errors. This can occur
+when a worker was restarted while a build was running a container on it. For information
+about the web node, see [Running a web node](https://concourse-ci.org/concourse-web.html)
+in the Concourse documentation.
+* The scheduler no longer starts a manually triggered build until the
+`last checked` timestamp of each of its resources is after the build’s `created at` timestamp.
+Before, manually-triggered builds would cause resource checking to happen in the job scheduling loop.
+This ensured that manually triggered builds ran with the latest versions available.
+However, it also slowed down scheduling for every other job in the pipeline
+because they are all scheduled one-by-one.
+* The above refactoring also fixed a race condition that could result
+in inputs configured with `version:` every having versions skipped when a build is manually triggered.
+* Task caches are now supported on Windows.
 
 
 #### Web UI
-* The dashboard will no longer crash when a pipeline is configured with a circular dependency.
+* The dashboard no longer crashes when a pipeline is configured with a circular dependency.
 * Improved rendering for pipeline groups.
-* Made improvements to the dashboard search, including:
-  * Team name autocomplete will now work even if you're not logged in.
+* Dashboard search has been improved in the following ways:
+  * Team name autocomplete now works even if you are not logged in.
   * Fixed the unstyled autosuggest menu in Chrome.
-  * Hitting the escape key will now un-focus the search field.
-  * The search autocomplete will now only appear if you press a key with the search field focused.
-  * Typing ‘?’ into the search field will no longer bring up the hotkey help pane.
+  * Hitting the escape key now un-focuses the search field.
+  * Search autocomplete now only appears if you press a key with the search field focused.
+  * Typing ‘?’ into the search field no longer brings up the hotkey help pane.
 * The HD dashboard view got a little weird in the last couple releases - it's fixed now.
-* Fixed the spacing of the pipeline view so tall pipelines no longer get clipped by the top bar.
+* Tall pipelines no longer get clipped by the top bar.
 * Fixed the status:running search functionality on the dashboard view
-* When viewing a pipeline build by ID, the top bar will show the breadcrumb for its pipeline and job whereas before it was empty.
-* The breadcrumb in the top bar now uses hyperlinks, so they can be middle-clicked and right-clicked and result in standard, predictable browser behavior.
+* When viewing a pipeline build by ID, the top bar now shows the breadcrumb for
+its pipeline and job.
+* The breadcrumb in the top bar now uses hyperlinks. You can
+middle-click and right-click the hyperlinks, resulting in standard and predictable browser behavior.
 * The groups bar on the pipeline view now has hover states for each group.
-* When viewing a one-off build in the web UI, the build will now render whereas before it was sending errors.
-* The web UI is now using Elm version 0.19
-* Fixed an issue where when the dashboard is more than one page, using the vertical scroll produces a horizontal scroll that continually grows.
-* Fixed a mobile issue where the black header bar wouldn’t remain sticky.
+* When viewing a one-off build in the web UI, the build now renders. Before, it was sending errors.
+* The web UI is now using Elm v0.19.
+* When the dashboard is more than one page,
+using the vertical scroll no longer  produces a horizontal scroll that continually grows.
+* When viewed on a mobile browser, the black header bar now remains sticky.
 * The legibility and anti-aliasing of text in the web UI has been improved.
-* Cleaned up some dashboard behavior when there are no pipelines:
-  * You can now see which team you're a member of, rather than one big 'no pipelines set' page
-  * The bar along the bottom will now show up
-  * The search function is no longer shown
-  * The HD view has been disabled and redirects instead, since there was nothing for it show
-* The username part of the top bar will now display correctly when viewed on a tiny mobile browser.
-* When a resource's metadata is super wide, it will remain cordoned off to the side rather than being squeezed into  the resource's get output.
-* Fixed an issue where the manifest.json href in the web UI was relative to the URL, meaning it was broken on any page except /.
-* The positioning of the "no results" text when searching on the dashboard has been fixed.
-* When viewing a build for a job that has a ton of builds, only the first batch of builds will be fetched and rendered instead of all of them. Older builds will be automatically loaded if the build being viewed is old, or as the user scrolls to see them.
-
+* Dashboard behavior has been improved when there are no pipelines in the following
+ways:
+  * You can now view which team you are a member.
+    Before, you could only view a 'no pipelines set' page.
+  * The bar along the bottom now shows up.
+  * The search function is no longer shown.
+  * The HD view has been disabled and now redirects.
+* When viewed on a mobile browser, the username in the header now displays correctly.
+* When the width of resource metadata is large, the text remains cordoned off to the side.
+Before, resource metadata was compressed into the resource's get output.
+* The URL link to the web app manifest was relative to the URL.
+This meant that the link was broken on all pages except '/'.
+* The position of the `no results` text has been fixed when searching on the dashboard.
+* When viewing a build, only the first batch of builds are rendered. Older builds
+are automatically rendered if build currently being viewed is old or if the user
+scrolls to view them.
 
 #### Teams
-* With Concourse 4.x configured with an oAuth provider such as GitHub, a user could log in via GitHub even if they weren't technically a member of any team. They couldn't do anything once logged in, but they shouldn’t have been allowed to log in in the first place. This is no longer permitted.
-  * Similarly, `fly login` will also check to make sure you've successfully logged in to the target team and return an error if the team isn't in your token.
-
+* In Concourse 4.x, if an oAuth provider was configured, a user that was not a member of any team
+could log in to Concourse. This user could not do anything once they were logged in.
+This is no longer permitted.
+* `fly login` checks to make sure you have successfully logged
+in to the target team and returns an error if the team is not in your token.
 
 #### Creds
-* The AWS SSM credential manager and the AWS SecretsManager credential manager had an issue with the  AWS_REGION environment variable where they would both declared it as their own. This meant that if you set it, they would both try to be configured, which would fail. They now have separately namespaced env vars instead.
-* Fixed a bug with the Vault login retry logic that caused it to go into a fast loop after reaching the maximum interval. It will now stay at the maximum interval.
+* The AWS SSM credential manager and the AWS Secrets Manager credential manager both
+declared the `AWS_REGION` environment variable as their own.
+If you set the environment variable, both credential managers would try to configured it and fail.
+They now have separately namespaced environment variables instead.
+* The Vault login retry logic caused it to go into a
+fast loop after reaching the maximum interval. It now stays at the maximum interval.
 
 
 #### Installation
-* The BOSH release now sets file permissions for its config values as 0600, which fixes Postgres certificate configuration.
-* The BOSH release now correctly handles array-values for authorized worker keys.
+* The BOSH release now sets file system permissions for its config values to chmod `0600`.
+This fixes Postgres certificate configuration.
+* The BOSH release now correctly handles array values for authorized worker keys.
