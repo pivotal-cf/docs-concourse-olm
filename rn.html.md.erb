@@ -6,7 +6,7 @@ owner: Concourse
 <strong><%= modified_date %></strong>
 
 ## <a id="rn-424"></a> v4.2.4
-**Release Date: May 07, 2019**
+**Release Date: May 21, 2019**
 
 <p class="note warning"><strong>Warning: </strong>To protect against clickjacking,
   set the <code>x_frame_options</code> property for the atc job to <code>deny</code>
@@ -16,7 +16,7 @@ owner: Concourse
   in the Mozilla documentation.</p>
 
 
-###<a id="security-424"></a> Security Fixes
+###<a id="security-424"></a> Security Fix
 This release contains the following security fix:
 
 * SSH MAC algorithms have been restricted to a smaller set to fix a vulnerability with the Concourse `web` instance VM.
@@ -25,6 +25,15 @@ that is used for Worker communication.
 
 For more information, see [SSH Weak MAC Algorithms Enabled](https://www.tenable.com/plugins/nessus/71049) in the Tenable
 documentation.
+
+### <a id="known-issues"></a> Known Issue
+This release has the following issue:
+
+* PostgreSQL v11.1 and v11.2 have an infinite parallel query bug.
+  To correct this, you must set your `max_parallel_workers_per_gather` to `0`.
+    * For more information on `max_parallel_workers_per_gather`, see [max\_parallel\_workers\_per\_gather (integer)](https://www.postgresql.org/docs/11/runtime-config-resource.html#GUC-MAX-PARALLEL-WORKERS-PER-GATHER) in the PostgreSQL documentation.
+    * For more information on the PostgreSQL infinite parallel query bug, see [BUG #15585: infinite DynamicSharedMemoryControlLock waiting in parallel query](https://www.postgresql.org/message-id/15585-324ff6a93a18da46@postgresql.org) in the PostgreSQL documentation.
+
 
 ## <a id="rn-423"></a> v4.2.3
 **Release Date: February 15, 2019**

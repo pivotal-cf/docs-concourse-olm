@@ -75,9 +75,11 @@ For more information, see <a href="./troubleshooting.html">Troubleshooting</a>.
 |       v4.2.3      | 1.18.2 | 9.5+ External |      Xenial 250.9  |      250.x          |      1.9.5      |
 |       v4.2.4      | 1.19.1 | 9.5+ External |      Xenial 250.38  |      250.x          |      1.9.5      |
 
-<p class="note warning"><strong>Warning: </strong>If you are using PostgreSQL v11.1 or v11.2, you will need to set 
-<a href="https://www.postgresql.org/docs/11/runtime-config-resource.html#GUC-MAX-PARALLEL-WORKERS-PER-GATHER">`max_parallel_workers_per_gather`</a> to `0`.
-This will correct a Postgres <a href="https://www.postgresql.org/message-id/15585-324ff6a93a18da46@postgresql.org">infinite parallel query bug</a>.
+<p class="note warning"><strong>Warning: </strong>If you are using PostgreSQL v11.1 or v11.2, you must set
+<code>max_parallel_workers_per_gather</code> to <code>0</code>.
+This will correct a PostgreSQL infinite parallel query bug.<br><br>
+For more information on <code>max_parallel_workers_per_gather</code>, see <a href="https://www.postgresql.org/docs/11/runtime-config-resource.html#GUC-MAX-PARALLEL-WORKERS-PER-GATHER">max_parallel_workers_per_gather (integer)</a> in the PostgreSQL documentation.<br>
+For more information on the PostgreSQL infinite parallel query bug, see <a href="https://www.postgresql.org/message-id/15585-324ff6a93a18da46@postgresql.org">BUG #15585: infinite DynamicSharedMemoryControlLock waiting in parallel query</a> in the PostgreSQL documentation.
 
 <p class="note"><strong>Note:</strong> The values in the "Tested" columns indicate
   that Concourse was tested with the listed stemcell or product version upon release.
