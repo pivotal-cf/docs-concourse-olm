@@ -9,7 +9,7 @@ owner: Concourse
 **Release Date: May 21, 2019**
 
 <p class="note warning"><strong>Warning: </strong>To protect against clickjacking,
-  set the <code>x_frame_options</code> property for the atc job to <code>deny</code>
+  set the <code>x_frame_options</code> property for the ATC job to <code>deny</code>
   or <code>sameorigin</code> instead of <code>allow-from</code>.<br>
   For more information, see
   <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a>
@@ -21,7 +21,7 @@ This release contains the following security fix:
 
 * SSH MAC algorithms have been restricted to a smaller set to fix a vulnerability with the Concourse `web` instance VM.
 By default, Golang allows for some weak algorithms that can lead to security vulnerabilities on port `2222`,
-which is used for Worker communication.
+which is used for worker communication.
 
     For more information, see [SSH Weak MAC Algorithms Enabled](https://www.tenable.com/plugins/nessus/71049) in the Tenable
 documentation.
@@ -39,7 +39,7 @@ This release has the following issue:
 **Release Date: February 15, 2019**
 
 <p class="note warning"><strong>Warning: </strong>To protect against clickjacking,
-  set the <code>x_frame_options</code> property for the atc job to <code>deny</code>
+  set the <code>x_frame_options</code> property for the ATC job to <code>deny</code>
   or <code>sameorigin</code> instead of <code>allow-from</code>.<br>
   For more information, see
   <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a>
