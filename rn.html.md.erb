@@ -9,7 +9,7 @@ owner: Concourse
 **Release Date: (TBD) MMMM XX, 2019**
 
 Concourse for PCF v5.2.0 includes Role Based Access Control (RBAC).
-For more information on Configuring RBAC, see [RBAC](./rbac)
+For more information about configuring RBAC, see RBAC.
 
 
 ###<a id="security-520"></a> Security Fixes
@@ -32,8 +32,9 @@ This release has the following breaking changes:
 
 #### Installation
 The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes.
-For manifest examples, see [operations directory](GITHUB) in the Concourse
-BOSH deployment GitHub repository.
+For manifest examples, see
+[operations](https://github.com/concourse/concourse-bosh-deployment/tree/release/5.1.x/cluster/operations)
+in the concourse-bosh-deployment GitHub repository.
 
 #### Release
 
@@ -153,7 +154,8 @@ Features and changes in this release:
   * It does not run Docker to fetch the image - it is written in pure Go,
     using the `go-containerregistry` package.
     This makes the implementation much less error-prone.
-    For more information, see [go-containerregistry](LINK) in the Google GitHub repo.
+    For more information, see [go-containerregistry](https://github.com/google/go-containerregistry)
+    in the Google GitHub repo.
   * Because it doesn't run Docker, it doesn't need a privileged container.
     The fewer privileged containers in your cluster, the better - especially in light of
     [v4.2.3](https://github.com/concourse/recent CVE fixes/releases/tag/v4.2.3).
