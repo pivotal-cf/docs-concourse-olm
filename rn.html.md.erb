@@ -50,13 +50,17 @@ in the concourse-bosh-deployment GitHub repository.
 
 
 #### Binary
+* Generic credential caching has been implemented for all credential managers. This will replace Vault-only caching functionality. To make this transition, the following two flags will need to be updated:
+  * `--vault-cache’ is now `--secret-cache-enabled`
+  * `--vault-max-lease` is now `--secret-cache-duration`
+  * As a result of this change, credential managers now implement a simpler interface that will make it easier to look-up secrets in multiple paths.
 * The Concourse binary distribution has been reformatted.
   Instead of a self-contained binary, it is now shipped as a .tgz containing the
   binary and its dependencies pre-extracted.
-  If you have been passing esoteric flags to Garden, you must switch to using a
+  If you have been passing specific flags to Garden, you must switch to using a
   config file through `--garden-config` instead, or pass them as `env vars` (e.g. `CONCOURSE_GARDEN_FOO_BAR`).
-* Flags are no longer supported because they relied on directly embedding their code.
-  The advantages of this include:
+  These flags are no longer supported because they relied on directly embedding their code.
+  The effects of this reformatting include:
   * Simpler and faster startup. The Concourse worker command no longer needs to
     extract resource types/etc. on start.
   * The Concourse binary no longer directly embeds Garden-runC code,
@@ -107,7 +111,7 @@ to Concourse for PCF v5.2.0
   as the CLI no longer has the flag.
 
 
-#### Runtime
+####<a id="breaking-runtime-520"></a>Runtime
 * Support for direct worker registration has been removed.
   The `--peer-ip` flag is no longer available on concourse workers.
   When updating to v5.2.0, remove this flag because the worker will register through forwarding instead.
@@ -151,12 +155,12 @@ Features and changes in this release:
   This resource is intended to replace the `docker-image resource` image for
   image pulling and pushing (but not building).
 * This resource improves on the `docker-image` resource in multiple ways:
-  * It does not run Docker to fetch the image - it is written in pure Go,
+  * It does not run the Docker daemon to fetch the image - it is written in pure Go,
     using the `go-containerregistry` package.
     This makes the implementation much less error-prone.
     For more information, see [go-containerregistry](https://github.com/google/go-containerregistry)
     in the Google GitHub repo.
-  * Because it doesn't run Docker, it doesn't need a privileged container.
+  * Because it does not run the Docker daemon, it doesn't need a privileged container.
     The fewer privileged containers in your cluster, the better - especially in light of
     [v4.2.3](https://github.com/concourse/recent CVE fixes/releases/tag/v4.2.3).
   * By focusing solely on fetching and pushing, the resource is smaller and simpler.
@@ -165,8 +169,6 @@ Features and changes in this release:
   Pivotal recommends that users try to switch their `image_resources` and `Resource Types`
   to the new resource type.
   In most cases this is just a matter of replacing `type: docker-image` with `type: registry-image`.
-* We intend to eventually deprecate and phase out support for the
-  `docker-image resource` in favor of the registry-image resource.
 
 
 #### Runtime
@@ -194,8 +196,18 @@ Features and changes in this release:
   forward through a single web node.
   To do this, set the `--rebalance-interval` flag on the concourse worker.
   The rebalancing drains in-flight connections and should not disrupt any in-flight builds.
+  * This results in a breaking change. For more information, see [Breaking Changes - Runtime](#breaking-runtime-520) above.
 
 #### Core Functionality
+* If you want to rename a job, while retaining its build history, Concourse can now retain this build history by updating the job name and specifying the old name as `old_name` within the job config.
+* A new flag called `--external-garden-url` has been added. This flag allows for the use of a separately managed Garden server as a worker.
+* Concourse is now compatible with Credhub v2.x (with the exception of 2.1 due to a bug).
+* Added the ability to retain build logs for a specific time duration.
+* A new `in_parallel` step has been added. `in_parallel` can run steps in parallel with more control through two additional configs:
+  * `limit`: Limits the number of parallel steps
+  * `fail_fast`: Interrupts currently running steps and prevents scheduling pending steps
+  * This will deprecate the `aggregate` step in future releases, so it is recommended that users move off to `in_parallel`.
+* The web node can now be configured to enable audit logs. Auditing currently logs API calls to the default logger using flags to enable specific auditing groups. More infor on audit logs here.
 * The `Vault credential manager` can now be configured with a global shared path for credential lookup. This should make sharing credentials between teams easier to manage. Please use with caution as all teams will be able to access it.
 * ‘Steps’ can now be annotated with an ‘on_error’ step hook whose value is a second step to execute only if the parent step errors.
 * Task ((vars)) received a large overhaul:
@@ -212,6 +224,9 @@ Features and changes in this release:
 
 
 #### Web UI
+* Added the ability to set a name for a Concourse cluster which will be displayed on the dashboard page by setting the `--cluster-name` flag
+* Added a tooltip to the pause toggle on the dashboard page and the pipeline page. This tooltip will display a “not authorized” message if a user doesn’t have permission to pause/unpause a pipeline
+* The pipeline navigation sidebar has been re-added.
 * A new animation has been added to running builds in the build number list to help differentiate between errored and running builds.
 * Concourse is now using Material Design icons everywhere in the UI
 * URLs in resource metadata are now clickable
