@@ -137,6 +137,9 @@ Features and changes in this release:
 * `fly execute` can now specify input mappings with `-m`, which is useful when
   running with ``--inputs-from-job` when the job renames some inputs.
 * `fly watch` can be called with `--timestamps` to show per-line timestamps in the build output.
+* `fly status` now prints a message if your token has expired.
+* `fly get-pipeline` now prints resources and resource types in a deterministic order.
+* `fly set-pipeline` now prints changes in the order of Grouping Jobs in the diff.
 * Added new `fly` commands:
   * `fly curl` assists with manual API requests to Concourse.
   * `fly userinfo` lets you know which teams you are logged in to and which roles you have in each team.
@@ -144,6 +147,7 @@ Features and changes in this release:
     This initiates the “landing” process through the API and results in the worker process exiting.
   * `fly-edit-target` edits a target’s name, team, or URL.
   * `fly-delete-target` removes targets from `~/.flyrc`.
+
 
 
 #### Resources
@@ -253,46 +257,39 @@ Features and changes in this release:
 
 This release fixes the following issues:
 
-#### Fly
+#### Fly Commands
 * `fly execute` with the `-j` flag now prints the correct build URL.
 * `fly execute` with the `--include-ignored` flag no longer fails when files are removed locally.
 * `fly login` now creates the `~/.flyrc` file with chmod 0600 file system permissions.
-* `fly login` no longer prompts you for your authentication method when
-    a username and password are given using `-u` and `-p`.
-    The command assumes that you are using local authentication.
+* `fly login` with `-u` and `-p` flags no longer prompts you for your authentication method. The command assumes that you are using local authentication.
 * `fly intercept` now prints clearer error messages when it fails to execute.
-* `fly set-pipeline` now prints changes in the order of Grouping Jobs in the diff.
+
 * `fly get-pipeline` now throws an error if the given pipeline does not exist.
    Before, the command returned an empty pipeline config.
-* `fly get-pipeline` now prints resources and resource types in a deterministic order.
-* `fly status` now prints a message if your token has expired.
 
-
-#### Core
+#### Core Functionality
 * Credential managers no longer are instantiated twice.
 This resulted in two authentication loops.
 * Builds no longer crash when a resource is removed from the pipeline configuration while the build is running. This happened for builds that produced outputs for the removed resource.
-* `UNIQUE` constraints for resource_configs are no longer ineffective.
+* `UNIQUE` constraints for `resource_configs` are no longer ineffective.
 For more information, see the
 [&#96;resource_configs&#96; unique constraint is ineffective #2509](https://github.com/concourse/concourse/issues/2509)
 issue in GitHub.
 * The `/api/v1/resources` and `/api/v1/jobs` endpoints now return `[]`
 instead of `null` when there are no resources or jobs.
 * Auth configs set from empty environment variables no longer result in incorrect
-Dex configurations. This caused cause errors.
+Dex configurations.
 * Concourse now sends TCP keepalives for connections to the database.
 This enables Concourse to detect when the connection has been interrupted ungracefully.
 * The `--tsa-authorized-keys` flag is now optional.
 You can use this flag when all authorized keys are associated to teams
 through `--tsa-team-authorized-keys`.
-* The web node no longer leaks a connection and goroutine for each build that
-completed when configured to drain build logs to syslog.
-* `version` parameters in a `get` step now takes precedence over `version` parameters pinned through the
+* When configured to drain build logs to syslog, the web node no longer leaks a connection and goroutine for each build.
+* `version` parameters in a `get` step now take precedence over `version` parameters pinned through the
  web UI  and `version` parameters in a resource definition. For information about `version`
  in `get` steps, [get step](https://concourse-ci.org/get-step.html).
  For information about `version` in resource definitions,
  see [Resources](https://concourse-ci.org/resources.html#resource-version).
-
 
 #### Resources
 * Fixed a resource error that caused the following error:
@@ -311,8 +308,8 @@ Before, manually-triggered builds caused resource checking to happen in the job 
 This ensured that manually-triggered builds ran with the latest versions available.
 However, it also slowed down scheduling for every other job in the pipeline
 because they are all scheduled in succession.
-* The above refactoring also fixed a race condition that resulted
-in inputs configured with `version:` having every version skipped when a build is manually triggered.
+    * The above refactoring also fixed a race condition that resulted
+      in inputs configured with `version:` having every version skipped when a build is manually triggered.
 * Task caches are now supported on Windows.
 
 
@@ -324,14 +321,14 @@ in inputs configured with `version:` having every version skipped when a build i
   * Fixed the unstyled autosuggest menu in Chrome.
   * Hitting the escape key now un-focuses the search field.
   * Search autocomplete now only appears if you press a key with the search field focused.
-  * Typing `? into the search field no longer brings up the hotkey help pane.
+  * Typing `?` into the search field no longer brings up the hotkey help pane.
 * Improved the HD dashboard view.
-* Tall pipelines are no longer cut off by the top bar.
-* Fixed the `status:running` search functionality on the dashboard view
+* Tall pipelines no longer are cut off by the top bar.
+* Fixed the `status:running` search functionality on the dashboard view.
 * When viewing a pipeline build by ID, the top bar now shows the breadcrumb for
 its pipeline and job.
 * The breadcrumb in the top bar now uses hyperlinks. You can
-middle-click and right-click the hyperlinks. This results in standard and predictable browser behavior.
+middle-click and right-click the hyperlinks. This results in predictable browser behavior.
 * The groups bar on the pipeline view now has a hover state for each group.
 * When viewing a one-off build in the web UI, the build now renders. Before, it was sending errors.
 * The web UI is now using Elm v0.19.
@@ -342,33 +339,30 @@ using the vertical scroll no longer produces a horizontal scroll that continuall
 * Dashboard behavior has been improved when there are no pipelines in the following
 ways:
   * You can now view which team you are a member of.
-    Before, you could only view a 'no pipelines set' page.
+    Before, you could only view a **no pipelines set** page.
   * The bar along the bottom now shows up.
   * The search function no longer is shown.
   * The HD view has been disabled and now redirects.
 * When viewed on a mobile browser, the username in the header now displays correctly.
 * When the width of resource metadata is large, the text is cordoned off to the side.
-Before, resource metadata was compressed into the resource get output.
+Before, resource metadata was compressed into the resource **get** output.
 * The URL link to the web app manifest no longer is relative to the URL.
-This meant that the link was broken on all pages except '/'.
-* The position of the `no results` text has been fixed when searching on the dashboard.
+Before, the link was broken on all pages except root URL.
+* The position of the **no results** text has been fixed when searching on the dashboard.
 * When viewing a build, only the first batch of builds are rendered. Older builds
 are automatically rendered if the build currently being viewed is old or if the user
 scrolls to view them.
 
 #### Teams
-* In Concourse 4.x, if an OAuth provider was configured, a user that was not a member of any team
-could log in to Concourse. However, users could not do anything after they were logged in.
-This is no longer permitted.
+* If an OAuth provider is configured for Concourse, a user that is not a member of any team can no longer log in to Concourse. However, when these users could log in, they could not do anything.
 * `fly login` checks to ensure you have successfully logged
 in to the target team and returns an error if the team is not in your token.
 
-#### Creds
-* The AWS SSM credential manager and the AWS Secrets Manager credential manager both
-declared the `AWS_REGION` environment variable as their own.
-If you set the environment variable, both credential managers tried to configured it and failed.
-They now have separately namespaced environment variables.
-* The Vault login retry logic caused Vault to go into a
+#### Credentials
+* The AWS SSM credential manager and the AWS Secrets Manager credential manager no longer declare the `AWS_REGION` environment variable as their own.
+Before, if you set these environment variable, both credential managers tried to configure them and failed.
+The AWS SSM and AWS Secrets Manager credential managers now have `AWS_REGION` environment variables in different namespaces.
+* The Vault login retry logic no longer causes Vault to go into a
 fast loop after reaching the maximum interval. It now stays at the maximum interval.
 
 
