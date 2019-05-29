@@ -15,16 +15,15 @@ For more information about configuring RBAC, see RBAC.
 ###<a id="security-520"></a> Security Fixes
 This release contains the following security fixes:
 
-* Fixed an information leak that potentially allows unauthenticated users to fetch
-  the step names and structure for a build whose job is not marked `public`.
-  This scenario will now return a 401 Unauthorized instead.
+* Fixed an information leak that potentially allows <%# Avoid weak verbs: "enable" or "permit" is likely better here. %><%# Avoid weak verbs: "enable" or "permit" is likely better here. %>unauthenticated users to fetch
+  the step names and structure for a build with a job not marked `public`.
+  This scenario now returns a 401 Unauthorized error.
 * Resource metadata is no longer shown by default in exposed pipelines.
-  The resource must have the public value set in order to show metadata, just like jobs.
-  One exception is build output: if a job is public,
-  any `get` step and `put` steps will still show their metadata.
-* The `web node` now defaults `X-Frame-Options` to `deny` to safeguard against
-  clickjacking attacks.
-  If you run Concourse in an iframe, you'll notice that it doesn't work anymore.
+  The resource must be set to `public` to show metadata, similar to jobs.
+  Build output is an exception.
+  If a job is public, any `get` step or `put` steps still show in the build's metadata.
+* To safeguard against clickjacking attacks, the `web node` now defaults `X-Frame-Options` to `deny`.
+  Running Concourse in an iframe no longer works.
 
 
 ###<a id="breaking-520"></a> Breaking Changes
@@ -37,60 +36,66 @@ For manifest examples, see
 in the concourse-bosh-deployment GitHub repository.
 
 #### Release
+* The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
 
-* The Concourse BOSH release has been redesigned and is now centered around the concourse binary.
+    <p class="note warning"><strong>Warning:</strong>
+      You must re-create your workers during or after you deploy.
+      The location where the worker stores volumes has changed and the old
+      volume directory is not cleaned up.
+      Failing to do so causes disk usage to leak.</p>
 
-<p class="note warning"><strong>Warning:</strong> Recreate your workers during or after the deploy. The location where the worker stores volumes has changed and the old volume directory is not cleaned up. This will leak disk usage.</p>
-<p class="note warning"><strong>Warning:</strong> The `additional_resource_types` property can no longer be configured.</p>
+    <p class="note warning"><strong>Warning:</strong>
+      The <code>additional_resource_types</code> property can no longer be configured.</p>
 
-* The Concourse release no longer needs to be deployed alongside a Garden-runC BOSH release, and instead embeds the gdn binary directly.
-* Concourse has adopted BPM and now use it for deploying the web node.
-  For more information on BPM, see [BPM]().
-
+* The Concourse release no longer needs to be deployed alongside a Garden-runC
+  BOSH release, and instead embeds the gdn <%# should this be in code? is this a name? %> binary directly.
+* Concourse now uses BPM for deploying the web node.
+  For more information on BPM, see [BPM](). <%# find a topic to link to %>
 
 #### Binary
-* Generic credential caching has been implemented for all credential managers. This will replace Vault-only caching functionality. To make this transition, the following two flags will need to be updated:
+* Generic credential caching has been implemented for all credential managers.
+  This replaces Vault-only caching.
+  As a result of this change, credential managers now implement a simpler
+  interface that makes it easier to look up secrets in multiple paths.
+  To make this transition, the following two flags must be updated:
   * `--vault-cache’ is now `--secret-cache-enabled`
   * `--vault-max-lease` is now `--secret-cache-duration`
-  * As a result of this change, credential managers now implement a simpler interface that will make it easier to look-up secrets in multiple paths.
 * The Concourse binary distribution has been reformatted.
-  Instead of a self-contained binary, it is now shipped as a .tgz containing the
+  Instead of a self-contained binary, it is now shipped as a TGZ containing the
   binary and its dependencies pre-extracted.
   If you have been passing specific flags to Garden, you must switch to using a
-  config file through `--garden-config` instead, or pass them as `env vars` (e.g. `CONCOURSE_GARDEN_FOO_BAR`).
-  These flags are no longer supported because they relied on directly embedding their code.
+  config file through `--garden-config`, or pass them as `env vars` (e.g. `CONCOURSE_GARDEN_FOO_BAR`).
+  These flags are no longer supported because they rely on directly embedding their code.
   The effects of this reformatting include:
-  * Simpler and faster startup. The Concourse worker command no longer needs to
-    extract resource types/etc. on start.
-  * The Concourse binary no longer directly embeds Garden-runC code,
-    and instead ships alongside the gdn binary, copied from their releases.
-    This simplifies the interface for configuring Garden and allows Concourse to
-    leverage their build process rather than risking deviation.
-
+  * Simpler and faster startup.
+    The Concourse worker command no longer needs to extract resource types, amongst other things, on start.
+  * The Concourse binary no longer directly embeds Garden-runC code.
+    Instead, it ships alongside the gdn <%# should this be in code? is this a name? %> binary, copied from their releases.
+    This simplifies the interface for configuring Garden and enables Concourse to
+    leverage Garden's build process rather than risking deviation.
 
 #### Core
 * As a result of internal refactoring and decoupling between various components,
-  web nodes no longer need to stream user artifacts to one another.
-  This was the only reason the `concourse web --peer-url` flag was needed.
-  As such, it has been removed. However, the SSH gateways which also run on the web node
-  still need their address for the forwarded worker connections advertised to other web nodes.
+  web nodes no longer need to stream user artefacts to one another.
+  Because of this the `concourse web --peer-url` flag has been removed.
+  However, the SSH gateways that run on the web node need their address for the
+  forwarded worker connections to be advertised to other web nodes.
   This value used to be inferred by ‘--peer-url’, so a new `--peer-address` flag has been added for it.
 * Two flags have been modified to be more consistent with other flag syntax:
-  `concourse web --vault-auth-param foo=bar` is now `concourse web --vault-auth-param foo:bar`
-  `concourse web --tsa-team-authorized-keys team=path/to/key` is now
+  * `concourse web --vault-auth-param foo=bar` is now `concourse web --vault-auth-param foo:bar`
+  * `concourse web --tsa-team-authorized-keys team=path/to/key` is now
   `concourse web --tsa-team-authorized-keys team:path/to/key`.
-
 
 #### Resources
 * As a result of major changes to how resource versions are stored,
 the version history for each resource across your pipelines is reset upon upgrading
-to Concourse for PCF v5.2.0
+to Concourse for PCF v5.2.0.
   * The upgrade preserves the state of which versions are disabled.
   * The upgrade preserves the data of what versions of which builds they are inputs to and outputs of.
-  * With v5.2.0, resource versions are tied directly to an anonymous "resource config".
+  * Resource versions are tied directly to an anonymous "resource config".
     Pipeline resources instead point to a config. If their `source:` or `type:` changes,
     they point to a new config with its own version history.
-  * Before v5.2.0, resource version history was associated to a pipeline resource by name.
+  * Resource version history was associated with a pipeline resource by name.
     This meant that if you changed a resource's configuration or type,
     those old versions would persist, even though they may no longer be appropriate.
   * This improves the accuracy of the system as a whole, removing the need to "purge" the history of a resource.
@@ -98,22 +103,24 @@ to Concourse for PCF v5.2.0
     check containers are also shared across teams.
     This reduces the overall container count.
 
-<p class="note"><strong>Note:</strong> As a result of the change to check containers, team members who can `fly intercept` check containers is limited to `admin` users.</p>
-
+<%# what does this note mean? %>
+<p class="note"><strong>Note:</strong>
+  As a result of the change to check containers, team members who can `fly intercept`
+  check containers is limited to `admin` users.</p>
 
 #### Teams
-* `--allow-all-users` has been removed as it was often misused.
+* The `--allow-all-users` flag has been removed because it was often misused.
   You must now configure users explicitly.
 * After upgrading, any teams that have `--allow-all-users` configured will preserve
   the behavior and continue to allow all users.
-  The next time a team is configured, you will have to specify something else,
-  as the CLI no longer has the flag.
+  The next time a team is configured, you have to specify something else,
+  because the CLI no longer has the flag.
 
 
 ####<a id="breaking-runtime-520"></a>Runtime
 * Support for direct worker registration has been removed.
   The `--peer-ip` flag is no longer available on concourse workers.
-  When updating to v5.2.0, remove this flag because the worker will register through forwarding instead.
+  When updating to v5.2.0, remove this flag. The worker registers through forwarding instead.
   Forwarding is more secure because it does not require you to open your workers to inbound traffic.
 
 
