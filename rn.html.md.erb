@@ -163,7 +163,7 @@ Features and changes in this release:
   prune all the stalled workers
 * `fly execute` will now upload inputs and download outputs in parallel.
 * `fly execute` can now specify input mappings with `-m`, which is useful when
-  running with ``--inputs-from-job` when the job renames some inputs.
+  running with `--inputs-from-job` when the job renames some inputs.
 * `fly watch` can be called with `--timestamps` to show per-line timestamps in the build output.
 * `fly get-pipeline` now prints resources and resource types in a deterministic order.
 * `fly status` prints the expiration status of your token.
@@ -289,21 +289,23 @@ This release fixes the following issues:
 #### Fly Commands
 * `fly execute` with the `-j` flag now prints the correct build URL.
 * `fly execute` with the `--include-ignored` flag no longer fails when files are removed locally.
-* `fly execute --input` no longer hangs indefinitely after uploading the input directory as a result of the web node stopping.
+* `fly execute` with the `--input` flag no longer hangs if the web node stops.
 * `fly login` now creates the `~/.flyrc` file with chmod `0600` file system permissions.
 * `fly intercept` now prints clearer error messages when it fails to execute.
-* `fly set-pipeline` no longer has issues when using the `--check-creds` flag
+* `fly set-pipeline` with the `--check-creds` flag no longer fails.
 * `fly get-pipeline` now throws an error if the given pipeline does not exist.
-   Previously, the command returned an empty pipeline config.
-* `fly prune-worker --all-stalled` now only returns a warning if no stalled workers are found.
-    Before, it returned an error.
+   Before, the command returned an empty pipeline config.
+* `fly prune-worker` with the `--all-stalled` flag now prints a warning if no stalled workers are found. 
+    Before, the command returned an error.
 
 
 #### Core Functionality
-* Multiple groups in the same pipeline can no longer use the same name. If this is attempted an error will occur.
-* Fixed a bug where aborting a started build prior to a web node re-attaching to it would result in an orphaned, uncompleted build that was still running.
-* The Concourse API now returns a `401 Unauthorized` when an expired/invalid token is used to access an endpoint which supports authenticated/unauthenticated views.
-* A check has been added to `concourse web` to ensure that `--session-signing-key` is specified. Not having this specified causes Concourse web to crash.
+* Multiple groups in the same pipeline can no longer use the same name. 
+If you use the same name, an error occurs.
+* Aborting a started build before a web node re-attaches to it no longer results in an orphaned build that continued to run.
+* The Concourse API now returns a `401 Unauthorized` when an expired or invalid token is used to access an endpoint which supports authenticated and unauthenticated views.
+* `concourse web` ensures that `--session-signing-key` is specified. 
+  Before, `concourse web` crashed if `--session-signing-key` was not specified.
 * Credential managers no longer instantiate twice.
 This resulted in two authentication loops.
 * Builds no longer crash when a resource is removed from the pipeline configuration while the build is running. This happened for builds that produced outputs for the removed resource.
@@ -334,7 +336,8 @@ through `--tsa-team-authorized-keys`.
 
 
 #### Runtime
-* The default concurrency settings for volume sweeping have been reduced from 5 to 3. This will reduce the stress that volume deletion ends up putting on the system in certain cases.
+* The default concurrency settings for volume sweeping are now reduced from 5 to 3. 
+This reduces the stress that volume deletion can put on the system.
 * The web node now retries on unexpected end-of-file errors. This occurred
 when a worker was restarted while a build was running a container on the worker. For information
 about web nodes, see [Running a web node](https://concourse-ci.org/concourse-web.html)
@@ -351,7 +354,8 @@ because they are all scheduled in succession.
 
 
 #### Web UI
-* Fixed an issue where when watching a build for a long period, users would get an error message that stated “You are not authorized to view the details of this pipeline”.
+* Users no longer see an **You are not authorized to view the details of this pipeline** error when viewing
+a build for a long time.
 * The dashboard no longer crashes when a pipeline is configured with a circular dependency.
 * Improved rendering for pipeline groups.
 * Dashboard search has been improved in the following ways:
@@ -391,10 +395,9 @@ are automatically rendered if the build currently being viewed is old or if the 
 scrolls to view them.
 
 #### Teams
-* Fixed a bug with Dex CloudFoundry connector where it did not iterate over all the results when requesting a user org/spaces for team authorization. This bug made it so that users who were members of many teams often could not access all of their teams.
-* In Concourse 4.x, if an OAuth provider was configured, a user that was not a member of any team
-could log in to Concourse. However, users could not do anything after they were logged in.
-This is no longer permitted.
+* Users who are members of many teams can now access all of their teams. Before, the Cloud Foundry Dex 
+connector did not iterate over all results when requesting a user's org and space for team authorization.
+* If an OAuth provider is configured for Concourse, a user that is not a member of any team can no longer log in to Concourse. However, when these users could log in, they could not do anything.
 * `fly login` checks to ensure you have successfully logged
 in to the target team and returns an error if the team is not in your token.
 
