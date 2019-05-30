@@ -40,20 +40,57 @@ This release contains the following security fixes:
   * For more information, see SSH Weak MAC Algorithms Enabled in the Tenable documentation.
 
 
-###<a id="breaking-520"></a> Breaking Changes
+###<a id="installation-520"></a> Installation
+
+For instructions on how to install Concourse v5.2.0, please see [installing Concourse](https://docs.pivotal.io/p-concourse/5-x/installing.html).
+
+
+###<a id="upgrades-520"></a> Upgrading
+
+#### Upgrade Path
+
+If you're currently on v3.13.0 and are looking to upgrade to v5.2.0, you must first upgrade to v.4.2.4 before upgrading to v5.2.0.
+
+
+#### Instructions
+
+The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes. The following changes need to be applied regardless whether you use the example [concourse-bosh-deployment][concourse-bosh-deployment] or your own manifest.
+
+These changes include the following:
+
+- `atc` or `tsa` jobs were consolidated under `web`:
+  - `tsa` properties:
+    - not at the root level of a job (previously, `tsa`) anymore:
+      - now they're all after `worker_gateway` (for instance, `tsa.host_key` became `web.worker_gateway.host_key`)
+    - `web.worker_gateway.team_authorized_keys` now takes a map rather than a list of objects
+  - `atc` variables are still at the root, but now under `web` (for instance, `atc.bind_port` became `web.bind_port`).
+  - Vault's app-role configuration now uses `:` instead of `=`
+    - for instance: `CONCOURSE_VAULT_AUTH_PARAM=role_id:some-id,secret_id:some-secret` instead of `role_id=some-id`
+- `baggageclaim`/`worker`/`garden` jobs were consolidated under `worker`
+  - `baggageclaim` properties are now under `worker.baggageclaim`
+  - `garden` properties are now under `worker.garden`, with only a subset of the previously-exposed flags being possible to be set
+  - `worker.tsa` properties are under `worker.worker_gateway`
+- `baggageclaim-windows`/`houdini-windows`/`worker-windows` jobs were consolidated under `worker-windows`
+  - `baggageclaim` properties are now under `worker.baggageclaim`
+  - `worker.tsa` properties are under under `worker.worker_gateway`
+
+
+##### Considerations
+
+In v5.2.0, Concourse workers won't run in machines that don't have [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) enabled (usually, in single-machine test environments).
+
+
+[concourse-bosh-deployment]: https://github.com/concourse/concourse-bosh-deployment/tree/release/5.2.x
+
+#### Breaking Changes
+
 This release has the following breaking changes:
 
-#### Installation
-The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes.
-For manifest examples, see
-[operations](https://github.com/concourse/concourse-bosh-deployment/tree/release/5.1.x/cluster/operations)
-in the concourse-bosh-deployment GitHub repository.
-
-#### Fly
+##### Fly
 
 * The short-flag for `fly builds --team` has been updated from `-t` to `-n` in order to make it consistent across `fly`
 
-#### Release
+##### Release
 * The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
 
     <p class="note warning"><strong>Warning:</strong>
@@ -69,8 +106,9 @@ in the concourse-bosh-deployment GitHub repository.
   BOSH release, and instead embeds the gdn <%# should this be in code? is this a name? %> binary directly.
 * Concourse now uses BPM for deploying the web node.
   For more information on BPM, see [BPM](). <%# find a topic to link to %>
+* [`blackbox`](https://bosh.io/jobs/blackbox?source=github.com/concourse/concourse-bosh-release&version=4.2.4), which used to be bundled in our releases, is not included anymore.
 
-#### Binary
+##### Binary
 * Generic credential caching has been implemented for all credential managers.
   This replaces Vault-only caching.
   As a result of this change, credential managers now implement a simpler
@@ -105,26 +143,11 @@ in the concourse-bosh-deployment GitHub repository.
   `concourse web --tsa-team-authorized-keys team:path/to/key`.
 
 #### Resources
-* As a result of major changes to how resource versions are stored,
-the version history for each resource across your pipelines is reset upon upgrading
-to Concourse for PCF v5.2.0.
-  * The upgrade preserves the state of which versions are disabled.
-  * The upgrade preserves the data of what versions of which builds they are inputs to and outputs of.
-  * Resource versions are tied directly to an anonymous "resource config".
-    Pipeline resources instead point to a config. If their `source:` or `type:` changes,
-    they point to a new config with its own version history.
-  * Resource version history was associated with a pipeline resource by name.
-    This meant that if you changed a resource's configuration or type,
-    those old versions would persist, even though they may no longer be appropriate.
-  * This improves the accuracy of the system as a whole, removing the need to "purge" the history of a resource.
-  * Now that versions are tied directly to their configs,
-    check containers are also shared across teams.
-    This reduces the overall container count.
 
-<%# what does this note mean? %>
-<p class="note"><strong>Note:</strong>
-  As a result of the change to check containers, team members who can `fly intercept`
-  check containers is limited to `admin` users.</p>
+* As a result of major changes to how resource versions are stored (see [Resources features section](#features-resource-520):
+  * The version history for each resource across your pipelines is reset upon upgrading to Concourse for PCF v5.2.0
+  * Team members who can `fly intercept` check containers is limited to `admin` users
+
 
 #### Teams
 * The `--allow-all-users` flag has been removed because it was often misused.
@@ -179,29 +202,25 @@ Features and changes in this release:
 
 
 
-#### Resources
-* `Concourse BOSH Release`
+####<a id="features-resource-520"></a> Resources
+
+* This version introduces an experimental feature called [Global Resources](https://concourse-ci.org/global-resources.html). The basic concept of global resources is to share detected resource versions between all resources that have the same `type` and `source` configuration.
+  * To utilize this feature, set [`web.enable_global_resource`](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3denable_global_resources) to `true.`
+
+* Concourse BOSH Release
   * Now packages Ubuntu-flavored images for each core resource type instead of Alpine.
     This change has been made for compliance reasons.
-* `registry-image resource`
-* This is a new resource that has been added to the core.
-  This resource is intended to replace the `docker-image resource` image for
-  image pulling and pushing (but not building).
-* This resource improves on the `docker-image` resource in multiple ways:
-  * It does not run the Docker daemon to fetch the image - it is written in pure Go,
-    using the `go-containerregistry` package.
-    This makes the implementation much less error-prone.
-    For more information, see [go-containerregistry](https://github.com/google/go-containerregistry)
-    in the Google GitHub repo.
-  * Because it does not run the Docker daemon, it doesn't need a privileged container.
-    The fewer privileged containers in your cluster, the better - especially in light of
-    [v4.2.3](https://github.com/concourse/recent CVE fixes/releases/tag/v4.2.3).
-  * By focusing solely on fetching and pushing, the resource is smaller and simpler.
-  * The resource has test coverage
-* These enhancements result in much faster, efficient, and resilient image fetching.
-  Pivotal recommends that users try to switch their `image_resources` and `Resource Types`
-  to the new resource type.
-  In most cases this is just a matter of replacing `type: docker-image` with `type: registry-image`.
+* `registry-image` resource
+  * This is a new resource that has been added to the core.
+    This resource is intended to replace the `docker-image` resource image for
+    image pulling and pushing (but not building).
+  * This resource improves on the `docker-image` resource in multiple ways:
+    * It does not run the Docker daemon to fetch the image - it is written in pure Go
+    * Because it does not run the Docker daemon, it doesn't need a privileged container.
+  * These enhancements result in much faster, efficient, and resilient image fetching.
+    Pivotal recommends that users try to switch their `image_resources` and `Resource Types`
+    to this new resource type.
+    In most cases this is just a matter of replacing `type: docker-image` with `type: registry-image`.
 
 
 #### Runtime
@@ -239,7 +258,7 @@ Features and changes in this release:
 * A new `in_parallel` step has been added. `in_parallel` can run steps in parallel with more control through two additional configs:
   * `limit`: Limits the number of parallel steps
   * `fail_fast`: Interrupts currently running steps and prevents scheduling pending steps
-  * This will deprecate the `aggregate` step in future releases, so it is recommended that users move off to `in_parallel`.
+  * This release deprecates the `aggregate` step in future releases, so it is recommended that users move off to `in_parallel`.
 * The web node can now be configured to enable audit logs. Auditing currently logs API calls to the default logger using flags to enable specific auditing groups. For more information on audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) in the Concourse open-source documentation.
 * The `Vault credential manager` can now be configured with a global shared path for credential lookup. This should make sharing credentials between teams easier to manage. Please use with caution as all teams will be able to access it.
 * ‘Steps’ can now be annotated with an ‘on_error’ step hook whose value is a second step to execute only if the parent step errors.
