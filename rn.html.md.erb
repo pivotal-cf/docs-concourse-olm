@@ -9,7 +9,18 @@ owner: Concourse
 **Release Date: (TBD) MMMM XX, 2019**
 
 Concourse for PCF v5.2.0 includes Role Based Access Control (RBAC).
-For more information about configuring RBAC, see RBAC.
+
+Currently, there are five defined roles:
+  * `main team`
+  * `team owner`
+  * `team member`
+  * `pipeline operator`
+  * `team viewer`
+
+These roles evolved out of the common request of having a read-only team member.
+A slightly less powerful `team member` role was added as well.
+For more information about RBAC roles and how they impact authentication,
+see [Configuring Team Authentication](./authenticating.html).
 
 
 ###<a id="security-520"></a> Security Fixes
@@ -24,6 +35,8 @@ This release contains the following security fixes:
   If a job is public, any `get` step or `put` steps still show in the build's metadata.
 * To safeguard against clickjacking attacks, the `web node` now defaults `X-Frame-Options` to `deny`.
   Running Concourse in an iframe no longer works.
+* SSH MAC algorithms have been restricted to a smaller set to fix a vulnerability with the Concourse web instance VM. By default, Golang allows for some weak algorithms that can lead to security vulnerabilities on port 2222, which is used for worker communication.
+  * For more information, see SSH Weak MAC Algorithms Enabled in the Tenable documentation.
 
 
 ###<a id="breaking-520"></a> Breaking Changes
@@ -34,6 +47,10 @@ The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes.
 For manifest examples, see
 [operations](https://github.com/concourse/concourse-bosh-deployment/tree/release/5.1.x/cluster/operations)
 in the concourse-bosh-deployment GitHub repository.
+
+#### Fly
+
+* The short-flag for `fly builds --team` has been updated from `-t` to `-n` in order to make it consistent across `fly`
 
 #### Release
 * The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
@@ -133,9 +150,13 @@ Features and changes in this release:
   by allowing you to copy the token to your clipboard instead.
   * The auto-login prompt will also no longer ask for the token, as it disrupts
     the normal flow of the command.
+* `fly login` no longer prompts you for your authentication method if
+    a username and password are given using `-u` and `-p`.
+    The command assumes that you are using local authentication.
 * `fly set-pipeline` now prints a copy-pasteable `fly unpause-pipeline` command
   after creating a pipeline.
   This will make it easier to unpause new pipelines as they are set to paused by default.
+* `fly set-pipeline` now prints changes in the order of Grouping Jobs in the diff.
 * `fly intercept` can now be given a specific container --handle to intercept
 * `fly prune-worker` command can now be given an `--all-stalled` or `-a` flag to
   prune all the stalled workers
@@ -143,9 +164,8 @@ Features and changes in this release:
 * `fly execute` can now specify input mappings with `-m`, which is useful when
   running with ``--inputs-from-job` when the job renames some inputs.
 * `fly watch` can be called with `--timestamps` to show per-line timestamps in the build output.
-* `fly status` now prints a message if your token has expired.
 * `fly get-pipeline` now prints resources and resource types in a deterministic order.
-* `fly set-pipeline` now prints changes in the order of Grouping Jobs in the diff.
+* `fly status` prints the expiration status of your token.
 * Added new `fly` commands:
   * `fly curl` assists with manual API requests to Concourse.
   * `fly userinfo` lets you know which teams you are logged in to and which roles you have in each team.
@@ -153,6 +173,8 @@ Features and changes in this release:
     This initiates the “landing” process through the API and results in the worker process exiting.
   * `fly-edit-target` edits a target’s name, team, or URL.
   * `fly-delete-target` removes targets from `~/.flyrc`.
+  * `get-team` subcommand has been added to `fly`.
+    This command allows users to retrieve a single team’s config.
 
 
 
@@ -211,13 +233,13 @@ Features and changes in this release:
 #### Core Functionality
 * If you want to rename a job, while retaining its build history, Concourse can now retain this build history by updating the job name and specifying the old name as `old_name` within the job config.
 * A new flag called `--external-garden-url` has been added. This flag allows for the use of a separately managed Garden server as a worker.
-* Concourse is now compatible with Credhub v2.x (with the exception of 2.1 due to a bug).
+* Concourse is now compatible with CredHub v2.x (with the exception of 2.1 due to a bug).
 * Added the ability to retain build logs for a specific time duration.
 * A new `in_parallel` step has been added. `in_parallel` can run steps in parallel with more control through two additional configs:
   * `limit`: Limits the number of parallel steps
   * `fail_fast`: Interrupts currently running steps and prevents scheduling pending steps
   * This will deprecate the `aggregate` step in future releases, so it is recommended that users move off to `in_parallel`.
-* The web node can now be configured to enable audit logs. Auditing currently logs API calls to the default logger using flags to enable specific auditing groups. More infor on audit logs here.
+* The web node can now be configured to enable audit logs. Auditing currently logs API calls to the default logger using flags to enable specific auditing groups. For more information on audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) in the Concourse open-source documentation.
 * The `Vault credential manager` can now be configured with a global shared path for credential lookup. This should make sharing credentials between teams easier to manage. Please use with caution as all teams will be able to access it.
 * ‘Steps’ can now be annotated with an ‘on_error’ step hook whose value is a second step to execute only if the parent step errors.
 * Task ((vars)) received a large overhaul:
@@ -235,20 +257,20 @@ Features and changes in this release:
 
 #### Web UI
 * Added the ability to set a name for a Concourse cluster which will be displayed on the dashboard page by setting the `--cluster-name` flag
-* Added a tooltip to the pause toggle on the dashboard page and the pipeline page. This tooltip will display a “not authorized” message if a user doesn’t have permission to pause/unpause a pipeline
 * The pipeline navigation sidebar has been re-added.
 * A new animation has been added to running builds in the build number list to help differentiate between errored and running builds.
 * Concourse is now using Material Design icons everywhere in the UI
 * URLs in resource metadata are now clickable
 * Pipelines now have a play/pause button at the top bar. This will allow you to not have to go back to the dashboard to use the play/pause button.
+  * Added a tooltip to the pause toggle on the dashboard page and the pipeline page. This tooltip will display a “not authorized” message if a user doesn’t have permission to pause/unpause a pipeline
 * Each step in the build log will now show how long it took to initialize and run when hovering over the icon to the right of the header.
 * Resources can now be annotated with `icon` which will allow you to place icons in your pipeline. This will make distinguishing different resource types easier.
 * We have replaced resource pausing with resource pinning.
-  * Resource pausing had the effect of disabling the periodic checking for the paused resource. However we found that in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
-  * However, with Concourse’s global resource versions functionality, each resource actually points to a shared history, so pausing checking wouldn't be enough - if any other pipelines had the same resource, new versions would still arrive!
+  * Resource pausing had the effect of disabling the periodic checking for the paused resource. However, in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
+  * However, with Concourse’s global resource versions functionality, each resource actually points to a shared history, so pausing checking wouldn't be enough - if any other pipelines had the same resource, new versions would still arrive.
   * Instead, versions can now be pinned individually via the web UI or via the pipeline config (see version). Pinned resources will also skip periodic checking, but now even if the checking still happens (because some other pipeline had it un-pinned), the resource will stay pinned to the desired version.
   * A comment can also be left on pinned versions for explaining to your team-mates why you decided to pin the resource.
-  * During the 5.1 upgrade, paused resources will be automatically transitioned to their pinned equivalent, by pinning the resource to the most recent available version. A comment will be left on any resources that are migrated so that it's clear to pipeline users.
+  * During the 5.2.0 upgrade, paused resources will be automatically transitioned to their pinned equivalent, by pinning the resource to the most recent available version. A comment will be left on any resources that are migrated so that it's clear to pipeline users.
 * The timestamps shown in the build header will now transition to absolute instead of relative when the build is over 24 hours old.
 * The web UI now explains why some get steps have a yellow icon, via a tooltip. The dashboard page will now indicate whether you are seeing a pipeline because it's exposed through an "eye" icon.
 
@@ -266,15 +288,22 @@ This release fixes the following issues:
 #### Fly Commands
 * `fly execute` with the `-j` flag now prints the correct build URL.
 * `fly execute` with the `--include-ignored` flag no longer fails when files are removed locally.
+* `fly execute --input` no longer hangs indefinitely after uploading the input directory as a result of the web node stopping.
 * `fly login` now creates the `~/.flyrc` file with chmod `0600` file system permissions.
-* `fly login` with `-u` and `-p` flags no longer prompts you for your authentication method. The command assumes that you are using local authentication.
 * `fly intercept` now prints clearer error messages when it fails to execute.
-
+* `fly set-pipeline` no longer has issues when using the `--check-creds` flag
 * `fly get-pipeline` now throws an error if the given pipeline does not exist.
-   Before, the command returned an empty pipeline config.
+   Previously, the command returned an empty pipeline config.
+* `fly prune-worker --all-stalled` now only returns a warning if no stalled workers are found.
+    Before, it returned an error.
+
 
 #### Core Functionality
-* Credential managers no longer are instantiated twice.
+* Multiple groups in the same pipeline can no longer use the same name. If this is attempted an error will occur.
+* Fixed a bug where aborting a started build prior to a web node re-attaching to it would result in an orphaned, uncompleted build that was still running.
+* The Concourse API now returns a `401 Unauthorized` when an expired/invalid token is used to access an endpoint which supports authenticated/unauthenticated views.
+* A check has been added to `concourse web` to ensure that `--session-signing-key` is specified. Not having this specified causes Concourse web to crash.
+* Credential managers no longer instantiate twice.
 This resulted in two authentication loops.
 * Builds no longer crash when a resource is removed from the pipeline configuration while the build is running. This happened for builds that produced outputs for the removed resource.
 * `UNIQUE` constraints for `resource_configs` are no longer ineffective.
@@ -304,6 +333,7 @@ through `--tsa-team-authorized-keys`.
 
 
 #### Runtime
+* The default concurrency settings for volume sweeping have been reduced from 5 to 3. This will reduce the stress that volume deletion ends up putting on the system in certain cases.
 * The web node now retries on unexpected end-of-file errors. This occurred
 when a worker was restarted while a build was running a container on the worker. For information
 about web nodes, see [Running a web node](https://concourse-ci.org/concourse-web.html)
@@ -320,6 +350,7 @@ because they are all scheduled in succession.
 
 
 #### Web UI
+* Fixed an issue where when watching a build for a long period, users would get an error message that stated “You are not authorized to view the details of this pipeline”.
 * The dashboard no longer crashes when a pipeline is configured with a circular dependency.
 * Improved rendering for pipeline groups.
 * Dashboard search has been improved in the following ways:
@@ -359,7 +390,10 @@ are automatically rendered if the build currently being viewed is old or if the 
 scrolls to view them.
 
 #### Teams
-* If an OAuth provider is configured for Concourse, a user that is not a member of any team can no longer log in to Concourse. However, when these users could log in, they could not do anything.
+* Fixed a bug with Dex CloudFoundry connector where it did not iterate over all the results when requesting a user org/spaces for team authorization. This bug made it so that users who were members of many teams often could not access all of their teams.
+* In Concourse 4.x, if an OAuth provider was configured, a user that was not a member of any team
+could log in to Concourse. However, users could not do anything after they were logged in.
+This is no longer permitted.
 * `fly login` checks to ensure you have successfully logged
 in to the target team and returns an error if the team is not in your token.
 
