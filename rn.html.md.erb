@@ -160,133 +160,135 @@ This release has the following breaking changes:
 
 
 ###<a id="features-520"></a> Features
-Features and changes in this release:
+New features and changes in this release:
 
 #### Fly
-* `fly login` workflow has been reworked to better support logging in to a remote session.
-  There is now an improved landing page that detects when the token transfer fails
-  by allowing you to copy the token to your clipboard instead.
-  * The auto-login prompt will also no longer ask for the token, as it disrupts
-    the normal flow of the command.
-* `fly login` no longer prompts you for your authentication method if
-    a username and password are given using `-u` and `-p`.
+* `fly login` has an improved landing page and workflow. 
+When you log in to a remote session, if your token transfer fails, you can now copy the token. 
+The auto-login prompt also no longer ask for your token.
+* `fly login` with the `-u` and `-p` flags no longer prompts you for your authentication method.
     The command assumes that you are using local authentication.
-* `fly set-pipeline` now prints a copy-pasteable `fly unpause-pipeline` command
-  after creating a pipeline.
-  This will make it easier to unpause new pipelines as they are set to paused by default.
-* `fly set-pipeline` now prints changes in the order of Grouping Jobs in the diff.
-* `fly intercept` can now be given a specific container --handle to intercept
-* `fly prune-worker` command can now be given an `--all-stalled` or `-a` flag to
-  prune all the stalled workers
-* `fly execute` will now upload inputs and download outputs in parallel.
-* `fly execute` can now specify input mappings with `-m`, which is useful when
-  running with `--inputs-from-job` when the job renames some inputs.
-* `fly watch` can be called with `--timestamps` to show per-line timestamps in the build output.
-* `fly get-pipeline` now prints resources and resource types in a deterministic order.
+* `fly set-pipeline` prints a `fly unpause-pipeline` command
+  after creating a pipeline. This enables you to unpause new pipelines. New pipelines are paused by default.
+* `fly set-pipeline` prints changes in the order of Grouping Jobs in the diff.
+* `fly intercept` with the `--handle` flag inspects the given Garden container.
+* `fly prune-worker` with the `--all-stalled` or `-a` flag prunes all the stalled workers
+* `fly execute` uploads inputs and download outputs in parallel.
+* `fly execute` with the `-m` flag enables you to specify input mappings. You can use this flag when
+    a job renames inputs with the `--inputs-from-job` flag.
+* `fly watch` with the `--timestamps` flag shows timestamps in the build output.
+* `fly get-pipeline` prints resources and resource types in a deterministic order.
 * `fly status` prints the expiration status of your token.
-* Added new `fly` commands:
-  * `fly curl` assists with manual API requests to Concourse.
-  * `fly userinfo` lets you know which teams you are logged in to and which roles you have in each team.
-  * `fly-land-worker` lands workers remotely.
-    This initiates the “landing” process through the API and results in the worker process exiting.
-  * `fly-edit-target` edits a target’s name, team, or URL.
-  * `fly-delete-target` removes targets from `~/.flyrc`.
-  * `get-team` subcommand has been added to `fly`.
-    This command allows users to retrieve a single team’s config.
-
-
+* Adds the following `fly` commands:
+  * `fly curl` enables manual API requests to Concourse.
+  * `fly userinfo` prints the teams you are logged in to and what roles you have in each team.
+  * `fly-land-worker` lands workers remotely. This starts the landing process through the API 
+     and exits the worker process.
+  * `fly-edit-target` edits the target’s name, team or URL.
+  * `fly-delete-target` removes targets from the `~/.flyrc` file.
+  * `fly get-team` retrieves a team’s configuration.
 
 ####<a id="features-resource-520"></a> Resources
 
-* This version introduces an experimental feature called [Global Resources](https://concourse-ci.org/global-resources.html). The basic concept of global resources is to share detected resource versions between all resources that have the same `type` and `source` configuration.
-  * To utilize this feature, set [`web.enable_global_resource`](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3denable_global_resources) to `true.`
+* **Global resources beta feature:** 
+Global resources share detected resource versions between all resources that have the same `type` and `source` configuration. To enable this feature, set `enable_global_resource` to `true` in your web job. <br><br>
 
-* Concourse BOSH Release
-  * Now packages Ubuntu-flavored images for each core resource type instead of Alpine.
-    This change has been made for compliance reasons.
-* `registry-image` resource
-  * This is a new resource that has been added to the core.
-    This resource is intended to replace the `docker-image` resource image for
-    image pulling and pushing (but not building).
-  * This resource improves on the `docker-image` resource in multiple ways:
-    * It does not run the Docker daemon to fetch the image - it is written in pure Go
-    * Because it does not run the Docker daemon, it doesn't need a privileged container.
-  * These enhancements result in much faster, efficient, and resilient image fetching.
-    Pivotal recommends that users try to switch their `image_resources` and `Resource Types`
+    For more information about global resources, see [Global Resources](https://concourse-ci.org/global-resources.html). 
+    For more information about `enable_global_resource`, see [`web.enable_global_resource`](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3denable_global_resources)
+
+* **Concourse BOSH Release Ubuntu image:** The BOSH release for Concourse packages Ubuntu images for each core resource type. Before, the BOSH release packaged Alpine images. This change has been made for compliance reasons.
+
+* **Adds a `registry-image` resource:** The `registry-image` resource has been added to the core. This resource replaces the `docker-image` resource image for image pulling and pushing. `registry-image` does not replace image building. <br><br>
+    This resource improves on the `docker-image` resource in the following ways:
+      * It does not run the Docker daemon to fetch the image because it is written in pure Go
+      * Because it does not run the Docker daemon, it does not need a privileged container.
+      
+    These improvements result in faster, efficient, and resilient image fetching.
+    Pivotal recommends that users switch their `image_resources` and `Resource Types`
     to this new resource type.
-    In most cases this is just a matter of replacing `type: docker-image` with `type: registry-image`.
+    In most cases, you can do this by replacing `type: docker-image` with `type: registry-image`.
 
 
 #### Runtime
-* Containers and volumes are now garbage-collected in parallel to each other,
-  with a default max-in-flight of 5 containers and 5 volumes at a time.
-  * Previously, workers would garbage collect containers in volumes sequentially,
-    destroying containers first and then volumes.
-    This meant that if a worker had thousands of volumes to remove,
-    it would go through and destroy them one by one - meanwhile,
-    containers were not being garbage-collected.
-  * This speeds up garbage-collection overall and prevents an imbalance in
-    volume/container counts from slowing each other down.
-    This is especially important as workers are typically capped at 250 containers,
-    but may have thousands of volumes and may even have a slow disk.
-* The web node can now be configured with a fewest-build-containers strategy,
-  which will place containers on workers that have the fewest build containers.
-* Any volumes or containers that disappeared from their worker will now be
-  automatically reaped from the database.
-  This makes it easier for Concourse to recover from this situation rather than
+* **Containers and volumes are garbage-collected in parallel:** 
+  Before, workers garbage collected containers in volumes sequentially and 
+  destroyed containers before volumes.
+  This meant that if a worker had many volumes to remove,
+  the worker destroyed them one by one and containers were not garbage-collected during this time.<br><br>
+  
+    Running garbage collection in parallel speeds up garbage collection and prevents an imbalance between 
+    volume and container counts from slowing each other down.
+    This is important as workers are typically capped at 250 containers,
+    but may have more volumes and a slow disk.<br><br>
+    
+    The default max-in-flight for garbage collection is 5 containers and 5 volumes at a time.
+
+* **Web nodes can be configured with a fewest-build-containers strategy:** 
+  This places containers on workers that have the fewest build containers.
+* **Volumes and containers that disappear from their worker are 
+  automatically removed from the database:**
+  This makes it easier for Concourse to recover from this situation instead of
   erroring with file not found or unknown handle errors.
-* Tasks are now permitted to have `inputs`, `outputs`, and `caches` with overlapping paths.
-* The error message when a task's `file` refers to an unknown artifact source
-  has been made more descriptive.
-* Workers can be configured to periodically rebalance so that they do not all
-  forward through a single web node.
-  To do this, set the `--rebalance-interval` flag on the concourse worker.
-  The rebalancing drains in-flight connections and should not disrupt any in-flight builds.
-  * This results in a breaking change. For more information, see [Breaking Changes - Runtime](#breaking-runtime-520) above.
+* **Tasks can have `inputs`, `outputs`, and `caches` with overlapping paths.**
+* **Improved error messages for when a task `file` property specifies an unknown artifact source.**
+* **Workers can be configured to rebalance:** 
+  This prevents workers from being forwarded through a single web node.
+  To enable this, set the `--rebalance-interval` flag on the Concourse worker.<br><br>
+  Rebalancing workers drains in-flight connections and does not disrupt in-flight builds.
+  This results in a breaking change. For more information, see [Breaking Changes - Runtime](#breaking-runtime-520) above.
 
 #### Core Functionality
-* If you want to rename a job, while retaining its build history, Concourse can now retain this build history by updating the job name and specifying the old name as `old_name` within the job config.
-* A new flag called `--external-garden-url` has been added. This flag allows for the use of a separately managed Garden server as a worker.
-* Concourse is now compatible with CredHub v2.x (with the exception of 2.1 due to a bug).
-* Added the ability to retain build logs for a specific time duration.
-* A new `in_parallel` step has been added. `in_parallel` can run steps in parallel with more control through two additional configs:
-  * `limit`: Limits the number of parallel steps
-  * `fail_fast`: Interrupts currently running steps and prevents scheduling pending steps
-  * This release deprecates the `aggregate` step in future releases, so it is recommended that users move off to `in_parallel`.
-* The web node can now be configured to enable audit logs. Auditing currently logs API calls to the default logger using flags to enable specific auditing groups. For more information on audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) in the Concourse open-source documentation.
-* The `Vault credential manager` can now be configured with a global shared path for credential lookup. This should make sharing credentials between teams easier to manage. Please use with caution as all teams will be able to access it.
-* ‘Steps’ can now be annotated with an ‘on_error’ step hook whose value is a second step to execute only if the parent step errors.
-* Task ((vars)) received a large overhaul:
-  * Values for task ((vars)) can now be provided during `fly execute`
-  * Values may be provided to a task step in a pipeline via `vars`.
-  * Tasks can now have ((vars)) almost anywhere in their config, as opposed to just in `image_resource`.
-  * For the sake of consistency, pipeline ((params)) will now be referred to as pipeline ((vars)) instead.
-* Concourse will now automatically retry fetching credentials when the request to the credential manager fails.
-  * By default Concourse will retry 5 times, waiting 1 second between each attempt. This can be adjusted with the `--secret-retry-attempts` and `--secret-retry-interval` flags on concourse web.
-* The `put step` can now be explicitly given a list of `inputs` to use, rather than using all of them. This can be used to dramatically speed up builds that have a large amount of artifacts prior to a put.
-* The concourse worker command can now be given a `--garden-use-houdini` flag on Linux to use the "no-op" Houdini Garden backend for cases where you don't really want containerization.
-* Logs emitted by Concourse components are now more readable.
-  * If you're using anything to parse your logs, please make sure to update it accordingly
+* **Concourse keeps build history when you rename a job:** 
+If you rename a job, Concourse updates the job name and specifies the old name as `old_name` within the job config.
+* **Adds a `--external-garden-url` flag:** 
+This flag enables you to use a separately managed Garden server as a worker.
+* **Concourse is compatible with CredHub v2.x, with the exception of v2.1.**
+* **Build logs are kept for a specific, configured time duration.**
+* **Adds a `in_parallel` step:** The `in_parallel` step can run steps in parallel using the following 
+  properties:
+  * `limit`: This property limits the number of parallel steps.
+  * `fail_fast`: This property interrupts running steps and prevents scheduling pending steps.
+  
+    This release deprecates the `aggregate` step in future releases. 
+    Pivotal recommendeds that users use `in_parallel`.
+
+* **Web nodes can be configured to enable audit logs:** Auditing logs API calls to the default logger using flags to enable specific auditing groups. For more information on audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) in the open-source Concourse  documentation.
+* **Vault credential manager can be configured with a global shared path for credential lookup:** This makes sharing credentials between teams easier to manage. Pivotal recommends using caution when using this feature because it enables all teams access to the credentials.
+* **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook  
+  is a second step to execute only if the parent step errors.
+* **Improvements for task `((vars))`:** 
+  * Values for task `((vars))` can be provided during `fly execute`.
+  * Values can be provided to a task step in a pipeline using `vars`.
+  * You can add task `((vars))` in the task config in properties besides `image_resource`.
+  * Pipeline `((params))` are now referred to as pipeline `((vars))`.
+* **Concourse automatically retries fetching credentials when the request to the credential manager fails:**
+  By default Concourse retries five times and waits one second between each attempt. 
+  This can be adjusted with the `--secret-retry-attempts` and `--secret-retry-interval` flags on Concourse web.
+* **The `put` step can be given a list of `inputs` to use:** This can be used rather than having the `put` step use all of the `inputs`. This can speed up builds that have a large amount of artifacts before a `put`.
+* **The Concourse worker command can be given a `--garden-use-houdini` flag on Linux:** This enables the use of a "no-op" Houdini Garden backend. You can use this if you do not want containerization.
+* **Improved Concourse components logs:** If you use a tool to parse your logs, you must update your tool. 
 
 
 #### Web UI
-* Added the ability to set a name for a Concourse cluster which will be displayed on the dashboard page by setting the `--cluster-name` flag
-* The pipeline navigation sidebar has been re-added.
-* A new animation has been added to running builds in the build number list to help differentiate between errored and running builds.
-* Concourse is now using Material Design icons everywhere in the UI
-* URLs in resource metadata are now clickable
-* Pipelines now have a play/pause button at the top bar. This will allow you to not have to go back to the dashboard to use the play/pause button.
-  * Added a tooltip to the pause toggle on the dashboard page and the pipeline page. This tooltip will display a “not authorized” message if a user doesn’t have permission to pause/unpause a pipeline
-* Each step in the build log will now show how long it took to initialize and run when hovering over the icon to the right of the header.
-* Resources can now be annotated with `icon` which will allow you to place icons in your pipeline. This will make distinguishing different resource types easier.
-* We have replaced resource pausing with resource pinning.
-  * Resource pausing had the effect of disabling the periodic checking for the paused resource. However, in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
+* **Concourse cluster name on the dashboard page:** You can set a name for a Concoures cluster with the `--cluster-name` flag. This name is displayed on the dashboard page. 
+* **Re-added the pipeline navigation sidebar.**
+* **Improved animation for running builds in the build number list:** This animation helps to differentiate between errored and running builds.
+* **Concourse uses Material Design icons everywhere in the UI.**
+* **You can click URLs in resource metadata.**
+* **Pipelines have a play and pause button at the top bar:** You do not have to go back to the dashboard page to use the play and pause button.
+* **Adds a tooltip to the pause toggle on the dashboard and pipeline pages:** This tooltip displays a **not authorized** message if a user does not have permission to pause and unpause a pipeline
+* **Adds duration information for steps in the build log:** 
+You can hover over the right side of a step in the build log to view how long it took to initialize and run.
+* **Resources have a `icon` property:** This enables you to add icons to your pipeline. You can use this 
+property to distinguish between different resource types.
+* **Resource pinning has replaced resource pausing:**
+  * Resource pausing disabled checking for paused resources. However, in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
   * However, with Concourse’s global resource versions functionality, each resource actually points to a shared history, so pausing checking wouldn't be enough - if any other pipelines had the same resource, new versions would still arrive.
   * Instead, versions can now be pinned individually via the web UI or via the pipeline config (see version). Pinned resources will also skip periodic checking, but now even if the checking still happens (because some other pipeline had it un-pinned), the resource will stay pinned to the desired version.
   * A comment can also be left on pinned versions for explaining to your team-mates why you decided to pin the resource.
   * During the 5.2.0 upgrade, paused resources will be automatically transitioned to their pinned equivalent, by pinning the resource to the most recent available version. A comment will be left on any resources that are migrated so that it's clear to pipeline users.
-* The timestamps shown in the build header will now transition to absolute instead of relative when the build is over 24 hours old.
-* The web UI now explains why some get steps have a yellow icon, via a tooltip. The dashboard page will now indicate whether you are seeing a pipeline because it's exposed through an "eye" icon.
+* **Timestamps for builds change to an absolute timestamps after 24 hours.**
+* **Adds a tooltip for yellow `get` steps:** The web UI now explains why some get steps have a yellow icon, via a tooltip. The dashboard page will now indicate whether you are seeing a pipeline because it's exposed through an "eye" icon.
 
 
 #### Teams
