@@ -282,18 +282,19 @@ You can hover over the right side of a step in the build log to view how long it
 * **Resources have a `icon` property:** This enables you to add icons to your pipeline. You can use this 
 property to distinguish between different resource types.
 * **Resource pinning has replaced resource pausing:**
-  * Resource pausing disabled checking for paused resources. However, in most cases it was being used in combination with disabling versions to effectively pin a resource to the most recent available version.
-  * However, with Concourse’s global resource versions functionality, each resource actually points to a shared history, so pausing checking wouldn't be enough - if any other pipelines had the same resource, new versions would still arrive.
-  * Instead, versions can now be pinned individually via the web UI or via the pipeline config (see version). Pinned resources will also skip periodic checking, but now even if the checking still happens (because some other pipeline had it un-pinned), the resource will stay pinned to the desired version.
-  * A comment can also be left on pinned versions for explaining to your team-mates why you decided to pin the resource.
-  * During the 5.2.0 upgrade, paused resources will be automatically transitioned to their pinned equivalent, by pinning the resource to the most recent available version. A comment will be left on any resources that are migrated so that it's clear to pipeline users.
-* **Timestamps for builds change to an absolute timestamps after 24 hours.**
+  When you upgrade to Concourse v5.2.0, paused resources automatically change to their pinned equivalent. 
+  Concourse pins the paused resource to the most recent available version. 
+  A comment is left on any migrated resources so that changes are visible to pipeline users. <br><br>
+  Versions can be individually pinned using the web UI or the pipeline config. Pinned resources skip resource checking. If resource checking does happen, the resource still stays pinned to the desired version. 
+  Comments can be left on pinned versions to explain why the resource is pinned.
+
+* **Timestamps for builds change are absolute after 24 hours.**
 * **Adds a tooltip for yellow `get` steps:** The web UI now explains why some get steps have a yellow icon, via a tooltip. The dashboard page will now indicate whether you are seeing a pipeline because it's exposed through an "eye" icon.
 
 
 #### Teams
-* `Generic oAuth` can now be configured with different user ID/name keys.
-* `Generic OIDC auth` can now be configured with a different user name key.
+* Generic oAuth can be configured with different user ID and name keys.
+* Generic OIDC auth can be configured with a different user name key.
 * BitBucket auth support has been re-introduced.
 
 
