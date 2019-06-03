@@ -8,7 +8,7 @@ owner: Concourse
 This topic describes how to configure your team's authentication using authentication providers and teams.
 
 ## <a id="overview"></a> Overview
-Continuous Integration servers often contain many secrets that let them access source code and deploy apps.
+Continuous integration servers often contain many secrets that let them access source code and deploy apps.
 It is important that those secrets remain well guarded.
 Concourse provides options for both authentication and authorization to give you control over who can access your server and how much they can see.
 
@@ -51,7 +51,8 @@ Example:
 
 
 ### <a id="config-github"></a> GitHub Authentication
-A Concourse server can authenticate against GitHub to take advantage of their permission model and other security improvements in their infrastructure.
+A Concourse server can authenticate against GitHub to take advantage of their permission model and other
+security improvements in their infrastructure.
 To do this, you need to:
 
 1. Create a GitHub app.
@@ -60,18 +61,20 @@ To do this, you need to:
 
 #### Create a GitHub App
 You can create an OAuth app on GitHub.
-To do this, see [Register a new OAuth app](https://github.com/settings/applications/new).
+To do this, see [Register a new OAuth app](https://github.com/settings/applications/new) in GitHub.
 
 The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
 For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-<p class="note"><strong>Note: </strong>The app must be created under an organization if you want to authorize users based on organization/team membership. If the app is created under a personal account, only individual users can be authorized.</p>
+<p class="note"><strong>Note: </strong>The app must be created under an org if you want to authorize users
+based on org/team membership. If the app is created under a personal account, only individual users can be
+authorized.</p>
 
 
 #### Configure the GitHub Client Details
 GitHub provides a Client ID and a Client Secret for the new app.
 Supply this information in the `github_auth`, `client_id`, and `client_secret` fields.
-For more information on these fields, see [github_auth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgithub_auth).
+For more information about these fields, see [github_auth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgithub_auth) in the BOSH documentation.
 
 
 ### <a id="config-cf"></a> Cloud Foundry Authentication
@@ -106,10 +109,10 @@ concourse:
 #### Configure the Client
 You are given a Client ID and a Client Secret for your new app.
 These are then passed in the `client_id` and `client-secret` fields on the `atc` job.
-For more information on these fields, see [client_id](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.client_id).
+For more information about these fields, see [client_id](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.client_id) in the BOSH documentation.
 
 You also need to configure your base API URL for CF in the `api_url` field.
-To do this, see [api_url](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.api_url).
+To do this, see [api_url](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.api_url) in the BOSH documentation.
 
 
 ### <a id="config-oidc"></a> OIDC Authentication
@@ -133,7 +136,7 @@ For example, Concourse's own CI server's callback URL is `https://ci.concourse-c
 
 #### Configure the Client
 To configure the generic OIDC, fill in the `generic_oidc` fields in the `atc` job of the manifest.
-For more information on these fields, see [generic_oidc](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oidc).
+For more information about these fields, see [generic_oidc](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oidc) in the BOSH documentation.
 
 
 ### <a id="config-oauth"></a>  OAuth Authentication
@@ -156,7 +159,7 @@ For example, Concourse's own CI server's callback URL is `https://ci.concourse-c
 
 #### Configure the Client
 To configure the OAuth provider, fill in the `generic_oauth` fields in the `atc` job of the manifest.
-For more information on these fields, see [generic_oauth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oauth).
+For more information about these fields, see [generic_oauth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oauth) in the BOSH documentation.
 
 
 ### <a id="config-main"></a> The Main Team
@@ -169,9 +172,9 @@ so `main` is a special team.
 Concourse requires you to specify at least one user/group to be a member of the `main`
 team during deployment.
 The list of allowed users, groups, and orgs are managed through the `main_team` property in the ATC job.
-For more information on this property, see [main_team](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dmain_team).
+For more information about this property, see [main_team](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dmain_team) in the BOSH documentation.
 
-An example of adding a local user to the main team can be found in the `add-local-users.yml` file in the [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/operations/add-local-users.yml) repository.
+An example of adding a local user to the main team can be found in the `add-local-users.yml` file in the [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/operations/add-local-users.yml) GitHub repository.
 
 The values set in the authentication flags take effect whenever the ATC starts up.
 This allows Concourse to be deployed against declared configurations.
@@ -180,16 +183,16 @@ It also makes sure that members of the `main` team do not get locked out of thei
 
 ## <a id="adding"></a>Add Users and Groups to Teams
 After you deploy Concourse with the authentication providers configured,
-you may specify allowed users and groups using the `fly set-team` command.
+you can specify allowed users and groups using the `fly set-team` command.
 With this command, users and groups can be:
 
   * Added to new teams
   * Modified on existing teams
 
-For more information on this command, see [fly set-team](https://concourse-ci.org/creating-and-updating-teams.html#fly-set-team).
+For more information about this command, see [fly set-team](https://concourse-ci.org/creating-and-updating-teams.html#fly-set-team).
 
 <p class="note"><strong>Note: </strong>
-The exception to this is the <code>main</code> team. Members of the <code>main</code> team are configured as part of the initial deployment and cannot be changed after the deployment. For more information on the <code>main</code> team, see <a href="https://concourse-ci.org/main-team.html">The <code>main</code> team</a>.
+The exception to this is the <code>main</code> team. Members of the <code>main</code> team are configured as part of the initial deployment and cannot be changed after the deployment. For more information about the <code>main</code> team, see <a href="https://concourse-ci.org/main-team.html">The <code>main</code> team</a>.
 </p>
 
 
@@ -207,10 +210,10 @@ $  fly set-team -n YOUR-TEAM --local-user USERNAME
 
 
 ### <a id="add-github"></a> GitHub Users, Teams, and Orgs
-Add GitHub users, teams, or organizations to a Concourse team.
+Add GitHub users, teams, or orgs to a Concourse team.
 
 * Use `--github-user=LOGIN` to authorize an individual user.
-* Use `--github-org=ORG-NAME` to authorize an entire organization's members.
+* Use `--github-org=ORG-NAME` to authorize an entire org's members.
 * Use `--github-team=ORG-NAME:TEAM-NAME` to authorize a team's members within an organization.
 
 For example:
@@ -230,7 +233,7 @@ $ fly set-team -n my-team \
 Add users, spaces, and org members from a CF deployment to a Concourse team.
 
 * Use `--cf-user=USERNAME` to authorize an individual user.
-* Use `--cf-org=ORG-NAME` to authorize an entire organization's members.
+* Use `--cf-org=ORG-NAME` to authorize an entire org's members.
 * Use `--cf-space=ORG-NAME:SPACE-NAME` to authorize the members of a space within an organization.
 
 For example:
@@ -250,12 +253,12 @@ $ fly set-team -n my-team \
 ### <a id="add-oauth"></a> OAuth Users and Groups
 Configure users and groups from a generic OAuth provider.
 
-You may only configure groups if the authentication provider exposes this information in either the token itself, or in the contents of the `userinfo` endpoint.
+You can only configure groups if the authentication provider exposes this information in either the token itself, or in the contents of the `userinfo` endpoint.
 You can configure which claim points to the group's information by specifying the `groups-key` at startup.
 
 * Use `--cf-user=USERNAME` to authorize an individual user.
-* Use `--cf-org=ORG-NAME` to authorize an entire organization's members.
-* Use `--cf-space=ORG_NAME:SPACE-NAME` to authorize the members of a space within an organization.
+* Use `--cf-org=ORG-NAME` to authorize an entire org's members.
+* Use `--cf-space=ORG_NAME:SPACE-NAME` to authorize the members of a space within an org.
 
 For example:
 
@@ -272,7 +275,7 @@ This is very similar to the OAuth connector.
 The main difference is that OIDC providers must follow the OIDC specification,
 while generic OAuth providers can be a little more flexible.
 
-You may only configure groups if the authentication provider exposes this information in the contents of the userinfo endpoint.
+You can only configure groups if the authentication provider exposes this information in the contents of the userinfo endpoint.
 You can configure which claim points to the groups information by specifying the `groups-key` at startup.
 
 * Use `--oidc-user=USERNAME` to authorize an individual user.

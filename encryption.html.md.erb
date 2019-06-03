@@ -9,15 +9,15 @@ Continuous integration and deployment systems are high-value targets for malicio
 
 Concourse lets you encrypt the database information at rest. By using encryption, you ensure that plaintext credentials do not exist in the database in the event of a security incident.
 
-Pivotal strongly recommends that Concourse admins enable encryption.
+Pivotal recommends that Concourse admins enable encryption.
 In addition to encrypting the Concourse database, you might want to configure <a href="./credential-management.html">credential management</a> for your pipelines.
 
 ## <a id="values-affected"></a> Values Affected by Encryption
-When you encrypt Concourse , it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default.
+When you encrypt Concourse, it secures the following values. These values are likely to contain credentials, which is why they get encrypted by default.
 
 * **Resources [sources](https://concourse-ci.org/resources.html#resource-source)** and **resource type [sources](https://concourse-ci.org/resource-types.html#resource-type-source)**. These sources often contain private keys and other credentials for writing to or accessing the resource.
 * **Task step [parameters](https://concourse-ci.org/tasks.html#task-params)**, **put step [parameters](https://concourse-ci.org/put-step.html#put-step-put)**, and **get step [parameters](https://concourse-ci.org/get-step.html#get-step-get)**. Parameters are often used to configure access to an external deployment with which a task is integrating.
-* **Team auth configurations.** These often contain OAuth client secrets.
+* **Team authentication configurations.** These often contain OAuth client secrets.
 
 The following things are not encrypted:
 <ul>
@@ -34,7 +34,7 @@ The following things are not encrypted:
 ## <a id="enable-encryption"></a> Enabling Encryption
 
 <p class="note"><strong>Note</strong>: Depending on the size of your deployment, enabling encryption might cause some downtime.
-If your deployment uses multiple ATCs, they might not be able to communicate with each other after encryption until the encryption keys are shared among them.</pre>
+If your deployment uses multiple ATCs, they might not be able to communicate with each other after encryption until the encryption keys are shared among them.</p>
 
 On startup, the ATC encrypts all existing plaintext data. After this point, any new data is encrypted before it is sent over the network to the database.
 <ol>
@@ -63,7 +63,7 @@ jobs:
       <strong>encryption_key: ENCRYPTION-KEY</strong>
 </pre>
 
-<li>Redeploy.</li> 
+<li>Redeploy.</li>
 </ol>
 
 ## <a id="rotate-key"></a> Rotating the Encryption Key
