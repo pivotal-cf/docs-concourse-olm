@@ -72,7 +72,7 @@ The following shows some common problems and solutions.
   <th>Solution</th>
   <tr>
     <td>The worker is out of disk space</td>
-    <td>An error states there is an inability to create a storage volume and may state that permissions are denied.</td>
+    <td>An error states there is an inability to create a storage volume and might state that permissions are denied.</td>
     <td>Increase persistent disk size for the worker or increase the number of worker VMs.</td>
   </tr>
   <tr>
@@ -84,16 +84,16 @@ The following shows some common problems and solutions.
   </tr>
   <tr>
     <td>Job does not start</td>
-    <td>This error may present as the build getting stuck in Pending state.</td>
+    <td>This error might present as the build getting stuck in Pending state.</td>
     <td>Restart the ATC job:<br/>
     <ol><li>Log in as a root user on Concourse for PCF web VMs where the ATC job is located.</li>
       <li>Run the <code>monit restart atc</code> command.</td>
   </tr>
   <tr>
     <td>Build fails when updating Concourse for PCF from a job on the same instance</td>
-    <td>When a build fails after BOSH deploys a Concourse for PCF update from a job running on that 
+    <td>When a build fails after BOSH deploys a Concourse for PCF update from a job running on that
     Concourse for PCF instance, typically the job fails with a "worker for container not found" error.
-  This is expected behavior; the BOSH Director will recreate the worker VM.</td>
+  This is expected behavior; the BOSH Director re-creates the worker VM.</td>
     <td>Run the job again.</td>
   </tr>
   <tr>
@@ -106,11 +106,11 @@ The following shows some common problems and solutions.
 
 ##<a id="logs"></a> Access Concourse Logs
 
-You might need to contact Pivotal Support for help identifying a problem. 
+You might need to contact Pivotal Support for help identifying a problem.
 In that case, support might ask you to send job log files.
 
 For general information about accessing log files,
-see [Location and use of logs](https://bosh.io/docs/job-logs.html) and 
+see [Location and use of logs](https://bosh.io/docs/job-logs.html) in the BOSH documentation and
 [Advanced Troubleshooting with the BOSH CLI](http://docs.pivotal.io/pivotalcf/2-1/customizing/trouble-advanced.html).
 
 ##<a id="other-resources"></a> Other Troubleshooting Resources

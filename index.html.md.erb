@@ -17,9 +17,7 @@ If you are unfamiliar with BOSH,
 Pivotal recommends that you review the <a href="http://bosh.io/docs">BOSH documentation</a>
 before continuing with the installation of Concourse for PCF.
 
-<p class="note"><strong>Note:</strong> Use the BOSH CLI v2+ (Pivotal recommends
-using the latest v5+)  with Concourse for PCF. Pivotal does not recommend using
-the old BOSH CLI v1 with Concourse for PCF.</p>
+<p class="note"><strong>Note:</strong> Pivotal recommends using BOSH CLI v5 or later with Concourse for PCF. Pivotal discourages using BOSH CLI v1.</p>
 
 When you are ready to install Concourse for PCF, see
 <a href="./prep_and_install.html">Preparing an Environment for Concourse</a>
@@ -36,23 +34,24 @@ For more information, see <a href="./encryption.html">Encrypting Concourse Datab
 
 <strong>Credential Management</strong>
 
-With Concourse credential management, pipeline credentials can be parameterized with
-[((parameters))](https://concourse-ci.org/setting-pipelines.html#pipeline-vars) in your pipeline or task config files.
+With Concourse credential management, you can parameterize pipeline credentials with parameters in your
+pipeline or task config files. See the
+[Concourse documentation](https://concourse-ci.org/setting-pipelines.html#pipeline-vars) for more information.
 Credential management also allows for credentials to be rotated and managed from outside the pipeline or team,
-and prevents them from being revealed by [get-pipeline](https://concourse-ci.org/managing-pipelines.html#fly-get-pipeline).
+and prevents them from being revealed by the `get-pipeline` command. For more information on `get-pipeline`, see the [Concourse documentation](https://concourse-ci.org/managing-pipelines.html#fly-get-pipeline).
 
-For more information, see <a href="./credential-management.html">Credential Management in Concourse </a>.
+For more detail, see <a href="./credential-management.html">Credential Management in Concourse</a>.
 
 <strong>Team Authentication</strong>
 
-In order to protect confidential or sensitive data, Concourse provides options for team authorization.
+Concourse provides options for team authorization to protect confidential or sensitive data.
 
 For more information, see <a href="./authenticating.html">Configuring Team Authentication</a>.
 
 ## <a id="monitoring-and-troubleshooting"></a>Monitoring and Troubleshooting
 
 Concourse can emit metrics about both the system health itself and about the builds that it is running.
-Operators can tap into these metrics in order to observe the health of the system.
+Operators can tap into these metrics to observe the health of the system.
 
 For more information, see <a href="./troubleshooting.html">Monitoring and Troubleshooting</a>.
 
@@ -64,9 +63,7 @@ For information about the architecture of Concourse and its components, see <a h
 
 ## <a id="troubleshooting"></a>Monitoring and Troubleshooting Your Installation
 
-If you're having trouble with your Concourse for PCF installation, this topic may help.
-
-For more information, see <a href="./troubleshooting.html">Troubleshooting</a>.
+To troubleshoot your Concourse for PCF installation, see <a href="./troubleshooting.html">Troubleshooting</a>.
 
 ## <a id="compatibility"></a>Concourse Compatibility
 | Concourse Version |  RunC  |   PostgreSQL  | Tested Stemcell  |  Supported Stemcells | Tested CredHub  |
@@ -77,19 +74,21 @@ For more information, see <a href="./troubleshooting.html">Troubleshooting</a>.
 |       v4.2.4      | 1.19.1 | 9.5+ External |      Xenial 250.38  |      250.x          |      1.9.5      |
 |       v5.2.0      | 1.19.1 | 9.5+ External |      Xenial 250.38  |      250.x          |      2.1.2      |
 
-<p class="note warning"><strong>Warning: </strong>If you are using PostgreSQL v11.1 or v11.2, you must set
-<code>max_parallel_workers_per_gather</code> to <code>0</code>.
-This will correct a PostgreSQL infinite parallel query bug.<br><br>
-For more information on <code>max_parallel_workers_per_gather</code>, see <a href="https://www.postgresql.org/docs/11/runtime-config-resource.html#GUC-MAX-PARALLEL-WORKERS-PER-GATHER">max_parallel_workers_per_gather (integer)</a> in the PostgreSQL documentation.<br>
-For more information on the PostgreSQL infinite parallel query bug, see <a href="https://www.postgresql.org/message-id/15585-324ff6a93a18da46@postgresql.org">BUG #15585: infinite DynamicSharedMemoryControlLock waiting in parallel query</a> in the PostgreSQL documentation.
+<p class="note warning"><strong>Warning: </strong>If you are using PostgreSQL v11.1 or v11.2, set
+<code>max_parallel_workers_per_gather</code> to <code>0</code>. This corrects a PostgreSQL infinite parallel
+query issue.<br><br>
+For more information, see
+<a href="https://www.postgresql.org/docs/11/runtime-config-resource.html#GUC-MAX-PARALLEL-WORKERS-PER-GATHER">max_parallel_workers_per_gather (integer)</a> and
+<a href="https://www.postgresql.org/message-id/15585-324ff6a93a18da46@postgresql.org">BUG #15585: infinite DynamicSharedMemoryControlLock waiting in parallel query</a>
+ in the PostgreSQL documentation.
 
 <p class="note"><strong>Note:</strong> Concourse is compatible with CredHub
-versions 2.1.2+ but is not compatible with versions from 2.0.0 to 2.1.1 </p>
+versions 2.1.2 and later. It is not compatible with versions 2.0.0 to 2.1.1.</p>
 
 <p class="note"><strong>Note:</strong> The values in the "Tested" columns indicate
   that Concourse was tested with the listed stemcell or product version upon release.
-  This does not mean that Concourse is restricted to those dependencies. </p>
+  This does not mean that Concourse is restricted to those dependencies.</p>
 
 ## Additional Documentation
 
-You can also read the documentation for the open source [Concourse project](https://concourse-ci.org/), which powers Concourse for PCF.
+For more information about the open source Concourse project that powers Concourse for PCF, see the [Concourse documentation](https://concourse-ci.org/).
