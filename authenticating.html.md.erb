@@ -33,9 +33,9 @@ You must specify the allowed authentication providers before Concourse is deploy
 
 A Concourse operator needs to provide the following information in their Concourse deployment manifest:
 
-* A list of allowed local users.
-* Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, OAuth, and OIDC).
-* Users who should be members of the default `main` team (either local users or users/groups from external authentication providers).
+* A list of allowed local users
+* Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, OAuth, and OIDC)
+* Users who should be members of the default `main` team (either local users or users/groups from external authentication providers)
 
 ### <a id="local-users"></a> Local Users
 Local users must be declared in the `add_local_users` of the `atc` job in the deployment manifest.
@@ -68,10 +68,12 @@ For example, Concourse's own CI server's callback URL is `https://ci.concourse-c
 
 <p class="note"><strong>Note: </strong>The app must be created under an org if you want to authorize users
 based on org/team membership. If the app is created under a personal account, only individual users can be
-authorized.</p>
+authorized.
+</p>
 
 
 #### Configure the GitHub Client Details
+
 GitHub provides a Client ID and a Client Secret for the new app.
 Supply this information in the `github_auth`, `client_id`, and `client_secret` fields.
 For more information about these fields, see [github_auth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgithub_auth) in the BOSH documentation.
@@ -225,7 +227,7 @@ $ fly set-team -n my-team \
 </pre>
 
 <p class="note"><strong>Note:</strong>
-  <code>:</code> is used as the separator when adding GitHub teams instead of <code>/</code>. If multiple teams are added, the flag must be repeated.<br> For example:<br> -\-github-team my-org:my-team 1 <br> -\-github-team my-org:my-team 2
+  <code>:</code> is used as the separator when adding GitHub teams instead of <code>/</code>. If multiple teams are added, the flag must be repeated.<br> For example:<br><code>-\-github-team my-org:my-team 1</code> <br><code>-\-github-team my-org:my-team 2</code>
 </p>
 
 
@@ -253,7 +255,8 @@ $ fly set-team -n my-team \
 ### <a id="add-oauth"></a> OAuth Users and Groups
 Configure users and groups from a generic OAuth provider.
 
-You can only configure groups if the authentication provider exposes this information in either the token itself, or in the contents of the `userinfo` endpoint.
+You can only configure groups if the authentication provider exposes this information in either the token itself
+or in the contents of the `userinfo` endpoint.
 You can configure which claim points to the group's information by specifying the `groups-key` at startup.
 
 * Use `--cf-user=USERNAME` to authorize an individual user.
@@ -297,7 +300,7 @@ For example, the command below:
 $ fly -t prod teams -d
 </pre>
 
-Results in something like the following:
+The output is similar to the following:
 <pre class="terminal">
 <strong>name</strong>     <strong>users</strong>          <strong>groups</strong>
 main     github:User    github:Organization
