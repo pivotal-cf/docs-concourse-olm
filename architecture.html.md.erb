@@ -79,7 +79,9 @@ Concourse workers can be either _internal_, also called _local_; or _external_, 
 
 * A worker VM is **internal** when the web VM, which hosts the ATC, can make direct HTTP calls to the worker VM. This is typical when web and worker VMs are all on the same private network.
 
-* A worker VM is **external** when the web VM cannot directly connect to the worker VM through HTTP or SSH. This is typical when the worker VMs are behind a firewall in a separate network from the web VM, or when security groups prevent communication from web VM to worker.
+* A worker VM is **external** when the web VM cannot directly connect to the worker VM through HTTP or SSH.
+  This is typical when the worker VMs are behind a firewall in a separate network from the web VM
+  or when security groups prevent communication from web VM to worker.
 
 You might use both internal and external workers in the same deployment. For example, if your main Concourse installation runs on Linux and you need Windows workers to run tests in a remote, Windows-based infrastructure.
 
