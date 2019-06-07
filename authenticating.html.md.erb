@@ -316,7 +316,7 @@ they could do before.
   
 More advanced [roles](#available-user-roles) configuration can be specified through the `--configuration` or `--c` flag. 
   
-The `-c` flag will expect a `.yml’ file with a single field, `roles:`. The `roles:` field will point to a list of role 
+The `-c` flag will expect a `yml’ file with a single field, `roles:`. The `roles` field will point to a list of role 
 authorization configs. 
 
 The attributes in each config will vary by provider. For specifics of your chosen provider, see 
@@ -367,7 +367,7 @@ cannot update pipeline configurations.
 Team viewers have “read-only” access to a team and its pipelines. These users are preventing from performing actions such as 
 `fly set-pipeline` or `fly intercept`. 
 
-### <a id="permission-matrix></a>Permission Matrix
+### <a id="permission-matrix"></a> Permission Matrix
 
 For a full list of permissions granted to each user role, see the following 
 <a href="https://concourse-ci.org/user-roles.html#permission-matrix">Permission Matrix</a>
