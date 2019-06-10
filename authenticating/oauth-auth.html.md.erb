@@ -1,0 +1,219 @@
+---
+title: Configuring oAuth Authentication
+owner: Concourse
+---
+
+<strong><%= modified_date %></strong>
+
+This topic describes how to configure your team's authentication using oAuth Authentication.
+
+## <a id="overview"></a> Overview
+Continuous integration servers often contain many secrets that let them access source code and deploy apps.
+It is important that those secrets remain well guarded.
+Concourse provides options for both authentication and authorization to give you control over who can access your server and how much they can see.
+
+Any number of the following providers can be enabled at any one time.
+Users are given a choice when logging in as to which one they want to use.
+
+<p class="note"><strong>Note:</strong>
+If you access your Concourse server over the public internet, then consider using TLS to secure your connection to the web node.
+</p>
+
+Configuring team authentication in Concourse is done in two parts:
+
+1. Configure the allowed authentication providers in the deployment manifest.
+See [Configure Authentication Providers](#configuring) below.
+2. Add users and groups to Concourse teams using `fly set-team`.
+See [Add Users and Groups to Teams](#adding) below.
+
+## <a id="configuring"></a> Configure Authentication Providers
+Concourse can be configured to use local users, GitHub, generic LDAP, Cloud Foundry, OAuth,
+and OIDC as authentication providers.
+You must specify the allowed authentication providers before Concourse is deployed.
+
+A Concourse operator needs to provide the following information in their Concourse deployment manifest:
+
+* A list of allowed local users
+* Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, OAuth, and OIDC)
+* Users who should be members of the default `main` team (either local users or users/groups from external authentication providers)
+
+### <a id="config-oauth"></a>  OAuth Authentication
+If your authentication provider supports OAuth2 but does not follow the OIDC specification,
+then use this provider.
+This provider gives you more control over the OIDC provider by letting operators specify the full set of authorization endpoints (`auth-url`, `token-url`).
+
+To add the OAuth provider, do the following:
+
+1. Create the OIDC client.
+2. Configure the client.
+
+
+#### Create the OAuth Client
+First, you need to create a client with your OAuth provider.
+
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
+For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
+
+
+#### Configure the Client
+To configure the OAuth provider, fill in the `generic_oauth` fields in the `atc` job of the manifest.
+For more information about these fields, see [generic_oauth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oauth) in the BOSH documentation.
+
+
+### <a id="config-main"></a> The Main Team
+By default, Concourse comes with a single team called `main`.
+The `main` team is an admin team.
+This means it can create and update other teams.
+Currently there is no way to promote a team to become an admin team,
+so `main` is a special team.
+
+Concourse requires you to specify at least one user/group to be a member of the `main`
+team during deployment.
+The list of allowed users, groups, and orgs are managed through the `main_team` property in the ATC job.
+For more information about this property, see [main_team](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dmain_team) in the BOSH documentation.
+
+An example of adding a local user to the main team can be found in the `add-local-users.yml` file in the [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/operations/add-local-users.yml) GitHub repository.
+
+The values set in the authentication flags take effect whenever the ATC starts up.
+This allows Concourse to be deployed against declared configurations.
+It also makes sure that members of the `main` team do not get locked out of their Concourse.
+
+
+## <a id="adding"></a>Add Users and Groups to Teams
+After you deploy Concourse with the authentication providers configured,
+you can specify allowed users and groups using the `fly set-team` command.
+With this command, users and groups can be:
+
+  * Added to new teams
+  * Modified on existing teams
+
+For more information about this command, see [fly set-team](https://concourse-ci.org/creating-and-updating-teams.html#fly-set-team).
+
+<p class="note"><strong>Note: </strong>
+The exception to this is the <code>main</code> team. Members of the <code>main</code> team are configured as part of the initial deployment and cannot be changed after the deployment. For more information about the <code>main</code> team, see <a href="https://concourse-ci.org/main-team.html">The <code>main</code> team</a>.
+</p>
+
+### <a id="add-oauth"></a> OAuth Users and Groups
+Configure users and groups from a generic OAuth provider.
+
+You can only configure groups if the authentication provider exposes this information in either the token itself
+or in the contents of the `userinfo` endpoint.
+You can configure which claim points to the group's information by specifying the `groups-key` at startup.
+
+* Use `--cf-user=USERNAME` to authorize an individual user.
+* Use `--cf-org=ORG-NAME` to authorize an entire org's members.
+* Use `--cf-space=ORG_NAME:SPACE-NAME` to authorize the members of a space within an org.
+
+For example:
+
+<pre class="code">
+$ fly set-team -n my-team \
+    --oauth-user my-username \
+    --oauth-group my-group
+</pre>
+
+
+### <a id="team-config"></a> Team Configuration Details
+Team members can view the authentication settings of the teams they belong to by using the `fly teams -d` command.
+
+For example, the command below:
+<pre class="code">
+$ fly -t prod teams -d
+</pre>
+
+The output is similar to the following:
+<pre class="terminal">
+<strong>name</strong>     <strong>users</strong>          <strong>groups</strong>
+main     github:User    github:Organization
+</pre>
+
+## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
+
+Concourse v5.2.0 now has five roles with varying levels of permission.
+These are described in the table below:
+
+<table class="nice">
+  <th width=20%>Role</th>
+  <th>Description</th>
+  <tr>
+    <td>
+      Admin
+    </td>
+    <td>
+      Admin is a special user attribute granted to owners of the main team.
+      Admins can administer teams using <code>fly set-team</code>,
+      <code>fly destroy-team</code>, and <code>fly rename-team</code>.<br>
+      For more information about the main team, see <a href= "#config-main">The Main Team</a>.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Team Owner
+    </td>
+    <td>
+      Team owners can read, write, and manage auth capabilities within the scope of their team.<br>
+      They cannot rename or destroy the team.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Team Member
+    </td>
+    <td>
+      Team members can perform read and write actions within their team.<br>
+      They cannot change their team configuration.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Pipeline Operator
+    </td>
+    <td>
+      Team pipeline operators can perform pipeline operations such as triggering builds and pinning resources.<br>
+      They cannot update pipeline configurations.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Viewer
+    </td>
+    <td>
+      Team viewers have read-only access to a team and its pipelines.<br>
+      They cannot perform actions such as <code>fly set-pipeline</code> or <code>fly intercept</code>.
+    </td>
+  </tr>
+</table>
+
+For a full list of permissions granted to each user role, see the
+[Permission Matrix](https://concourse-ci.org/user-roles.html#permission-matrix)
+in the Concourse documentation.
+
+### <a id="setting-user-roles"></a> Set User Roles
+By default, the authorization config passed to `set-team` configures the [member role](#member). In addition, Existing
+team auth config will be transitioned to the team [owner role](#owner). In other words, anyone that can authenticate
+prior to the upgrade will now be authenticated as an owner of their team. This role is the closest equivalent to what
+they could do before.
+
+More advanced [roles](#available-user-roles) configuration can be specified through the `--configuration` or `--c` flag.
+
+The `-c` flag expects a YAML file with a single field, `roles:`.
+The `roles` field points to a list of role authorization configs.
+
+The attributes in each config will vary by provider. For specifics of your chosen provider, see
+[Add Users to Groups and Teams](#adding)
+
+For example, the following config sets three roles with different Github auth configs for each role's provider:
+<pre class="code">
+roles:
+- name: owner
+  github:
+    users: ["admin"]
+- name: member
+  github:
+    teams: ["org:team"]
+- name: viewer
+  github:
+    orgs: ["org"]
+  local:
+    users: ["visitor"]
+</pre>
