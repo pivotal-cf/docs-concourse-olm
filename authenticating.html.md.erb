@@ -306,22 +306,81 @@ The output is similar to the following:
 main     github:User    github:Organization
 </pre>
 
-## <a id="user-roles-and-permissions"></a> User Roles and Permissions
+## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
-### <a id="setting-user-roles"></a> Setting User Roles
-By default, the authorization config passed to `set-team` configures the [member role](#member). In addition, Existing 
-team auth config will be transitioned to the team [owner role](#owner). In other words, anyone that can authenticate 
-prior to the upgrade will now be authenticated as an owner of their team. This role is the closest equivalent to what 
+Concourse v5.2.0 now has five roles with varying levels of permission.
+These are described in the table below:
+
+<table class="nice">
+  <th width=20%>Role</th>
+  <th>Description</th>
+  <tr>
+    <td>
+      Admin
+    </td>
+    <td>
+      Admin is a special user attribute granted to owners of the main team.
+      Admins can administer teams using <code>fly set-team</code>,
+      <code>fly destroy-team</code>, and <code>fly rename-team</code>.<br>
+      For more information about the main team, see [main team](#config-main).
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Team Owner
+    </td>
+    <td>
+      Team owners can read, write, and manage auth capabilities within the scope of their team.<br>
+      They cannot rename or destroy the team.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Team Member
+    </td>
+    <td>
+      Team members can perform read and write actions within their team.<br>
+      They cannot change their team configuration.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Pipeline Operator
+    </td>
+    <td>
+      Team pipeline operators can perform pipeline operations such as triggering builds and pinning resources.<br>
+      They cannot update pipeline configurations.
+    </td>
+  </tr>
+  <tr>
+    <td>
+      Viewer
+    </td>
+    <td>
+      Team viewers have read-only access to a team and its pipelines.<br>
+      They cannot perform actions such as <code>fly set-pipeline</code> or <code>fly intercept</code>.
+    </td>
+  </tr>
+</table>
+
+For a full list of permissions granted to each user role, see the
+[Permission Matrix](https://concourse-ci.org/user-roles.html#permission-matrix)
+in the Concourse documentation.
+
+### <a id="setting-user-roles"></a> Set User Roles
+By default, the authorization config passed to `set-team` configures the [member role](#member). In addition, Existing
+team auth config will be transitioned to the team [owner role](#owner). In other words, anyone that can authenticate
+prior to the upgrade will now be authenticated as an owner of their team. This role is the closest equivalent to what
 they could do before.
-  
-More advanced [roles](#available-user-roles) configuration can be specified through the `--configuration` or `--c` flag. 
-  
-The `-c` flag expects a YAML file with a single field, `roles:`.
-The `roles` field points to a list of role authorization configs. 
 
-The attributes in each config will vary by provider. For specifics of your chosen provider, see 
+More advanced [roles](#available-user-roles) configuration can be specified through the `--configuration` or `--c` flag.
+
+The `-c` flag expects a YAML file with a single field, `roles:`.
+The `roles` field points to a list of role authorization configs.
+
+The attributes in each config will vary by provider. For specifics of your chosen provider, see
 [Add Users to Groups and Teams](#adding)
-  
+
 For example, the following config sets three roles with different Github auth configs for each role's provider:
 <pre class="code">
 roles:
@@ -337,37 +396,3 @@ roles:
   local:
     users: ["visitor"]
 </pre>
-
-### <a id="available-user-roles"></a> Available User Roles
-
-Concourse 5.2.0 comes with five roles: Concourse Admin, Team Owner, Team Member, Pipeline-Operator, and Team Viewer
-
-#### <a id="concourse-admin"></a> Concourse Admin
-
-Admin is a special user attribute granted to [owners](#owner) of the [main team](#config-main). 
-
-Admins have the ability to administer teams using `fly set-team`, `fly destroy-team`, and `fly rename-team`
-  
-#### <a id="owner"></a> Owner
-
-Team owners have read, write, and auth management capabilities within the scope of their team, but they cannot rename or 
-destroy the team.   
-  
-#### <a id="member"></a> Member
-
-Team members can perform read and write actions within their team, but they cannot change their team configuration.
-
-#### <a id="pipeline-operator"></a> Pipeline Operator
-
-Team pipeline operators can perform pipeline operations such as triggering builds and pinning resources, however they 
-cannot update pipeline configurations. 
-
-#### <a id="viewer"></a> Viewer
-
-Team viewers have “read-only” access to a team and its pipelines. These users are preventing from performing actions such as 
-`fly set-pipeline` or `fly intercept`. 
-
-### <a id="permission-matrix"></a> Permission Matrix
-
-For a full list of permissions granted to each user role, see the following 
-<a href="https://concourse-ci.org/user-roles.html#permission-matrix">Permission Matrix</a>
