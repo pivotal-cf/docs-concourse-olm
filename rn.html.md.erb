@@ -36,7 +36,6 @@ This release contains the following security fixes:
   If a job is public, any `get` step or `put` steps still show in the build's metadata.
 * To safeguard against clickjacking attacks, the `web node` now defaults `X-Frame-Options` to `deny`.
   Running Concourse in an iframe no longer works.
-<%# new %>
 * SSH MAC algorithms have been restricted to a smaller set to fix a vulnerability
   with the Concourse web instance VM. By default, golang allows for some weak algorithms
   that can lead to security vulnerabilities on port 2222, which is used for worker communication.
@@ -70,7 +69,6 @@ These changes include the following:
     - `baggageclaim` properties are now under `worker.baggageclaim`
     - `worker.tsa` properties are under under `worker.worker_gateway`
 
-
 ##### Considerations
 In v5.2.0, Concourse workers will not run on machines that do not have
 [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) enabled (usually, in single-machine test environments).
@@ -81,11 +79,9 @@ In v5.2.0, Concourse workers will not run on machines that do not have
 ##<a id="breaking-520"></a> Breaking Changes
 This release has the following breaking changes:
 
-
 ###<a id="breaking-fly-520"></a> Fly Commands
 * The short flag for `fly builds --team` has been updated from `-t` to `-n`
   to make it consistent across `fly`.
-
 
 ###<a id="breaking-release-520"></a> Release
 
@@ -109,15 +105,13 @@ This release has the following breaking changes:
 see [blackbox job](https://bosh.io/jobs/blackbox?source=github.com/concourse/concourse-bosh-release&version=4.2.4)
 in the BOSH documentation.
 
-
 ###<a id="breaking-binary-520"></a> Binary
-
 * Generic credential caching has been implemented for all credential managers.
   This replaces Vault-only caching.
   As a result of this change, credential managers now implement a simpler
   interface that makes it easier to look up secrets in multiple paths.
   To make this transition, the following two flags must be updated:
-  * `--vault-cache’ is now `--secret-cache-enabled`
+  * `--vault-cache` is now `--secret-cache-enabled`
   * `--vault-max-lease` is now `--secret-cache-duration`
 * The Concourse binary distribution has been reformatted.
   Instead of a self-contained binary, it is now shipped as a TGZ file containing the
@@ -134,9 +128,7 @@ in the BOSH documentation.
     This simplifies the interface for configuring Garden and enables Concourse to
     leverage Garden's build process rather than risking deviation.
 
-
 ###<a id="breaking-core-520"></a> Core Functionality
-
 * The `concourse web --peer-url` flag has been removed.
   Web nodes no longer need to stream user artifacts to one another
   as a result of internal refactoring and decoupling between various components.
@@ -149,12 +141,10 @@ in the BOSH documentation.
   * `concourse web --tsa-team-authorized-keys team=path/to/key` is now
   `concourse web --tsa-team-authorized-keys team:path/to/key`
 
-
 ###<a id="breaking-resources-520"></a> Resources
-
-  * The version history for each resource across your pipelines is reset upon
-    upgrading to Concourse for PCF v5.2.0
-  * Team members who can `fly intercept` check containers is limited to `admin` users
+* The version history for each resource across your pipelines is reset when you
+  upgrade to Concourse for PCF v5.2.0.
+* Only `admin` users can run the `fly intercept` command to enter resource check containers.
 
 For more information about the changes to how resource versions are stored, see
 [Resources](#features-resources-520) in the Features section below.
@@ -167,10 +157,9 @@ For more information about the changes to how resource versions are stored, see
   The next time a team is configured, you must specify another flag because `--allow-all-users`
   is no longer available.
 
-
 ###<a id="breaking-runtime-520"></a> Runtime
-* Support for direct worker registration has been removed.
-  The `--peer-ip` flag is no longer available on concourse workers.
+* The `--peer-ip` flag is no longer available on concourse workers.
+  Support for direct worker registration has been removed.
   When updating to v5.2.0, remove this flag because the worker registers through forwarding instead.
   Forwarding is more secure because it does not require you to open your workers to inbound traffic.
 
