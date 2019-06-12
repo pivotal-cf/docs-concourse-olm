@@ -56,11 +56,11 @@ These changes include the following:
   - `atc` and `tsa` jobs were consolidated under `web`:
     - `tsa` properties:
       - no longer at the root level of a job (previously, `tsa`):
-        - now they are all after `worker_gateway` (for instance<%# "for example" is preferred. %>, `tsa.host_key` became `web.worker_gateway.host_key`)
+        - now they are all after `worker_gateway` (for instance, `tsa.host_key` became `web.worker_gateway.host_key`)
       - `web.worker_gateway.team_authorized_keys` now takes a map rather than a list of objects.
-    - `atc` variables are still at the root, but now under `web` (for instance<%# "for example" is preferred. %>, `atc.bind_port` is now `web.bind_port`).
+    - `atc` variables are still at the root, but now under `web` (for instance, `atc.bind_port` is now `web.bind_port`).
     - Vault's app-role configuration now uses `:` instead of `=`
-      - for instance<%# "for example" is preferred. %>: `CONCOURSE_VAULT_AUTH_PARAM=role_id:some-id,secret_id:some-secret` instead of `role_id=some-id`
+      - for instance: `CONCOURSE_VAULT_AUTH_PARAM=role_id:some-id,secret_id:some-secret` instead of `role_id=some-id`
   - `baggageclaim`/`worker`/`garden` jobs were consolidated under `worker`
     - `baggageclaim` properties are now under `worker.baggageclaim`
     - `garden` properties are now under `worker.garden`, with only a subset of the previously-exposed flags being possible to be set
@@ -70,7 +70,7 @@ These changes include the following:
     - `worker.tsa` properties are under under `worker.worker_gateway`
 
 ##### Considerations
-In v5.2.0, Concourse workers will<%# Avoid "will" as we prefer the present tense. %> not run on machines that do not have
+In v5.2.0, Concourse workers will not run on machines that do not have
 [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) enabled (usually, in single-machine test environments).
 
 [concourse-bosh-deployment]: https://github.com/concourse/concourse-bosh-deployment/tree/release/5.2.x
@@ -98,8 +98,8 @@ This release has the following breaking changes:
 
 * The Concourse release no longer needs to be deployed alongside a Garden-runC
  BOSH release, and instead embeds the `gdn` binary directly. <%# possibly remove part two of sentence %>
-* Concourse now uses BPM<%# "bpm" is preferred as this is the BOSH docs style. %> for deploying the web node.
- For more information about BPM<%# "bpm" is preferred as this is the BOSH docs style. %>, see the [bpm-release](https://github.com/cloudfoundry/bpm-release)
+* Concourse now uses bpm for deploying the web node.
+ For more information about bpm, see the [bpm-release](https://github.com/cloudfoundry/bpm-release)
  repository in GitHub.
 * `blackbox` is no longer included. For more information about `blackbox`,
 see [blackbox job](https://bosh.io/jobs/blackbox?source=github.com/concourse/concourse-bosh-release&version=4.2.4)
@@ -151,7 +151,7 @@ For more information about the changes to how resource versions are stored, see
 ###<a id="breaking-teams-520"></a> Teams
 * The `--allow-all-users` flag has been removed because it was often misused.
   You must now configure users explicitly.<br><br>
-  After upgrading, any teams that have `--allow-all-users` configured will<%# Avoid "will" as we prefer the present tense. %> continue
+  After upgrading, any teams that have `--allow-all-users` configured will continue
   to allow all users.
   The next time a team is configured, you must specify another flag because `--allow-all-users`
   is no longer available.
@@ -167,49 +167,61 @@ For more information about the changes to how resource versions are stored, see
 New features and changes in this release:
 
 ###<a id="features-fly-520"></a> Fly Commands
-  * `fly login` has an improved landing page and workflow.
+* `fly login` has an improved landing page and workflow.
   When you log in to a remote session, if your token transfer fails, you can now copy the token.
-  The auto-login prompt also no longer ask for your token.
-  * `fly login` with the `-u` and `-p` flags no longer prompts you for your authentication method.
-      The command assumes that you are using local authentication.
-  * `fly set-pipeline` prints a `fly unpause-pipeline` command
-    after creating a pipeline. This enables you to unpause new pipelines. New pipelines are paused by default.
-  * `fly set-pipeline` prints changes in the order of Grouping Jobs in the diff.
-  * `fly intercept` with the `--handle` flag inspects the given Garden container.
-  * `fly prune-worker` with the `--all-stalled` or `-a` flag prunes all the stalled workers. It also shows a warning when no stalled workers are found.
-  * `fly execute` uploads inputs and download outputs in parallel.
-  * `fly execute` with the `-m` flag enables you to specify input mappings. You can use this flag when
-      a job renames inputs with the `--inputs-from-job` flag.
-  * `fly watch` with the `--timestamps` flag shows timestamps in the build output.
-  * `fly get-pipeline` prints resources and resource types in a deterministic order.
-  * `fly status` prints the expiration status of your token.
-  * Adds the following `fly` commands:
-    * `fly curl` enables manual API requests to Concourse.
-    * `fly userinfo` prints the teams you are logged in to and what roles you have in each team.
-    * `fly-land-worker` lands workers remotely. This starts the landing process through the API
-       and exits the worker process.
-    * `fly-edit-target` edits the target’s name, team or URL.
-    * `fly-delete-target` removes targets from the `~/.flyrc` file.
-    * `fly get-team` retrieves a team’s configuration.
+  The auto-login prompt also no longer asks for your token.
+* `fly login` with the `-u` and `-p` flags no longer prompts you for your authentication method.
+  The command assumes that you are using local authentication.
+* `fly set-pipeline` prints a `fly unpause-pipeline` command
+  after creating a pipeline. This enables you to unpause new pipelines. New pipelines are paused by default.
+* `fly set-pipeline` prints changes in the order of Grouping Jobs in the diff.
+* `fly intercept` with the `--handle` flag inspects the given Garden container.
+* `fly prune-worker` with the `--all-stalled` or `-a` flag prunes all the stalled workers.
+  It also shows a warning when no stalled workers are found.
+* `fly execute` uploads inputs and downloads outputs in parallel.
+* `fly execute` with the `-m` flag enables you to specify input mappings. You can use this flag when
+  a job renames inputs with the `--inputs-from-job` flag.
+* `fly watch` with the `--timestamps` flag shows timestamps in the build output.
+* `fly get-pipeline` prints resources and resource types in a deterministic order.
+* `fly status` prints the expiration status of your token.
+* Adds the following `fly` commands:
+  * `fly curl` enables manual API requests to Concourse.
+  * `fly userinfo` prints the teams you are logged in to and what roles you have in each team.
+  * `fly-land-worker` lands workers remotely. This starts the landing process through the API
+     and exits the worker process.
+  * `fly-edit-target` edits the target’s name, team or URL.
+  * `fly-delete-target` removes targets from the `~/.flyrc` file.
+  * `fly get-team` retrieves a team’s configuration.
 
 ###<a id="features-resources-520"></a> Resources
-  * **Adds a `registry-image` resource:** The `registry-image` resource has been added to the core. This resource replaces the `docker-image` resource image for image pulling and pushing. `registry-image` does not replace image building. <br><br>
-      This resource improves on the `docker-image` resource in the following ways:
-        * It does not run the Docker daemon to fetch the image because it is written in pure Go
-        * Because it does not run the Docker daemon, it does not need a privileged container.
+* **Adds a `registry-image` resource:** The `registry-image` resource has been added to the core.
+  This resource replaces the `docker-image` resource for image pulling and pushing.
+  `registry-image` does not replace image building. <br><br>
+  This resource improves on the `docker-image` resource in the following ways:
+  <ul>
+    <li>It does not run the Docker daemon to fetch the image because it is written in pure Go.</li>
+    <li>Because it does not run the Docker daemon, it does not need a privileged container.</li>
+  </ul>
+  These improvements result in faster, more efficient, and more resilient image fetching.
+  Pivotal recommends that users switch their `image_resources` and `Resource Types`
+  to this new resource type.
+  In most cases, you can do this by replacing `type: docker-image` with `type: registry-image`.
 
-      These improvements result in faster, efficient, and resilient image fetching.
-      Pivotal recommends that users switch their `image_resources` and `Resource Types`
-      to this new resource type.
-      In most cases, you can do this by replacing `type: docker-image` with `type: registry-image`.
+* **Global resources beta feature:**
+  Global resources share detected resource versions between all resources that have
+  the same `type` and `source` configuration.
+  To enable this feature, set `enable_global_resource` to `true` in your web job.
+  <br><br>
+  For more information about global resources, see
+  [Global Resources](https://concourse-ci.org/global-resources.html) in the open source Concourse Documentation.
+  For more information about `enable_global_resource`, see
+  [`web.enable_global_resource`](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3denable_global_resources)
+  in the BOSH documentation.
 
-  * **Global resources beta feature:**
-  Global resources share detected resource versions between all resources that have the same `type` and `source` configuration. To enable this feature, set `enable_global_resource` to `true` in your web job. <br><br>
-
-      For more information about global resources, see [Global Resources](https://concourse-ci.org/global-resources.html) <%# The link name must be "Concourse documentation". %>.
-      For more information about `enable_global_resource`, see [`web.enable_global_resource`](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3denable_global_resources) <%# The BOSH cross-referencing format is: "For information about SUBJECT, see [EXACT-HEADING](LINK-TO-BOSH-DOCS) in the BOSH documentation." %>
-
-  * **Concourse BOSH Release Ubuntu image:** The BOSH release for Concourse packages Ubuntu images for each core resource type. Before, the BOSH release packaged Alpine images. This change has been made for compliance reasons.
+* **Concourse BOSH Release Ubuntu image:** The BOSH release for Concourse packages
+  Ubuntu images for each core resource type.
+  Before, the BOSH release packaged Alpine images.
+  This change has been made for compliance reasons.
 
 ###<a id="features-runtime-520"></a> Runtime
   * **Containers and volumes are garbage-collected in parallel:**
@@ -248,7 +260,7 @@ New features and changes in this release:
   * **Improved error messages for when a task `file` property specifies an unknown artifact source.**
 
 ###<a id="features-core-520"></a> Core Functionality
-  * **Web nodes can be configured to enable audit logs:** Auditing logs API calls to the default logger using flags to enable specific auditing groups. For more information on<%# "information about" is preferred. %> audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) <%# The link name must be "Concourse documentation". %> in the open-source Concourse  documentation.
+  * **Web nodes can be configured to enable audit logs:** Auditing logs API calls to the default logger using flags to enable specific auditing groups. For more information about audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) <%# The link name must be "Concourse documentation". %> in the open-source Concourse  documentation.
   * **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook
     is a second step to execute only if the parent step errors.
   * **Improvements for task `((vars))`:**
