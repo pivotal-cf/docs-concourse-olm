@@ -323,6 +323,9 @@ animation helps to differentiate between errored and running builds.
 This release fixes the following issues:
 
 ###<a id="resolved-fly-520"></a> Fly Commands
+
+These are the fixes made to fly commands:
+
 * `fly get-pipeline` now throws an error if the given pipeline does not exist.
    Before, the command returned an empty pipeline config.
 * `fly execute` with the `-j` flag now prints the correct build URL.
@@ -334,6 +337,9 @@ This release fixes the following issues:
 
 
 ###<a id="resolved-core-520"></a> Core Functionality
+
+These are the fixes made to the core functionality of Concourse:
+
 * Multiple groups in the same pipeline can no longer use the same name.
   If you use the same name, an error occurs.
 * Aborting a started build before a web node re-attaches to it no longer results
@@ -368,12 +374,16 @@ This release fixes the following issues:
   see [Resources](https://concourse-ci.org/resources.html#resource-version) in the open source Concourse documentation.
 
 ###<a id="resolved-resources-520"></a> Resources
-* Fixed a resource error that caused the following error:
+
+Fixed a resource error that caused the following error:
 
   <pre class=terminal>worker_resource_config_check__resource_config_check_sessio_fkey references unreticulated spline</pre>
 
 
 ###<a id="resolved-runtime-520"></a> Runtime
+
+These are the fixes made to the Concourse runtime:
+
 * The web node now retries on unexpected end-of-file errors. This occurred
 when a worker was restarted while a build was running a container on the worker. For information
 about web nodes, see [Running a web node](https://concourse-ci.org/concourse-web.html)
@@ -390,6 +400,9 @@ because they are all scheduled in succession.
 
 
 ###<a id="resolved-web-520"></a> Web UI
+
+These are the fixes made the the web UI of Concourse:
+
 * Dashboard search has been improved in the following ways:
   * Team name autocomplete now works even if you are not logged in.
   * Fixed the unstyled autosuggest menu in Chrome.
@@ -429,6 +442,9 @@ are automatically rendered if the build currently being viewed is old or if the 
 scrolls to view them.
 
 ###<a id="resolved-teams-520"></a> Teams
+
+These are fixes made to team functionality:
+
 * `fly login` checks to ensure you have successfully logged in to the target team
 and returns an error if the team is not in your token.
 * Users who are members of many teams can now access all of their teams. Before, the Cloud Foundry Dex
@@ -438,6 +454,9 @@ of any team can no longer log in to Concourse.
 However, when these users could log in, they could not do anything.
 
 ###<a id="resolved-credentials-520"></a> Credentials
+
+These are the fixes that relate to credentials in Concourse:
+
 * The AWS SSM credential manager and the AWS Secrets Manager credential manager
 no longer declare the `AWS_REGION` environment variable as their own.
 Before, if you set these environment variables, both credential managers tried
@@ -449,6 +468,9 @@ fast loop after reaching the maximum interval. It now stays at the maximum inter
 
 
 ###<a id="resolved-install-520"></a> Installation
+
+These are the fixes that relate to Concourse installation:
+
 * The BOSH release now sets file system permissions for its config values to chmod `0600`.
 This fixes PostgreSQL certificate configuration.
 * The BOSH release now correctly handles array values for authorized worker keys.
