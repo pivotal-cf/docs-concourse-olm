@@ -260,6 +260,7 @@ New features and changes in this release:
   * **Improved error messages for when a task `file` property specifies an unknown artifact source.**
 
 ###<a id="features-core-520"></a> Core Functionality
+
   * **Web nodes can be configured to enable audit logs:** Auditing logs API calls to the default logger using flags to enable specific auditing groups. For more information about audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) <%# The link name must be "Concourse documentation". %> in the open-source Concourse  documentation.
   * **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook
     is a second step to execute only if the parent step errors.
@@ -284,6 +285,9 @@ New features and changes in this release:
 
 
 ###<a id="features-web-520"></a> Web UI
+
+These are the new features and changes for the Concourse Web UI:
+
 * **Resource pinning has replaced resource pausing:**
   When you upgrade to Concourse v5.2.0, paused resources automatically change to their pinned equivalent.
   Concourse pins the paused resource to the most recent available version.
@@ -314,6 +318,9 @@ animation helps to differentiate between errored and running builds.
 
 
 ###<a id="features-teams-520"></a> Teams
+
+These are the new features and changes for team functionality:
+
 * Generic OAuth can be configured with different user ID and name keys.
 * Generic OIDC authentication can be configured with a different username key.
 * BitBucket authentication support has been re-introduced.
