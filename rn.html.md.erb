@@ -80,10 +80,15 @@ In v5.2.0, Concourse workers will not run on machines that do not have
 This release has the following breaking changes:
 
 ###<a id="breaking-fly-520"></a> Fly Commands
+
+These breaking changes affect fly commands:
+
 * The short flag for `fly builds --team` has been updated from `-t` to `-n`
   to make it consistent across `fly`.
 
 ###<a id="breaking-release-520"></a> Release
+
+These breaking changes affect the Concourse release:
 
 * The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
 
@@ -106,12 +111,15 @@ see [blackbox job](https://bosh.io/jobs/blackbox?source=github.com/concourse/con
 in the BOSH documentation.
 
 ###<a id="breaking-binary-520"></a> Binary
+
+These breaking changes affect the Concourse binary:
+
 * The Concourse binary distribution has been reformatted.
   Instead of a self-contained binary, it is now shipped as a TGZ file containing the
   binary and its dependencies pre-extracted. <%# what is pre-extracted? is this referring to the tgz file or the dependancies or both? %>
-  Flags are no longer supported because they rely on directly embedding their code.
+  Garden flags are no longer supported because they rely on directly embedding their code.
   If you have been passing specific flags to Garden, you must switch to using a
-  config file through `--garden-config` <%# is this a flag? I thought they werent supported. What are the specific flags that are no longer supported?%>,
+  config file through `--garden-config`,
   or pass them as `env vars`, for example, `CONCOURSE_GARDEN_FOO_BAR`.
   The effects of this reformatting include:
   * Simpler and faster startup.
@@ -129,6 +137,9 @@ in the BOSH documentation.
   * `--vault-max-lease` is now `--secret-cache-duration`
 
 ###<a id="breaking-core-520"></a> Core Functionality
+
+These breaking changes affect the core functionality:
+
 * The `concourse web --peer-url` flag has been removed.
   Web nodes no longer need to stream user artifacts to one another
   as a result of internal refactoring and decoupling between various components.
@@ -142,6 +153,9 @@ in the BOSH documentation.
   `concourse web --tsa-team-authorized-keys team:path/to/key`
 
 ###<a id="breaking-resources-520"></a> Resources
+
+These breaking changes affect Concourse resources:
+
 * The version history for each resource across your pipelines is reset when you
   upgrade to Concourse for PCF v5.2.0.
 
@@ -149,6 +163,9 @@ For more information about the changes to how resource versions are stored, see
 [Resources](#features-resources-520) in the Features section below.
 
 ###<a id="breaking-teams-520"></a> Teams
+
+These breaking changes affect team functionality:
+
 * The `--allow-all-users` flag has been removed because it was often misused.
   You must now configure users explicitly.<br><br>
   After upgrading, any teams that have `--allow-all-users` configured will continue
@@ -157,6 +174,9 @@ For more information about the changes to how resource versions are stored, see
   is no longer available.
 
 ###<a id="breaking-runtime-520"></a> Runtime
+
+These breaking changes affect the Concourse runtime:
+
 * The `--peer-ip` flag is no longer available on concourse workers.
   Support for direct worker registration has been removed.
   When updating to v5.2.0, remove this flag because the worker registers through forwarding instead.
@@ -164,9 +184,13 @@ For more information about the changes to how resource versions are stored, see
 
 
 ##<a id="features-520"></a> Features
+
 New features and changes in this release:
 
 ###<a id="features-fly-520"></a> Fly Commands
+
+These are the new features and changes to fly commands:
+
 * `fly login` has an improved landing page and workflow.
   When you log in to a remote session, if your token transfer fails, you can now copy the token.
   The auto-login prompt also no longer asks for your token.
@@ -194,6 +218,9 @@ New features and changes in this release:
   * `fly get-team` retrieves a team’s configuration.
 
 ###<a id="features-resources-520"></a> Resources
+
+These are the new features and changes to Concourse resources:
+
 * **Adds a `registry-image` resource:** The `registry-image` resource has been added to the core.
   This resource replaces the `docker-image` resource for image pulling and pushing.
   `registry-image` does not replace image building. <br><br>
@@ -224,16 +251,20 @@ New features and changes in this release:
   This change has been made for compliance reasons.
 
 ###<a id="features-runtime-520"></a> Runtime
+
+These are the new features and changes to the Councourse runtime:
+
   * **Containers and volumes are garbage-collected in parallel:**
-    Before, workers garbage collected containers in volumes sequentially and
+    Workers used to garbage-collect containers in volumes sequentially and
     destroyed containers before volumes.
     This meant that if a worker had many volumes to remove,
-    the worker destroyed them one by one and containers were not garbage-collected during this time.<br><br>
+    the worker destroyed them one by one and containers were not garbage-collected
+    during this time.<br><br>
 
       Running garbage collection in parallel speeds up garbage collection and prevents an imbalance between
       volume and container counts from slowing each other down.
       This is important as workers are typically capped at 250 containers,
-      but may<%# "can" usually works better. Use "might" to convey possibility. %> have more volumes and a slow disk.<br><br>
+      but might have more volumes and a slow disk.<br><br>
 
       The default max-in-flight for garbage collection is 3 containers and 3 volumes at a time.
 
@@ -261,6 +292,8 @@ New features and changes in this release:
 
 ###<a id="features-core-520"></a> Core Functionality
 
+These are the new features and changes to the core functionality of Concourse:
+
   * **Web nodes can be configured to enable audit logs:** Auditing logs API calls to the default logger using flags to enable specific auditing groups. For more information about audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) <%# The link name must be "Concourse documentation". %> in the open-source Concourse  documentation.
   * **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook
     is a second step to execute only if the parent step errors.
@@ -286,7 +319,7 @@ New features and changes in this release:
 
 ###<a id="features-web-520"></a> Web UI
 
-These are the new features and changes for the Concourse Web UI:
+These are the new features and changes to the Concourse web UI:
 
 * **Resource pinning has replaced resource pausing:**
   When you upgrade to Concourse v5.2.0, paused resources automatically change to their pinned equivalent.
@@ -319,7 +352,7 @@ animation helps to differentiate between errored and running builds.
 
 ###<a id="features-teams-520"></a> Teams
 
-These are the new features and changes for team functionality:
+These are the new features and changes to team functionality:
 
 * Generic OAuth can be configured with different user ID and name keys.
 * Generic OIDC authentication can be configured with a different username key.
