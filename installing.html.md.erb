@@ -6,7 +6,7 @@ owner: Concourse
 <strong><%= modified_date %></strong>
 
 Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and
-delivery tool that lets you build and monitor scalable pipelines seamlessly.
+delivery tool that enables you to build and monitor scalable pipelines seamlessly.
 This topic describes how to install Concourse and what you need to install it successfully.
 
 ## <a id="prereqs"></a> Prerequisites
@@ -29,13 +29,7 @@ Before you install Concourse for PCF, you must have the following:
   To download an Ubuntu Xenial stemcell from Pivotal Network, see
   [Stemcells for PCF (Ubuntu Xenial)](https://network.pivotal.io/products/stemcells-ubuntu-xenial/).
 * PostgreSQL v9.5 and later.
-Concourse can be configured to connect to an external PostgreSQL database or a
-BOSH-managed Cloud Foundry PostgreSQL release.
-For more information, see [postgres/36](http://bosh.io/releases/github.com/cloudfoundry/postgres-release))
-in the BOSH documentation.
-<p class="note"><strong>Note: </strong> As of Concourse v3.6.0,
-  the Concourse BOSH release no longer supplies an internal PostgreSQL.
-  You must provide your own PostgreSQL database as of v3.6.0.
+* A load balancer with multiple Air Traffic Controllers (ATCs), if you expect a heavy load on your Concourse installation.
 
 
 ## <a id="setup"></a> Set Up and Install Concourse
@@ -48,14 +42,25 @@ To configure and deploy Concourse for PCF, do the following:
 1. Prepare the Concourse deployment manifest.
   You can write your own manifest or modify a template
   with your unique configuration. For an example of a manifest template,
-  see the [concourse.yml](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml) file
-  in GitHub.
+  see the [concourse.yml](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml) file in GitHub.
 For more information about `Cluster Concourse deployment`, see
-[concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md)
-in GitHub.
+[concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md) in GitHub.
 1. Configure authentication in your deployment manifest by providing `tls_cert` and `tls_key` values.
    For instructions, see [Authentication](./authenticating.html).
 1. Prepare the `cloud-config.yml` file and upload it to your BOSH Director with `bosh update-cloud-config`.
 1. Deploy Concourse with `bosh deploy`. For more information,
     see [Deploying](https://bosh.io/docs/deploying/) in the BOSH documentation.
     After Concourse deploys, a success message is displayed.
+1. Configure Concourse to connect it to an external PostgreSQL database or a BOSH-managed Cloud Foundry PostgreSQL release.
+For more information, see [postgres/37](http://bosh.io/releases/github.com/cloudfoundry/postgres-release)
+in the BOSH documentation.
+1. Configure the <code>postgresql</code> properties of the ATC job for your database.
+For a list of these properties, see
+<a href="https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dpostgresql">postgresql</a>
+in the BOSH documentation.
+
+For more information about using the Concourse BOSH release, see the
+<a href="https://github.com/concourse/concourse-bosh-deployment">Concourse BOSH Deployment</a>
+GitHub repository.
+It includes sample manifest files, references to prerequisite BOSH knowledge, IaaS-specific configurations,
+and more.
