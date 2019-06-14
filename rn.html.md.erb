@@ -90,8 +90,6 @@ These breaking changes affect fly commands:
 
 These breaking changes affect the Concourse release:
 
-* The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
-
    <p class="note warning"><strong>Warning:</strong>
      You must re-create your workers during or after deploying.
      The location where the worker stores volumes has changed and the old
@@ -99,7 +97,9 @@ These breaking changes affect the Concourse release:
      Failing to do so causes disk usage to leak.</p>
 
    <p class="note warning"><strong>Warning:</strong>
-     The <code>additional_resource_types</code> property can no longer be configured.</p>
+     The <code>additional\_resource\_types</code> property can no longer be configured.</p>
+
+* The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
 
 * The Concourse release no longer needs to be deployed alongside a Garden-runC
  BOSH release, and instead embeds the `gdn` binary directly. <%# possibly remove part two of sentence %>
@@ -254,67 +254,83 @@ These are the new features and changes to Concourse resources:
 
 These are the new features and changes to the Councourse runtime:
 
-  * **Containers and volumes are garbage-collected in parallel:**
-    Workers used to garbage-collect containers in volumes sequentially and
-    destroyed containers before volumes.
-    This meant that if a worker had many volumes to remove,
-    the worker destroyed them one by one and containers were not garbage-collected
-    during this time.<br><br>
+* **Containers and volumes are garbage-collected in parallel:**
+  Workers used to garbage-collect containers in volumes sequentially and
+  destroyed containers before volumes.
+  This meant that if a worker had many volumes to remove,
+  the worker destroyed them one by one and containers were not garbage-collected
+  during this time.<br><br>
 
-      Running garbage collection in parallel speeds up garbage collection and prevents an imbalance between
-      volume and container counts from slowing each other down.
-      This is important as workers are typically capped at 250 containers,
-      but might have more volumes and a slow disk.<br><br>
+    Running garbage collection in parallel speeds up garbage collection and prevents an imbalance between
+    volume and container counts from slowing each other down.
+    This is important as workers are typically capped at 250 containers,
+    but might have more volumes and a slow disk.<br><br>
 
-      The default max-in-flight for garbage collection is 3 containers and 3 volumes at a time.
+    The default max-in-flight for garbage collection is 3 containers and 3 volumes at a time.
 
-  * **Web nodes can be configured with a fewest-build-containers strategy:**
-    This places containers on workers that have the fewest build containers.
-  * **Workers can be configured to rebalance:**
-    This prevents workers from being forwarded through a single web node.
-    To enable this, set the `--rebalance-interval` flag on the Concourse worker.<br><br>
-    Rebalancing workers drains in-flight connections and does not disrupt in-flight builds.
-    This results in a breaking change. For more information, see [Breaking Changes - Runtime](#breaking-runtime-520) above.
-  * **Volumes and containers that disappear from their worker are
-    automatically removed from the database:**
-    This makes it easier for Concourse to recover from this situation instead of
-    erroring with file not found or unknown handle errors.
-  * **Tasks<%# "tasks" is preferred. %> can have `inputs`, `outputs`, and `caches` with overlapping paths.**
-  * **Adds a `in_parallel` step:** The `in_parallel` step can run steps in parallel using the following
-    properties:
-    * `limit`: This property limits the number of parallel steps.
-    * `fail_fast`: This property interrupts running steps and prevents scheduling pending steps.
+* **You can configure web nodes with a fewest-build-containers strategy:**
+  This places containers on workers that have the fewest build containers.
+* **You can configure workers to rebalance:**
+  This prevents workers from being forwarded through a single web node.
+  To enable this, set the `--rebalance-interval` flag on the Concourse worker.<br><br>
+  Rebalancing workers drains in-flight connections and does not disrupt in-flight builds.
+  This results in a breaking change.
+  For more information, see [Breaking Changes - Runtime](#breaking-runtime-520) above.
+* **Volumes and containers that disappear from their worker are
+  automatically removed from the database:**
+  This makes it easier for Concourse to recover from this situation instead of
+  erroring with file not found or unknown handle errors.
+* **Tasks can have `inputs`, `outputs`, and `caches` with overlapping paths.**
+* **Adds an `in_parallel` step:** The `in_parallel` step can run steps in parallel
+using the following properties:
+  * `limit`: This property limits the number of parallel steps.
+  * `fail_fast`: This property interrupts running steps and prevents scheduling pending steps.
 
-    <p class="note"><strong>Note:</strong> This release deprecates the `aggregate` step in future<%# Only document what exists. There are legal ramifications to making promises. %> releases.
-    Pivotal recommendeds that users use `in_parallel`.</p>
+  <p class="note"><strong>Note:</strong> This release deprecates the `aggregate` step in future releases.
+  Pivotal recommends that users use `in_parallel`.</p> <%# not clear when aggregate will be deprecated? Is it actually deprecated now and then will be removed in a     future release? If that is the case we can say it's deprecated and P recommends using `in_parallel`. We shouldn’t really talk about the future in case plans change. %>
 
-  * **Improved error messages for when a task `file` property specifies an unknown artifact source.**
+* **Improved error messages for when a task `file` property specifies an unknown artifact source.**
 
 ###<a id="features-core-520"></a> Core Functionality
 
 These are the new features and changes to the core functionality of Concourse:
 
-  * **Web nodes can be configured to enable audit logs:** Auditing logs API calls to the default logger using flags to enable specific auditing groups. For more information about audit logs, see [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs) <%# The link name must be "Concourse documentation". %> in the open-source Concourse  documentation.
-  * **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook
-    is a second step to execute only if the parent step errors.
-  * **Improvements for task `((vars))`:**
-    * Values for task `((vars))` can be provided during `fly execute`.
-    * Values can be provided to a task step in a pipeline using `vars`.
-    * You can add task `((vars))` in the task config in properties besides `image_resource`.
-    * Pipeline `((params))` are now referred to as pipeline `((vars))`.
-  * **The `put` step can be given a list of `inputs` to use:** This can be used rather than having the `put` step use all of the `inputs`. This can speed up builds that have a large amount of artifacts before a `put`.
-  * **Concourse automatically retries fetching credentials when the request to the credential manager fails:**
-    By default Concourse retries five times and waits one second between each attempt.
-    This can be adjusted with the `--secret-retry-attempts` and `--secret-retry-interval` flags on Concourse web.
-  * **Concourse is compatible with CredHub v2.x, with the exception of v2.1.**
-  * **Vault credential manager can be configured with a global shared path for credential lookup:** This makes sharing credentials between teams easier to manage. Pivotal recommends using caution when using this feature because it enables all teams access to the credentials.
-  * **Concourse keeps build history when you rename a job:**
-  If you rename a job, Concourse updates the job name and specifies the old name as `old_name` within the job config.
-  * **Build logs are kept for a specific, configured time duration.**
-  * **Adds a `--external-garden-url` flag:**
-  This flag enables you to use a separately managed Garden server as a worker.
-  * **The Concourse worker command can be given a `--garden-use-houdini` flag on Linux:** This enables the use of a "no-op" Houdini Garden backend. You can use this if you do not want containerization.
-  * **Improved Concourse components logs:** If you use a tool to parse your logs, you must update your tool.
+* **Web nodes can be configured to enable audit logs:** Auditing logs API calls
+to the default logger using flags to enable specific auditing groups.
+For more information about audit logs, see
+[Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs)
+in the open source Concourse documentation.
+* **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook
+  is a second step to execute only if the parent step errors. <%# is on_error supposed to be in code? %>
+* **Improvements for task `((vars))`:**
+  * You can provide values for task `((vars))` when using the `fly execute` command.
+  * You can provide values to a task step in a pipeline using `vars`.
+  * You can add task `((vars))` in the task config in properties besides `image_resource`.
+  * Pipeline `((params))` are now referred to as pipeline `((vars))`.
+* **You can give the `put` step a list of `inputs` to use:** You can use this
+rather than having the `put` step use all of the `inputs`.
+This can speed up builds that have a large amount of artifacts before a `put`.
+* **Concourse automatically retries fetching credentials when the request to
+the credential manager fails:**
+  By default, Concourse retries five times and waits one second between each attempt.
+  You can adjust this with the `--secret-retry-attempts` and `--secret-retry-interval`
+  flags on Concourse web.
+* **Concourse is compatible with CredHub v2.x, except v2.1.**
+* **You can configure Vault credential manager with a global shared path for
+credential lookup:** This makes sharing credentials between teams easier to manage.
+Pivotal recommends that you use caution when using this feature because it
+enables all teams to have access to the credentials.
+* **Concourse keeps build history when you rename a job:**
+If you rename a job, Concourse updates the job name and specifies the old name
+as `old_name` within the job config.
+* **Build logs are kept for a specific, configured time duration.**
+* **Adds a `--external-garden-url` flag:**
+This flag enables you to use a separately managed Garden server as a worker.
+* **The Concourse worker command can be given a `--garden-use-houdini` flag on Linux:**
+This enables the use of a "no-op" Houdini Garden backend.
+You can use this if you do not want containerization.
+* **Improved Concourse components logs:** If you use a tool to parse your logs,
+you must update your tool.
 
 
 ###<a id="features-web-520"></a> Web UI
@@ -325,12 +341,14 @@ These are the new features and changes to the Concourse web UI:
   When you upgrade to Concourse v5.2.0, paused resources automatically change to their pinned equivalent.
   Concourse pins the paused resource to the most recent available version.
   A comment is left on any migrated resources so that changes are visible to pipeline users. <br><br>
-  Versions can be individually pinned using the web UI or the pipeline config. Pinned resources skip resource checking. If resource checking does happen, the resource still stays pinned to the desired version.
+  Versions can be individually pinned using the web UI or the pipeline config.
+  Pinned resources skip resource checking.
+  If resource checking does happen, the resource still stays pinned to the desired version.
   Comments can be left on pinned versions to explain why the resource is pinned.
 * **Re-added the pipeline navigation sidebar.**
-* **Resources have a `icon` property:** This enables you to add icons to your pipeline.
+* **Resources have an `icon` property:** This enables you to add icons to your pipeline.
 You can use this property to distinguish between different resource types.
-* **Concourse cluster name on the dashboard page:** You can set a name for a
+* **You can add a Concourse cluster name to the dashboard page:** You can set a name for a
 Concourse cluster with the `--cluster-name` flag. This name is displayed on the dashboard page.
 * **Concourse uses Material Design icons everywhere in the UI.**
 * **You can click URLs in resource metadata.**
@@ -338,11 +356,11 @@ Concourse cluster with the `--cluster-name` flag. This name is displayed on the 
 to go back to the dashboard page to use the play and pause button.
   The play and pause button is only enabled for authorized users.
   A tooltip appears for users who do not have access.
-* **Timestamps for builds change are absolute after 24 hours.**
+* **Timestamps for builds change are absolute after 24 hours.** <%# I don't understand. Needs to be clearer. %>
 * **Adds a tooltip for yellow `get` steps:** The web UI now explains why some
 get steps have a yellow icon in a tooltip.
 The dashboard page now indicates whether you are seeing a pipeline because it is
-exposed through an "eye" icon.
+exposed through an "eye" icon. <%# I don't understand. Needs to be clearer. %>
 * **Adds duration information for steps in the build log:**
 You can hover over the right side of a step in the build log to view how long
 it took to initialize and run.
@@ -364,7 +382,7 @@ This release fixes the following issues:
 
 ###<a id="resolved-fly-520"></a> Fly Commands
 
-These are the fixes made to fly commands:
+These are the fixes to fly commands:
 
 * `fly get-pipeline` now throws an error if the given pipeline does not exist.
    Before, the command returned an empty pipeline config.
@@ -378,7 +396,7 @@ These are the fixes made to fly commands:
 
 ###<a id="resolved-core-520"></a> Core Functionality
 
-These are the fixes made to the core functionality of Concourse:
+These are the fixes to the core functionality of Concourse:
 
 * Multiple groups in the same pipeline can no longer use the same name.
   If you use the same name, an error occurs.
@@ -422,7 +440,7 @@ Fixed a resource error that caused the following error:
 
 ###<a id="resolved-runtime-520"></a> Runtime
 
-These are the fixes made to the Concourse runtime:
+These are the fixes to the Concourse runtime:
 
 * The web node now retries on unexpected end-of-file errors. This occurred
 when a worker was restarted while a build was running a container on the worker. For information
@@ -441,7 +459,7 @@ because they are all scheduled in succession.
 
 ###<a id="resolved-web-520"></a> Web UI
 
-These are the fixes made the the web UI of Concourse:
+These are the fixes to the web UI of Concourse:
 
 * Dashboard search has been improved in the following ways:
   * Team name autocomplete now works even if you are not logged in.
@@ -483,7 +501,7 @@ scrolls to view them.
 
 ###<a id="resolved-teams-520"></a> Teams
 
-These are fixes made to team functionality:
+These are the fixes to team functionality:
 
 * `fly login` checks to ensure you have successfully logged in to the target team
 and returns an error if the team is not in your token.
