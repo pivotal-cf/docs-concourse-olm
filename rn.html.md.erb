@@ -102,7 +102,7 @@ These breaking changes affect the Concourse release:
 * The Concourse BOSH release has been redesigned and is now centered around the Concourse binary.
 
 * The Concourse release no longer needs to be deployed alongside a Garden-runC
- BOSH release, and instead embeds the `gdn` binary directly. <%# possibly remove part two of sentence %>
+ BOSH release. Instead, it ships alongside the `gdn` binary.
 * Concourse now uses bpm for deploying the web node.
  For more information about bpm, see the [bpm-release](https://github.com/cloudfoundry/bpm-release)
  repository in GitHub.
@@ -116,7 +116,7 @@ These breaking changes affect the Concourse binary:
 
 * The Concourse binary distribution has been reformatted.
   Instead of a self-contained binary, it is now shipped as a TGZ file containing the
-  binary and its dependencies pre-extracted. <%# what is pre-extracted? is this referring to the tgz file or the dependancies or both? %>
+  binary and its prepackaged dependencies.
   Garden flags are no longer supported because they rely on directly embedding their code.
   If you have been passing specific flags to Garden, you must switch to using a
   config file through `--garden-config`,
