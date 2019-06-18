@@ -300,8 +300,8 @@ to the default logger using flags to enable specific auditing groups.
 For more information about audit logs, see
 [Enabling audit logs](https://concourse-ci.org/concourse-web.html#audit-logs)
 in the open source Concourse documentation.
-* **Steps can have with an ‘on_error’ step hook:** The value for the ‘on_error’ step hook
-  is a second step to execute only if the parent step errors. <%# is on_error supposed to be in code? %>
+* **Steps can have an `on_error` step hook:** The value for the `on_error` step hook
+  is a second step to execute only if the parent step errors.
 * **Improvements for task `((vars))`:**
   * You can provide values for task `((vars))` when using the `fly execute` command.
   * You can provide values to a task step in a pipeline using `vars`.
@@ -356,11 +356,11 @@ Concourse cluster with the `--cluster-name` flag. This name is displayed on the 
 to go back to the dashboard page to use the play and pause button.
   The play and pause button is only enabled for authorized users.
   A tooltip appears for users who do not have access.
-* **Timestamps for builds change are absolute after 24 hours.** <%# I don't understand. Needs to be clearer. %>
+* **Relative timestamps in the build header convert to absolute timestamps after 24 hours.**
 * **Adds a tooltip for yellow `get` steps:** The web UI now explains why some
 get steps have a yellow icon in a tooltip.
-The dashboard page now indicates whether you are seeing a pipeline because it is
-exposed through an "eye" icon. <%# I don't understand. Needs to be clearer. %>
+The dashboard page uses an “eye” icon to indicate that you are seeing a
+pipeline because it is exposed.
 * **Adds duration information for steps in the build log:**
 You can hover over the right side of a step in the build log to view how long
 it took to initialize and run.
