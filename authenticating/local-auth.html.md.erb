@@ -186,18 +186,10 @@ The `roles` field points to a list of role authorization configs.
 The attributes in each config will vary by provider. For specifics of your chosen provider, see
 [Add Users to Groups and Teams](#adding)
 
-For example, the following config sets three roles with different Github auth configs for each role's provider:
+For example, the following config sets the `owner` role using the local auth config:
 <pre class="code">
 roles:
 - name: owner
-  github:
-    users: ["admin"]
-- name: member
-  github:
-    teams: ["org:team"]
-- name: viewer
-  github:
-    orgs: ["org"]
   local:
-    users: ["visitor"]
+    users: ["username"]
 </pre>
