@@ -217,18 +217,18 @@ The `roles` field points to a list of role authorization configs.
 The attributes in each config will vary by provider. For specifics of your chosen provider, see
 [Add Users to Groups and Teams](#adding)
 
-For example, the following config sets three roles with different Github auth configs for each role's provider:
+For example, the following config sets three roles with different CF auth configs for each role's provider:
 <pre class="code">
 roles:
 - name: owner
-  github:
+  cf:
     users: ["admin"]
 - name: member
-  github:
-    teams: ["org:team"]
+  cf:
+    orgs: ["my-team"]
 - name: viewer
-  github:
-    orgs: ["org"]
+  cf:
+    spaces: ["org:my-other-team"]
   local:
     users: ["visitor"]
 </pre>
