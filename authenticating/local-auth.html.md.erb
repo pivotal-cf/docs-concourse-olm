@@ -70,18 +70,8 @@ It also makes sure that members of the `main` team do not get locked out of thei
 
 
 ## <a id="adding"></a>Add Users and Groups to Teams
-After you deploy Concourse with the authentication providers configured,
-you can specify allowed users and groups using the `fly set-team` command.
-With this command, users and groups can be:
 
-  * Added to new teams
-  * Modified on existing teams
-
-For more information about this command, see [fly set-team](https://concourse-ci.org/creating-and-updating-teams.html#fly-set-team).
-
-<p class="note"><strong>Note: </strong>
-The exception to this is the <code>main</code> team. Members of the <code>main</code> team are configured as part of the initial deployment and cannot be changed after the deployment. For more information about the <code>main</code> team, see <a href="https://concourse-ci.org/main-team.html">The <code>main</code> team</a>.
-</p>
+<%= partial 'add-users-and-groups' %>
 
 
 ### <a id="add-basic-auth"></a> Local Users
