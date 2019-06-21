@@ -98,18 +98,8 @@ $  fly set-team -n YOUR-TEAM --local-user USERNAME
 
 
 ### <a id="team-config"></a> Team Configuration Details
-Team members can view the authentication settings of the teams they belong to by using the `fly teams -d` command.
 
-For example, the command below:
-<pre class="code">
-$ fly -t prod teams -d
-</pre>
-
-The output is similar to the following:
-<pre class="terminal">
-<strong>name</strong>     <strong>users</strong>          <strong>groups</strong>
-main     github:User    github:Organization
-</pre>
+<%= partial 'team-config' %>
 
 ## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
