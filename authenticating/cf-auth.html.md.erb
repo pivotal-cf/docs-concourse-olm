@@ -75,22 +75,8 @@ You also need to configure your base API URL for CF in the `api_url` field.
 To do this, see [api_url](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dcf_auth.api_url) in the BOSH documentation.
 
 ### <a id="config-main"></a> The Main Team
-By default, Concourse comes with a single team called `main`.
-The `main` team is an admin team.
-This means it can create and update other teams.
-Currently there is no way to promote a team to become an admin team,
-so `main` is a special team.
 
-Concourse requires you to specify at least one user/group to be a member of the `main`
-team during deployment.
-The list of allowed users, groups, and orgs are managed through the `main_team` property in the ATC job.
-For more information about this property, see [main_team](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dmain_team) in the BOSH documentation.
-
-An example of adding a local user to the main team can be found in the `add-local-users.yml` file in the [concourse-bosh-deployment](https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/operations/add-local-users.yml) GitHub repository.
-
-The values set in the authentication flags take effect whenever the ATC starts up.
-This allows Concourse to be deployed against declared configurations.
-It also makes sure that members of the `main` team do not get locked out of their Concourse.
+<%= partial 'main-team' %>
 
 
 ## <a id="adding"></a>Add Users and Groups to Teams
