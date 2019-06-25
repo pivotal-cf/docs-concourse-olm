@@ -44,36 +44,46 @@ This release contains the following security fixes:
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
 ##<a id="upgrades-520"></a> Upgrading
-#### Upgrade Path
 
-If you're currently on v3.13.0 and are looking to upgrade to v5.2.0, you must first upgrade to v.4.2.4 before upgrading to v5.2.0.
+<p class="note warning"><strong>Warning:</strong> If you are currently using Concourse for PCF v3.13.0,
+  you must first upgrade to v4.2.4 before upgrading to v5.2.0.</p>
 
-#### Instructions
-The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes. The following changes need to be applied regardless whether you use the example [concourse-bosh-deployment][concourse-bosh-deployment] or your own manifest.
+<%# Include this in Upgrading somewhere:
+The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes.
+The following changes need to be applied regardless whether you use the example
+[concourse-bosh-deployment][concourse-bosh-deployment] or your own manifest. %>
 
-These changes include the following:
+This release contains the following changes to the manifest:
 
-  - `atc` and `tsa` jobs were consolidated under `web`:
+  - `atc` and `tsa` jobs are consolidated under `web`:
+    - `atc` variables:
+      - These are still at the root level of job, but are now under `web`<br>
+      (for instance, `atc.bind_port` is now `web.bind_port`).
+      - Vault's app-role configuration now uses `:` instead of `=`<br>
+      (for example, `CONCOURSE_VAULT_AUTH_PARAM` uses `role_id:some-id` instead of `role_id=some-id`).
     - `tsa` properties:
-      - no longer at the root level of a job (previously, `tsa`):
-        - now they are all after `worker_gateway` (for instance, `tsa.host_key` became `web.worker_gateway.host_key`)
+      - These are no longer at the root level of a job (previously, `tsa`):
+        - They are now all after `worker_gateway` (for instance, `tsa.host_key` is now `web.worker_gateway.host_key`)
       - `web.worker_gateway.team_authorized_keys` now takes a map rather than a list of objects.
-    - `atc` variables are still at the root, but now under `web` (for instance, `atc.bind_port` is now `web.bind_port`).
-    - Vault's app-role configuration now uses `:` instead of `=`
-      - for instance: `CONCOURSE_VAULT_AUTH_PARAM=role_id:some-id,secret_id:some-secret` instead of `role_id=some-id`
-  - `baggageclaim`/`worker`/`garden` jobs were consolidated under `worker`
-    - `baggageclaim` properties are now under `worker.baggageclaim`
-    - `garden` properties are now under `worker.garden`, with only a subset of the previously-exposed flags being possible to be set
+
+  - `baggageclaim`,`worker`, and `garden` jobs are consolidated under `worker`.
+    - `baggageclaim` properties are now under `worker.baggageclaim`.
+    - `garden` properties are now under `worker.garden`.
+      Also, only a subset of the previously-exposed flags are able to be set.
     - `worker.tsa` properties are under `worker.worker_gateway`
-  - `baggageclaim-windows`/`houdini-windows`/`worker-windows` jobs were consolidated under `worker-windows`
+  - `baggageclaim-windows`, `worker-windows`, and `houdini-windows` jobs are consolidated under `worker-windows`.
     - `baggageclaim` properties are now under `worker.baggageclaim`
-    - `worker.tsa` properties are under under `worker.worker_gateway`
+    - `worker.tsa` properties are under `worker.worker_gateway`
+<%# TODO Chris: Verify the baggageclaim-windows ... section is accurate %>
+<%# TODO Chris: Location of all variables and how they've changed? Create table in "Upgrading" with manifest changes? %>
 
 ##### Considerations
 In v5.2.0, Concourse workers will not run on machines that do not have
 [`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) enabled (usually, in single-machine test environments).
+<%# TODO Chris: Verify what this section wants %>
 
 [concourse-bosh-deployment]: https://github.com/concourse/concourse-bosh-deployment/tree/release/5.2.x
+<%# TODO Chris: Verify what this link is %>
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
 ##<a id="breaking-520"></a> Breaking Changes
