@@ -27,15 +27,8 @@ See [Configure Authentication Providers](#configuring) below.
 See [Add Users and Groups to Teams](#adding) below.
 
 ## <a id="configuring"></a> Configure Authentication Providers
-Concourse can be configured to use local users, GitHub, generic LDAP, Cloud Foundry, OAuth,
-and OIDC as authentication providers.
-You must specify the allowed authentication providers before Concourse is deployed.
 
-A Concourse operator needs to provide the following information in their Concourse deployment manifest:
-
-* A list of allowed local users
-* Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, OAuth, and OIDC)
-* Users who should be members of the default `main` team (either local users or users/groups from external authentication providers)
+<%= partial 'configure-auth-providers' %>
 
 ### <a id="local-users"></a> Local Users
 Local users must be declared in the `add_local_users` of the `atc` job in the deployment manifest.

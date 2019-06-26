@@ -1,0 +1,13 @@
+<p>
+  Concourse can be configured to use local users, GitHub, generic LDAP, Cloud Foundry, OAuth,
+  and OIDC as authentication providers.
+  You must specify the allowed authentication providers before Concourse is deployed.
+</p>
+<p>
+  A Concourse operator needs to provide the following information in their Concourse deployment manifest:
+</p>
+<ul>
+  <li>A list of allowed local users</li>
+  <li>Configurations against third-party authentication providers (GitHub, generic LDAP, Cloud Foundry, OAuth, and OIDC)</li>
+  <li>Users who should be members of the default <code>main</code> team (either local users or users/groups from external authentication providers)</li>
+</ul>
