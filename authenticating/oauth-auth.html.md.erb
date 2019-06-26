@@ -95,34 +95,3 @@ main     oauth:User     oauth:Group
 ## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
 <%= partial 'set-user-roles-and-perms' %>
-
-
-### <a id="setting-user-roles"></a> Set User Roles
-By default, the authorization config passed to `set-team` configures the [member role](#member). In addition, Existing
-team auth config will be transitioned to the team [owner role](#owner). In other words, anyone that can authenticate
-prior to the upgrade will now be authenticated as an owner of their team. This role is the closest equivalent to what
-they could do before.
-
-More advanced [roles](#available-user-roles) configuration can be specified through the `--configuration` or `--c` flag.
-
-The `-c` flag expects a YAML file with a single field, `roles:`.
-The `roles` field points to a list of role authorization configs.
-
-The attributes in each config will vary by provider. For specifics of your chosen provider, see
-[Add Users to Groups and Teams](#adding)
-
-For example, the following config sets three roles with different oauth configs for each role's provider:
-<pre class="code">
-roles:
-- name: owner
-  oauth:
-    users: ["admin"]
-- name: member
-  oauth:
-    groups: ["my-group"]
-- name: viewer
-  oauth:
-    groups: ["my-other-group"]
-  local:
-    users: ["visitor"]
-</pre>

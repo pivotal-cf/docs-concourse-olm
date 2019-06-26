@@ -54,6 +54,38 @@ These are described in the table below:
   </tr>
 </table>
 
-<p>For a full list of permissions granted to each user role, see the
+<p>For a full list of permissions granted to each user role, see
 <a href="https://concourse-ci.org/user-roles.html#permission-matrix">the Concourse documentation</a>.
 </p>
+
+<p>By default, the authentication config passed to <code>set-team</code> configures the
+  <a href="#member">member role</a>. In addition, the existing team authentication config transitions to the
+  team <a href="#owner">owner role</a>.</p>
+
+<p>In other words, anyone who could authenticate before the upgrade now authenticates as an owner of their
+  team. This role is the closest equivalent to what they could do before.</p>
+
+<p>More advanced <a href="#available-user-roles">roles</a> configuration can be specified through the <code>--configuration</code> or <code>--c</code> flag.</p>
+
+<p>The <code>-c</code> flag expects a YAML file with a single field, <code>roles:</code>.
+The <code>roles</code> field points to a list of role authentication configs.</p>
+
+<p>The attributes in each config vary by provider. For specifics of your chosen provider, see
+<a href="#adding">Add Users to Groups and Teams</a> above.</p>
+
+<p>For example, the following config sets three roles with different CF authentication configs for each role&#39;s provider:</p>
+
+<pre class="code">
+roles:
+- name: owner
+  cf:
+    users: ["admin"]
+- name: member
+  cf:
+    orgs: ["my-team"]
+- name: viewer
+  cf:
+    spaces: ["org:my-other-team"]
+  local:
+    users: ["visitor"]
+</pre>
