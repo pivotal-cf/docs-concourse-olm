@@ -23,12 +23,15 @@ Before you install Concourse for PCF, you must have the following:
 
 * BOSH CLI v5.x and earlier. For more information, see
 [Installing the CLI](https://bosh.io/docs/cli-v2-install/) in the BOSH documentation.
-* Concourse and Garden Run-C BOSH releases. Download these from
+* Concourse BOSH release. Download this from
 [Pivotal Network](https://network.pivotal.io/products/p-concourse/).
 * The stemcell for your IaaS, for when you create your Concourse deployment manifest.
   To download an Ubuntu Xenial stemcell from Pivotal Network, see
   [Stemcells for PCF (Ubuntu Xenial)](https://network.pivotal.io/products/stemcells-ubuntu-xenial/).
 * PostgreSQL v9.5 and later.
+<p class="note warning"><strong>Warning: </strong>If you are using PostgreSQL v11.1 or v11.2, set
+<code>max_parallel_workers_per_gather</code> to <code>0</code>. This corrects a PostgreSQL infinite parallel
+query issue.<br><br>
 * A load balancer with multiple Air Traffic Controllers (ATCs), if you expect a heavy load on your Concourse installation.
 
 
