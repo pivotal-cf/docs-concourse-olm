@@ -101,64 +101,8 @@ main     oauth:User     oauth:Group
 
 ## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
-Concourse v5.2.0 now has five roles with varying levels of permission.
-These are described in the table below:
+<%= partial 'set-user-roles-and-perms' %>
 
-<table class="nice">
-  <th width=20%>Role</th>
-  <th>Description</th>
-  <tr>
-    <td>
-      Admin
-    </td>
-    <td>
-      Admin is a special user attribute granted to owners of the main team.
-      Admins can administer teams using <code>fly set-team</code>,
-      <code>fly destroy-team</code>, and <code>fly rename-team</code>.<br>
-      For more information about the main team, see <a href= "#config-main">The Main Team</a>.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Team Owner
-    </td>
-    <td>
-      Team owners can read, write, and manage auth capabilities within the scope of their team.<br>
-      They cannot rename or destroy the team.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Team Member
-    </td>
-    <td>
-      Team members can perform read and write actions within their team.<br>
-      They cannot change their team configuration.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Pipeline Operator
-    </td>
-    <td>
-      Team pipeline operators can perform pipeline operations such as triggering builds and pinning resources.<br>
-      They cannot update pipeline configurations.
-    </td>
-  </tr>
-  <tr>
-    <td>
-      Viewer
-    </td>
-    <td>
-      Team viewers have read-only access to a team and its pipelines.<br>
-      They cannot perform actions such as <code>fly set-pipeline</code> or <code>fly intercept</code>.
-    </td>
-  </tr>
-</table>
-
-For a full list of permissions granted to each user role, see the
-[Permission Matrix](https://concourse-ci.org/user-roles.html#permission-matrix)
-in the Concourse documentation.
 
 ### <a id="setting-user-roles"></a> Set User Roles
 By default, the authorization config passed to `set-team` configures the [member role](#member). In addition, Existing
