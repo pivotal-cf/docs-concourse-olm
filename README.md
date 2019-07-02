@@ -12,7 +12,8 @@ https://github.com/pivotal-cf/docs-book-concourse-olm
 
 | Branch name | Use for… | Currently lives… |
 |-------------| ------| ------|
-| master      | Next version in development (5.x) | https://docs-pcf-staging.cfapps.io/p-concourse/5-n/ |
+| master      | Next version in development (6.x) | https://docs-pcf-staging.cfapps.io/p-concourse/6-x/ |
+| 5.x      | Current published branch (5.2.0) | https://docs.pivotal.io/p-concourse/5-x/ |
 | 4.x      | Current published branch (4.0.0) | https://docs.pivotal.io/p-concourse/4-x/ |
 | 3.x         | Current published branch | https://docs.pivotal.io/p-concourse/3-x/ |
 
@@ -26,9 +27,9 @@ Production (Public): https://concourse.run.pivotal.io/teams/cf-docs/pipelines/cf
 # Staging and Production Sites
 
 Changes to the **master** branch in this repo appear here:
-Staging: http://docs-pcf-staging.cfapps.io/p-concourse/4-0/index.html
+Staging: http://docs-pcf-staging.cfapps.io/p-concourse/6-x/index.html
 
-Production (public): https://docs.pivotal.io/p-concourse/3-0/index.html - Making changes public requires a manual push to production.
+Production (public): https://docs.pivotal.io/p-concourse/5-x/index.html - Making changes public requires a manual push to production.
 
 # How to do a Pull Request (PR)
 
