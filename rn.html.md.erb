@@ -48,7 +48,7 @@ This release contains the following security fixes:
 <p class="note warning"><strong>Warning:</strong> If you are currently using Concourse for PCF v3.13.0,
   you must first upgrade to v4.2.4 before upgrading to v5.2.0.</p>
 
-<%# Include this in Upgrading somewhere:
+<%# TODO: Include this in Upgrading somewhere:
 The BOSH deployment for Concourse for PCF v5.2.0 requires manifest changes.
 The following changes need to be applied regardless whether you use the example
 [concourse-bosh-deployment][concourse-bosh-deployment] or your own manifest. %>
@@ -66,6 +66,9 @@ This release contains the following changes to the manifest:
         - They are now all after `worker_gateway` (for instance, `tsa.host_key` is now `web.worker_gateway.host_key`)
       - `web.worker_gateway.team_authorized_keys` now takes a map rather than a list of objects.
 
+      For more information on the new `web` properties used in v5.2.0, see [web job](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0) in the BOSH documentation.<br>
+      For more information on the previous `atc` variables and `tsa` jobs used in v4.2.4, see [atc job](https://bosh.io/jobs/atc?source=github.com/concourse/concourse-bosh-release&version=4.2.4) and [tsa job](https://bosh.io/jobs/tsa?source=github.com/concourse/concourse-bosh-release&version=4.2.4) in the BOSH documentation.
+<br><br>
   - `baggageclaim`,`worker`, and `garden` jobs are consolidated under `worker`.
     - `baggageclaim` properties are now under `worker.baggageclaim`.
     - `garden` properties are now under `worker.garden`.
@@ -75,15 +78,6 @@ This release contains the following changes to the manifest:
     - `baggageclaim` properties are now under `worker.baggageclaim`
     - `worker.tsa` properties are under `worker.worker_gateway`
 <%# TODO Chris: Verify the baggageclaim-windows ... section is accurate %>
-<%# TODO Chris: Location of all variables and how they've changed? Create table in "Upgrading" with manifest changes? %>
-
-##### Considerations
-In v5.2.0, Concourse workers will not run on machines that do not have
-[`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) enabled (usually, in single-machine test environments).
-<%# TODO Chris: Verify what this section wants %>
-
-[concourse-bosh-deployment]: https://github.com/concourse/concourse-bosh-deployment/tree/release/5.2.x
-<%# TODO Chris: Verify what this link is %>
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
 ##<a id="breaking-520"></a> Breaking Changes
@@ -119,6 +113,12 @@ These breaking changes affect the Concourse release:
 * `blackbox` is no longer included. For more information about `blackbox`,
 see [blackbox job](https://bosh.io/jobs/blackbox?source=github.com/concourse/concourse-bosh-release&version=4.2.4)
 in the BOSH documentation.
+* In v5.2.0, Concourse workers will not run on machines that do not have
+[`systemd`](https://www.freedesktop.org/wiki/Software/systemd/) installed.
+This is the case in single-machine test environments.
+For more information, see [Common Concourse for PCF Issues](./troubleshooting.html#common-issues).
+<%# TODO Chris: Add Ciro's notes to Troubleshooting %>
+
 
 ###<a id="breaking-binary-520"></a> Binary
 
