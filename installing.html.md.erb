@@ -5,9 +5,17 @@ owner: Concourse
 
 <strong><%= modified_date %></strong>
 
-Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery tool that lets you build and monitor scalable pipelines seamlessly. This topic describes how to install Concourse and what you need to install it successfully.
+Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delivery
+tool that lets you build and monitor scalable pipelines seamlessly.
 
-## <a id="prereqs"></a> Prerequisites
+Concourse for PCF v3.13.x is no longer supported.
+
+Instead of pursuing an installation of this version,
+navigate to [Install v4.2.4](http://docs.pivotal.io/concourse-pcf/v4/installation)
+or [Installing v5.2.0](http://docs.pivotal.io/concourse-pcf/v5/installation) for
+instructions on installing a supported version.
+
+<!-- ## Prerequisites
 <ul>
 <li>A supported IaaS provider: AWS, Azure, GCP, or vSphere</li>
 <li>A <a href="http://bosh.io/docs/init.html">BOSH Director</a>. Do not use the BOSH Director associated with an existing PCF deployment.</li>
@@ -20,7 +28,7 @@ Concourse for Pivotal Cloud Foundry (PCF) is a continuous integration and delive
 <li>If you are planning to use CredHub, Concourse 3.8.0 is compatible with CredHub 1.6.x. Concourse 3.8.0 is <strong>not</strong> compatible with CredHub 1.7.x
 </ul>
 
-## <a id="setup"></a> Setting Up and Installing Concourse
+## Setting Up and Installing Concourse
 <ol>
  <li>Configure your IaaS environment by modifying your cloud config for BOSH deployment. </li>
  <li>Prepare the Concourse deployment manifest. You can write your own manifest or <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/concourse.yml">modify a template</a> with your unique configuration. You can read more about BOSH deployment configurations in the <code>concourse-bosh-deployment</code> repo for <a href="https://github.com/concourse/concourse-bosh-deployment/blob/master/cluster/README.md">cluster deployments</a><br/>
@@ -32,4 +40,4 @@ Provide <code>tls_cert</code> and <code>tls_key</code> values in the manifest.</
     see the <a href="https://bosh.io/docs/cli-v2.html">BOSH CLI documentation</a> for more information.
     After Concourse deploys, a success message displays.</li>
 </ol>
-<br/>
+<br/> -->
