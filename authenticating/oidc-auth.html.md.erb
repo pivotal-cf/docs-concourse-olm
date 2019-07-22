@@ -38,18 +38,13 @@ Instead, you can provide an `issuer-url`, and the system queries the `.well-know
 
 To add the OIDC authentication provider, do the following:
 
-1. Create the OIDC client.
-2. Configure the client.
-
-
-#### Create the OIDC Client
-First, you need to create a client with your OIDC provider.
-
+1. Create a client with your OIDC provider.
+<br><br>
 The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
 For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
 
-#### Configure the Client
+1. Configure the client.
 To configure the generic OIDC, fill in the `generic_oidc` fields in the `atc` job of the manifest.
 For more information about these fields, see [generic_oidc](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dgeneric_oidc) in the BOSH documentation.
 
