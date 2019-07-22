@@ -36,28 +36,22 @@ security improvements in their infrastructure.
 To do this, you need to:
 
 1. Create a GitHub app.
-2. Configure your deployment with the GitHub client details.
-
-
-#### Create a GitHub App
 You can create an OAuth app on GitHub.
 To do this, see [Register a new OAuth app](https://github.com/settings/applications/new) in GitHub.
-
+<br><br>
 The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
 For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-<p class="note"><strong>Note: </strong>The app must be created under an org if you want to authorize users
-based on org/team membership. If the app is created under a personal account, only individual users can be
-authorized.
-</p>
+    <p class="note"><strong>Note: </strong>The app must be created under an org if you want to authorize users
+    based on org/team membership. If the app is created under a personal account, only individual users can be
+    authorized.
+    </p>
 
 
-#### Configure the GitHub Client Details
-
+2. Configure your deployment with the GitHub client details.
 GitHub provides a Client ID and a Client Secret for the new app.
 Supply this information in the `github_auth`, `client_id`, and `client_secret` fields.
 For more information about these fields, see [github_auth](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgithub_auth) in the BOSH documentation.
-
 
 
 ### <a id="config-main"></a> The Main Team
