@@ -37,19 +37,12 @@ This provider gives you more control over the OIDC provider by letting operators
 
 To add the OAuth provider, do the following:
 
-1. Create the OIDC client.
-2. Configure the client.
-
-
-#### Create the OAuth Client
-First, you need to create a client with your OAuth provider.
-
+1. Create a client with your OAuth provider.
+<br><br>
 The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
 For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-
-#### Configure the Client
-To configure the OAuth provider, fill in the `generic_oauth` fields in the `atc` job of the manifest.
+1. Configure the OAuth provider by filling in the `generic_oauth` fields in the `atc` job of the manifest.
 For more information about these fields, see [generic_oauth](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dgeneric_oauth) in the BOSH documentation.
 
 
