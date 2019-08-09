@@ -8,7 +8,11 @@ owner: Concourse
 ## <a id="rn-520"></a> v5.2.0
 **Release Date: July 2, 2019**
 
-Concourse for PCF v5.2.0 includes Role Based Access Control (RBAC).
+<p class="note warning"><strong>Warning:</strong> If you are currently using Concourse for PCF v3.13.0,
+  you must first upgrade to v4.2.4 before upgrading to v5.2.0.</p>
+
+###<a id="highlight"></a> Role Based Access Control now in Concourse 5.2.0!
+Concourse for PCF v5.2.0 includes a major feature: Role Based Access Control (RBAC).
 
 Currently, there are five defined roles:
 
@@ -23,30 +27,14 @@ Also, a less powerful `team member` role was added.
 For more information about RBAC roles and how they impact authentication,
 see [Set User Roles and Permissions](./authenticating/github-auth.html#user-roles-and-permissions).
 
-<hr style="height:1px;border:none;color:#333;background-color:#333;" />
-##<a id="security-520"></a> Security Fixes
-This release contains the following security fixes:
-
-* Fixed an information leak that potentially permits unauthenticated users to fetch
-  the step names and structure for a build that has a non-public job.
-  This scenario now returns a 401 Unauthorized error.
-* Resource metadata is no longer shown by default in exposed pipelines.
-  The resource must be set to `public` to show metadata, similar to jobs.
-  Build output is an exception.
-  If a job is public, any `get` step or `put` steps still show in the build's metadata.
-* SSH MAC algorithms have been restricted to a smaller set to fix a vulnerability
-  with the Concourse web instance VM. By default, golang allows for some weak algorithms
-  that can lead to security vulnerabilities on port 2222, which is used for worker communication.
-  For more information, see [SSH Weak MAC Algorithms Enabled](https://www.tenable.com/plugins/nessus/71049)
-  in the Tenable documentation.
-* To safeguard against clickjacking attacks, the `web node` now defaults `X-Frame-Options` to `deny`.
-  Running Concourse in an iframe no longer works.
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
-##<a id="upgrades-520"></a> Upgrading
+##<a id="breaking-520"></a> Breaking Changes
+This release has the following breaking changes:
 
-<p class="note warning"><strong>Warning:</strong> If you are currently using Concourse for PCF v3.13.0,
-  you must first upgrade to v4.2.4 before upgrading to v5.2.0.</p>
+###<a id="breaking-manifest-520"></a> Manifest
+
+These breaking changes affect the Manifest when performing an upgrade:
 
 This release contains the following changes to the manifest:
 
@@ -72,11 +60,6 @@ This release contains the following changes to the manifest:
   - `baggageclaim-windows`, `worker-windows`, and `houdini-windows` jobs are consolidated under `worker-windows`.
     - `baggageclaim` properties are now under `worker.baggageclaim`
     - `worker.tsa` properties are under `worker.worker_gateway`
-<%# TODO Chris: Verify the baggageclaim-windows ... section is accurate %>
-
-<hr style="height:1px;border:none;color:#333;background-color:#333;" />
-##<a id="breaking-520"></a> Breaking Changes
-This release has the following breaking changes:
 
 ###<a id="breaking-fly-520"></a> Fly Commands
 
@@ -380,6 +363,25 @@ These are the new features and changes to team functionality:
 * Generic OAuth can be configured with different user ID and name keys.
 * Generic OIDC authentication can be configured with a different username key.
 * BitBucket authentication support has been re-introduced.
+
+<hr style="height:1px;border:none;color:#333;background-color:#333;" />
+##<a id="security-520"></a> Security Fixes
+This release contains the following security fixes:
+
+* Fixed an information leak that potentially permits unauthenticated users to fetch
+  the step names and structure for a build that has a non-public job.
+  This scenario now returns a 401 Unauthorized error.
+* Resource metadata is no longer shown by default in exposed pipelines.
+  The resource must be set to `public` to show metadata, similar to jobs.
+  Build output is an exception.
+  If a job is public, any `get` step or `put` steps still show in the build's metadata.
+* SSH MAC algorithms have been restricted to a smaller set to fix a vulnerability
+  with the Concourse web instance VM. By default, golang allows for some weak algorithms
+  that can lead to security vulnerabilities on port 2222, which is used for worker communication.
+  For more information, see [SSH Weak MAC Algorithms Enabled](https://www.tenable.com/plugins/nessus/71049)
+  in the Tenable documentation.
+* To safeguard against clickjacking attacks, the `web node` now defaults `X-Frame-Options` to `deny`.
+  Running Concourse in an iframe no longer works.
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
 ##<a id="resolved-520"></a> Resolved Issues
