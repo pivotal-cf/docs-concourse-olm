@@ -16,7 +16,8 @@ Any number of the following providers can be enabled at any one time.
 Users are given a choice when logging in as to which one they want to use.
 
 <p class="note"><strong>Note:</strong>
-If you access your Concourse server over the public internet, then consider using TLS to secure your connection to the web node.
+  If you access your Concourse server over the public internet, then consider
+  using TLS to secure your connection to the web node.
 </p>
 
 Configuring team authentication in Concourse is done in two parts:
@@ -31,26 +32,27 @@ See [Add Users and Groups to Teams](#adding) below.
 <%= partial 'configure-auth-providers' %>
 
 ### <a id="config-github"></a> GitHub Authentication
-A Concourse server can authenticate against GitHub to take advantage of their permission model and other
-security improvements in their infrastructure.
+
+A Concourse server can authenticate against GitHub to take advantage of their
+permission model and other security improvements in their infrastructure.
 To do this, you need to:
 
-1. Create a GitHub app.
-You can create an OAuth app on GitHub.
-To do this, see [Register a new OAuth app](https://github.com/settings/applications/new) in GitHub.
+1. Create a GitHub app. For how to create an OAuth app, see
+[Register a new OAuth app](https://github.com/settings/applications/new) in GitHub.
 <br><br>
 The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
-For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
+For example, the callback URL for Concourse's CI server is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-    <p class="note"><strong>Note: </strong>The app must be created under an org if you want to authorize users
-    based on org/team membership. If the app is created under a personal account, only individual users can be
-    authorized.
+    <p class="note">
+      <strong>Note: </strong>The app must be created under an org if you want to authorize users
+      based on org/team membership. If the app is created under a personal account,
+      only individual users can be authorized.
     </p>
 
-
-2. Configure your deployment with the GitHub client details.
+2. Configure your deployment with the GitHub client details.<br><br>
 GitHub provides a Client ID and a Client Secret for the new app.
-Supply this information in the `github_auth`, `client_id`, and `client_secret` fields.
+Supply this information in the `github_auth`, `client_id`, and `client_secret` fields in the `atc` job
+in the Concourse manifest.
 For more information about these fields, see [github_auth](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dgithub_auth) in the BOSH documentation.
 
 
