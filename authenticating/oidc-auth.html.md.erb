@@ -34,19 +34,20 @@ See [Add Users and Groups to Teams](#adding) below.
 
 If your authentication provider follows the OIDC specification, then use this provider.
 Unlike the OAuth provider, you do not need to provide `auth-url`, `token-url`, and `userinfo-url`.
-Instead, you can provide an `issuer-url`, and the system queries the `.well-known/openid-configuration` endpoint to discover the information it needs.
+Instead, you can provide an `issuer-url`, and the system queries the
+`.well-known/openid-configuration` endpoint to discover the information it needs.
 
-To add the OIDC authentication provider, do the following:
+To add the OIDC authentication provider:
 
 1. Create a client with your OIDC provider.
 <br><br>
-The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
-For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
+For example, the callback URL for Concourse's own CI server is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-
-1. Configure the client.
-To configure the generic OIDC, fill in the `generic_oidc` fields in the `atc` job of the manifest.
-For more information about these fields, see [generic_oidc](https://bosh.io/jobs/atc?source=github.com/concourse/concourse&version=4.0.0#p%3dgeneric_oidc) in the BOSH documentation.
+1. Configure the client by filling in the `generic_oidc` fields in the `atc` job
+in the Concourse manifest.
+For more information about these fields, see [generic_oidc](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dgeneric_oidc)
+in the BOSH documentation.
 
 ### <a id="config-main"></a> The Main Team
 By default, Concourse comes with a single team called `main`.
