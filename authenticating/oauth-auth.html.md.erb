@@ -31,19 +31,23 @@ See [Add Users and Groups to Teams](#adding) below.
 <%= partial 'configure-auth-providers' %>
 
 ### <a id="config-oauth"></a>  OAuth Authentication
+
 If your authentication provider supports OAuth2 but does not follow the OIDC specification,
 then use this provider.
-This provider gives you more control over the OIDC provider by letting operators specify the full set of authorization endpoints (`auth-url`, `token-url`).
+This provider gives you more control over the OIDC provider by letting operators
+specify the full set of authorization endpoints (`auth-url`, `token-url`).
 
-To add the OAuth provider, do the following:
+To add the OAuth provider:
 
 1. Create a client with your OAuth provider.
 <br><br>
-The callback URL is the external URL of your Concourse server with `/sky/issuer/callback appended`.
-For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
+The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
+For example, the callback URL for Concourse's own CI server is `https://ci.concourse-ci.org/sky/issuer/callback`.
 
-1. Configure the OAuth provider by filling in the `generic_oauth` fields in the `atc` job of the manifest.
-For more information about these fields, see [generic_oauth](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dgeneric_oauth) in the BOSH documentation.
+1. Configure the client by filling in the `generic_oauth` fields in the `atc` job
+in the Concourse manifest.
+For more information about these fields, see [generic_oauth](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dgeneric_oauth)
+in the BOSH documentation.
 
 
 ### <a id="config-main"></a> The Main Team

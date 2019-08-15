@@ -26,27 +26,28 @@ See [Configure Authentication Providers](#configuring) below.
 2. Add users and groups to Concourse teams using `fly set-team`.
 See [Add Users and Groups to Teams](#adding) below.
 
+
 ## <a id="configuring"></a> Configure Authentication Providers
 
 <%= partial 'configure-auth-providers' %>
 
 ### <a id="config-cf"></a> Cloud Foundry Authentication
-Operators can use Cloud Foundry Authentication (CF Auth) to authenticate users against a Cloud Foundry deployment, using the User Account and Authentication (UAA) server.
+
+Operators can use Cloud Foundry Authentication (CF Auth) to authenticate users
+against a Cloud Foundry deployment, using the User Account and Authentication (UAA) server.
 
 To authenticate users, do the following:
 
-
-1. Create a client for Concourse in UAA.
-<br><br>
+1. Create a client for Concourse in UAA.<br><br>
 The callback URL is the external URL of your Concourse server with `/sky/issuer/callback` appended.
-    For example, Concourse's own CI server's callback URL is `https://ci.concourse-ci.org/sky/issuer/callback`.
+For example, the callback URL for Concourse's CI server is `https://ci.concourse-ci.org/sky/issuer/callback`.
 <br><br>
-    Configure the client under `uaa.clients` as in the example below:
+The client should look something like this, under `uaa.clients`:
 
-    <pre class="code">
+    <pre class="terminal">
     concourse:
-      id: my-client-id
-      secret: my-client-secret
+      id: MY-CLIENT-ID
+      secret: MY-CLIENT-SECRET
       scope: openid,cloud_controller.read
       authorized-grant-types: "authorization_code,refresh_token"
       access-token-validity: 3600
@@ -55,13 +56,17 @@ The callback URL is the external URL of your Concourse server with `/sky/issuer/
     </pre>
 
 
-2. Configure your deployment with the Cloud Foundry client details.
-You are given a Client ID and a Client Secret for your new app.
-    These are then passed in the `client_id` and `client-secret` fields on the `atc` job.
-    For more information about these fields, see [client_id](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dcf_auth.api_url) in the BOSH documentation.
-
-3. You also need to configure your base API URL for CF in the `api_url` field.
-    To do this, see [api_url](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dcf_auth.api_url) in the BOSH documentation.
+2. Configure the `atc` job in the Concourse manifest with the Cloud Foundry client details:
+<ul>
+  <li>
+    You are given a Client ID and a Client Secret for your new app.
+    Supply this information in the `client_id` and `client_secret` fields.
+  </li><br>
+  <li>Configure your base API URL for CF in the `api_url` field.</li>
+</ul>
+  For more information about these fields, see
+  [cf_auth](https://bosh.io/jobs/web?source=github.com/concourse/concourse-bosh-release&version=5.2.0#p%3dcf_auth.api_url)
+  in the BOSH documentation.
 
 ### <a id="config-main"></a> The Main Team
 
