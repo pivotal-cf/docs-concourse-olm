@@ -12,10 +12,10 @@ owner: Concourse
 This release has the following fix:
 
 * Fixes an issue where the web UI used to crash when your JSON Web token (JWT) was longer than
-  the size of a single cookie (4096 bytes on most browsers).
-    * This is because users with a lot of teams would have a JWT with a long
-      JSON-encoded string of these teams and the roles they had on them.
-    * Now this JWT is broken into up to 15 cookies to accommodate for users
+  the size of a single cookie. In most browsers, this is 4096 bytes.
+    * If a user was a member of many teams, then their JWT was very long because
+      it encoded all teams and roles for that user.
+    * Now, this JWT is broken into multiple cookies to accommodate users
       who belong to hundreds of teams.
 
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
