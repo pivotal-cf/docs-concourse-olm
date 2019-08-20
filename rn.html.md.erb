@@ -8,16 +8,17 @@ owner: Concourse
 ## <a id="rn-521"></a> v5.2.1
 **Release Date: August 20, 2019**
 
+##<a id="resolved-521"></a> Resolved Issues
+This release has the following fix:
+
+* Fixes an issue where the web UI used to crash when your JSON Web token (JWT) was longer than
+  the size of a single cookie (4096 bytes on most browsers).
+    * This is because users with a lot of teams would have a JWT with a long
+      JSON-encoded string of these teams and the roles they had on them.
+    * Now this JWT is broken into up to 15 cookies to accommodate for users
+      who belong to hundreds of teams.
+
 <hr style="height:1px;border:none;color:#333;background-color:#333;" />
-##<a id="resolved-520"></a> Resolved Issues
-This release fixes the following issues:
-
-###<a id="resolved-web-520"></a> Web UI
-
-Fixed an issue where the web UI used to break when your token (which includes a potentially-long JSON-encoded string detailing 
-all the teams you are part of and what roles you have on them) was longer than the size of a single cookie (4096 bytes on most
-browsers). This limit has been heavily increased, which should solve the issue for most users on clusters with a lot of teams.
-
 ## <a id="rn-520"></a> v5.2.0
 **Release Date: July 2, 2019**
 
