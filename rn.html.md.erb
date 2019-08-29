@@ -5,6 +5,23 @@ owner: Concourse
 
 <strong><%= modified_date %></strong>
 
+## <a id="rn-521"></a> v5.2.2
+**Release Date: August 30, 2019**
+
+##<a id="resolved-522"></a> Security Fix
+This release contains the following security fix:
+
+* Bumped the go version to <a href="https://golang.org/doc/devel/release.html#go1.12.minor">1.12.9</a> in order to address 
+  two cves:
+    * CVE-2019-9512, also known as Ping Flood
+     * The attacker sends continual pings to an HTTP/2 peer, causing the peer to build an internal queue of responses. 
+       Depending on how efficiently this data is queued, this can consume excess CPU, memory, or both, potentially leading
+       to a denial of service.
+    * CVE-2019-9514, also known as Reset Flood
+     * The attacker opens a number of streams and sends an invalid request over each stream that should solicit a stream of \
+       RST_STREAM frames from the peer. Depending on how the peer queues the RST_STREAM frames, this can consume excess memory,
+       CPU, or both, potentially leading to a denial of service.
+
 ## <a id="rn-521"></a> v5.2.1
 **Release Date: August 20, 2019**
 
