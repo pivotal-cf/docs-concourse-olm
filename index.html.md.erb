@@ -68,9 +68,9 @@ To troubleshoot your Concourse for PCF installation, see <a href="./troubleshoot
 ## <a id="compatibility"></a>Concourse Compatibility
 | Concourse Version |   PostgreSQL  | Tested Stemcell  |  Supported Stemcells | Tested CredHub  |
 |:-----------------:|:-------------:|:----------------:|:--------------------:|:---------------:|
-|       v5.2.0      | 9.6+ External |   Xenial 315.26  |      315.x           |      2.4.0      |
-|       v5.2.1      | 9.6+ External |   Xenial 315.26  |      315.x           |      2.4.0      |
-|       v5.2.3      | 9.6+ External |   Xenial 315.26  |      315.x           |      2.4.0      |
+|       5.2.0      | 9.6+ External |   Xenial 315.26  |      315.x           |      2.4.0      |
+|       5.2.1      | 9.6+ External |   Xenial 315.26  |      315.x           |      2.4.0      |
+|       5.2.3      | 9.6+ External |   Xenial 315.26  |      315.x           |      2.4.0      |
 
 <p class="note warning"><strong>Warning: </strong>If you are using PostgreSQL v11.1 or v11.2, set
 <code>max_parallel_workers_per_gather</code> to <code>0</code>. This corrects a PostgreSQL infinite parallel
@@ -81,12 +81,12 @@ For more information, see
  in the PostgreSQL documentation.
 
 <p class="note"><strong>Note:</strong> Concourse is compatible with CredHub
-versions 2.1.2 and later. It is not compatible with versions 2.0.0 to 2.1.1.</p>
+v2.1.2 and later. It is not compatible with v2.0.0 to v2.1.1.</p>
 
 <p class="note"><strong>Note:</strong> The values in the "Tested" columns indicate
   that Concourse was tested with the listed stemcell or product version upon release.
   This does not mean that Concourse is restricted to those dependencies.</p>
 
-## Additional Documentation
+## <a id="add-docs"></a> Additional Documentation
 
 For more information about the open source Concourse project that powers Concourse for PCF, see the [Concourse documentation](https://concourse-ci.org/).
