@@ -5,7 +5,7 @@ owner: Concourse
 
 <strong><%= modified_date %></strong>
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.13.0
+## <a id="3-13-0"></a> Release Notes for Concourse v3.13.0
 **Release Date: June 4, 2018**
 
 <p class="note warning"><strong>Warning: </strong>To protect against clickjacking, set the <code>x_frame_options</code> property for the atc job to <code>deny</code> or <code>sameorigin</code> instead of <code>allow-from</code>.<br>For more information, see <a href="https://developer.mozilla.org/en-US/docs/Web/HTTP/Headers/X-Frame-Options">X-Frame-Options</a>in the Mozilla documentation.</p>
@@ -30,7 +30,7 @@ see [CVE 2019-5736: runC container breakout](https://pivotal.io/security/cve-201
 * The `groundcrew` job has been renamed to `worker` in this release of Concourse.
   Update your BOSH manifest.<br><br>
   For more information, see
-  [worker job from concourse/3.13.0](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0)
+  [worker job from concour  se/3.13.0](http://bosh.io/jobs/worker?source=github.com/concourse/concourse&version=3.13.0)
   in the BOSH documentation.
   For additional usage information and sample manifests,
   see the `operations` directory in the
@@ -159,7 +159,7 @@ in the BOSH documentation.
 * `fly` will no longer repeatedly error when given an invalid token during `fly login`.
 
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.9.2
+## <a id="3-9-2"></a> Release Notes for Concourse v3.9.2
 **May 8, 2018**
 
 ###<a id="known-issues"></a>Known Issues
@@ -210,7 +210,7 @@ with the introduction of timestamps in v3.6.0
 * Certain ANSI cursor movement escape sequences would wreak havoc on the Concourse build output page because there was no window size set on the TTY, thus defaulting it to 80x24. We've set it to 500x500
 * Fixed an issue where Firefox users couldn't click around on the build page.
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.8.0
+## <a id="3-8-0"></a> Release Notes for Concourse v3.8.0
 **February 1, 2018**
 
 ###<a id="breaking-changes"></a> WARNING
@@ -266,7 +266,7 @@ Please also refer to Concourse BOSH release documentation on [`bosh.io`](http://
 * The deprecated Bosh Deployment resource resource contains the bosh CLI again
 * Fixed an issue with the CredHub integration that made it necessary to configure `--insecure-skip-verify`
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.6.0
+## <a id="3-6-0"></a> Release Notes for Concourse v3.6.0
 **November 9, 2017**
 
 ###<a id="breaking-changes"></a> BREAKING CHANGES
@@ -317,7 +317,7 @@ and `file`, which has been depracated.
 * Fixed an issue where clicking and dragging on the pipeline view would send you to the job details page.
 
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.5.0
+## <a id="3-5-0"></a> Release Notes for Concourse v3.5.0
 **September 25, 2017**
 
 ### <a id="features"></a> Features
@@ -363,7 +363,7 @@ and `file`, which has been depracated.
 ### <a id="known-issues"></a> Known Issues
 * A migration introduced in `v3.3.0` would load all the builds into memory and then process them, causing a lot of issues when upgrading. We optimized this migration to migrate build plans in batches, rather than all at once.
 
-## <a id="release-notes"></a> Release Notes for Concourse v3.3.3
+## <a id="3-3-0"></a> Release Notes for Concourse v3.3.3
 **July 31, 2017**
 
 Concourse for PCF is the first version of Concourse that is eligible for
