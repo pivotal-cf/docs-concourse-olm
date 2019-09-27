@@ -28,7 +28,7 @@ See [Add Users and Groups to Teams](#adding) below.
 
 ## <a id="configuring"></a> Configure Authentication Providers
 
-<%= partial 'configure-auth-providers' %>
+<%= partial vars.path_to_partials + '/configure-auth-providers' %>
 
 ### <a id="config-oauth"></a>  OAuth Authentication
 
@@ -52,12 +52,12 @@ in the BOSH documentation.
 
 ### <a id="config-main"></a> The Main Team
 
-<%= partial 'main-team' %>
+<%= partial vars.path_to_partials + '/main-team' %>
 
 
 ## <a id="adding"></a>Add Users and Groups to Teams
 
-<%= partial 'add-users-and-groups' %>
+<%= partial vars.path_to_partials + '/add-users-and-groups' %>
 
 ### <a id="add-oauth"></a> OAuth Users and Groups
 Configure users and groups from a generic OAuth provider.
@@ -81,7 +81,7 @@ $ fly set-team -n my-team \
 
 ### <a id="team-config"></a> Team Configuration Details
 
-<%= partial 'team-config' %>
+<%= partial vars.path_to_partials + '/team-config' %>
 
 The output is similar to the following:
 <pre class="terminal">
@@ -91,4 +91,4 @@ main     oauth:User     oauth:Group
 
 ## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
-<%= partial 'set-user-roles-and-perms' %>
+<%= partial vars.path_to_partials + '/set-user-roles-and-perms' %>

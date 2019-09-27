@@ -29,7 +29,7 @@ See [Add Users and Groups to Teams](#adding) below.
 
 ## <a id="configuring"></a> Configure Authentication Providers
 
-<%= partial 'configure-auth-providers' %>
+<%= partial vars.path_to_partials + '/configure-auth-providers' %>
 
 ### <a id="config-github"></a> GitHub Authentication
 
@@ -58,12 +58,12 @@ For more information about these fields, see [github_auth](https://bosh.io/jobs/
 
 ### <a id="config-main"></a> The Main Team
 
-<%= partial 'main-team' %>
+<%= partial vars.path_to_partials + '/main-team' %>
 
 
 ## <a id="adding"></a>Add Users and Groups to Teams
 
-<%= partial 'add-users-and-groups' %>
+<%= partial vars.path_to_partials + '/add-users-and-groups' %>
 
 ### <a id="add-github"></a> GitHub Users, Teams, and Orgs
 Add GitHub users, teams, or orgs to a Concourse team.
@@ -87,7 +87,7 @@ $ fly set-team -n my-team \
 
 ### <a id="team-config"></a> Team Configuration Details
 
-<%= partial 'team-config' %>
+<%= partial vars.path_to_partials + '/team-config' %>
 
 The output is similar to the following:
 <pre class="terminal">
@@ -97,4 +97,4 @@ main     github:User    github:Organization
 
 ## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
-<%= partial 'set-user-roles-and-perms' %>
+<%= partial vars.path_to_partials + '/set-user-roles-and-perms' %>
