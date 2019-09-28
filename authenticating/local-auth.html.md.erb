@@ -28,7 +28,7 @@ See [Add Users and Groups to Teams](#adding) below.
 
 ## <a id="configuring"></a> Configure Authentication Providers
 
-<%= partial vars.path_to_partials + '/configure-auth-providers' %>
+<%= partial vars.path_to_partials + '/concourse/configure-auth-providers' %>
 
 ### <a id="local-users"></a> Local Users
 Local users must be declared in the `add_local_users` of the `atc` job in the deployment manifest.
@@ -45,12 +45,12 @@ Example:
 
 ### <a id="config-main"></a> The Main Team
 
-<%= partial vars.path_to_partials + '/main-team' %>
+<%= partial vars.path_to_partials + '/concourse/main-team' %>
 
 
 ## <a id="adding"></a>Add Users and Groups to Teams
 
-<%= partial vars.path_to_partials + '/add-users-and-groups' %>
+<%= partial vars.path_to_partials + '/concourse/add-users-and-groups' %>
 
 
 ### <a id="add-basic-auth"></a> Local Users
@@ -68,7 +68,7 @@ $  fly set-team -n YOUR-TEAM --local-user USERNAME
 
 ### <a id="team-config"></a> Team Configuration Details
 
-<%= partial vars.path_to_partials + '/team-config' %>
+<%= partial vars.path_to_partials + '/concourse/team-config' %>
 
 The output is similar to the following:
 <pre class="terminal">
@@ -78,4 +78,4 @@ main     local:User
 
 ## <a id="user-roles-and-permissions"></a> Set User Roles and Permissions
 
-<%= partial vars.path_to_partials + '/set-user-roles-and-perms' %>
+<%= partial vars.path_to_partials + '/concourse/set-user-roles-and-perms' %>
