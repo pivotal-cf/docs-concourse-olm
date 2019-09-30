@@ -28,7 +28,7 @@ See [Add Users and Groups to Teams](#adding) below.
 
 ## <a id="configuring"></a> Configure Authentication Providers
 
-<%= partial 'configure-auth-providers' %>
+<%= partial vars.path_to_partials + '/concourse/configure-auth-providers' %>
 
 ### <a id="config-oauth"></a>  OAuth Authentication
 
@@ -71,7 +71,7 @@ It also makes sure that members of the `main` team do not get locked out of thei
 
 ## <a id="adding"></a>Add Users and Groups to Teams
 
-<%= partial 'add-users-and-groups' %>
+<%= partial vars.path_to_partials + '/concourse/add-users-and-groups' %>
 
 ### <a id="add-oauth"></a> OAuth Users and Groups
 Configure users and groups from a generic OAuth provider.
@@ -95,7 +95,7 @@ $ fly set-team -n my-team \
 
 ### <a id="team-config"></a> Team Configuration Details
 
-<%= partial 'team-config' %>
+<%= partial vars.path_to_partials + '/concourse/team-config' %>
 
 The output is similar to the following:
 <pre class="terminal">
