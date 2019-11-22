@@ -1,5 +1,11 @@
 # Pivotal Concourse Documentation
 
+==============================================
+
+**Important Notice:** This book repo is no longer in use. For the current Concourse documentation using MKDocs, see https://github.com/pivotal/docs-concourse-pcf
+
+==============================================
+
 This repository contains documentation for Pivotal Concourse, the Pivotal supported
 version of OSS Concourse. It is a CI/CD tool that is also effective for
 continuously deploying and managing Pivotal Cloud Foundry (PCF).
@@ -12,10 +18,10 @@ https://github.com/pivotal-cf/docs-book-concourse-olm
 
 | Branch name | Use for… | Currently lives… |
 |-------------| ------| ------|
-| master      | Next version in development (6.x) | https://docs-pcf-staging.cfapps.io/p-concourse/6-x/ |
-| 5.x      | Current published branch (5.2.0) | https://docs.pivotal.io/p-concourse/5-x/ |
-| 4.x      | Current published branch (4.0.0) | https://docs.pivotal.io/p-concourse/4-x/ |
-| 3.x         | Current published branch | https://docs.pivotal.io/p-concourse/3-x/ |
+| master      | Originally the next version in development (6.x) | ~https://docs-pcf-staging.cfapps.io/p-concourse/6-x/~ |
+| 5.x      | Previously published branch (5.2.0) | ~https://docs.pivotal.io/p-concourse/5-x/~ |
+| 4.x      | Previously published branch (4.0.0) | ~https://docs.pivotal.io/p-concourse/4-x/~ |
+| 3.x         | Previously published branch | ~https://docs.pivotal.io/p-concourse/3-x/~ |
 
 # Pipeline
 
