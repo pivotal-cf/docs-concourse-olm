@@ -146,7 +146,7 @@ in the BOSH documentation.
 * Added a missing property to the BOSH release for configuring the Generic oAuth provider's CA cert.
 * The Git resource will now recover from a deleted tag when configured with `tag_filter`
 * Previously, tags on a resource type didn't get respected, that's been addressed now.
-* Fixed an ATC crash that would occurn when a `task` step errored with the next step using
+* Fixed an ATC crash that would occur when a `task` step errored with the next step using
   an `attempts` step modifier
 * Concourse now supports the newer `umask`-hardened BOSH stemcells (v3541.x).
 * Fixed a botched `bash`ism that led to the Docker Image resource to exit early
@@ -163,7 +163,7 @@ in the BOSH documentation.
 **May 8, 2018**
 
 ###<a id="known-issues"></a>Known Issues
-* Certificate propogation breaks Alpine OpenJDK images. See GitHub issue [#2042](https://github.com/concourse/concourse/issues/2042)
+* Certificate propagation breaks Alpine OpenJDK images. See GitHub issue [#2042](https://github.com/concourse/concourse/issues/2042)
 
 ###<a id="features"></a> Features
 * Certificates can now be automatically propagated from the worker machine into
@@ -174,9 +174,9 @@ on [Certificate Propagation](https://concourse-ci.org/implementing-resources.htm
 * Concourse Dashboard has been graduated out of beta and can now be found under `dashboard/`
 * Tasks now support [`inputs.optional`](https://concourse-ci.org/tasks.html#input-optional)
 * [CredHub credential manager integration](https://concourse-ci.org/creds.html#credhub) can now
-be configured with mutal TLS based Authentication
+be configured with mutual TLS based Authentication
 * Teams can now be renamed via the `fly` command [`rename-team`](https://concourse-ci.org/managing-teams.html#fly-rename-team)
-* `fly` target will no longer be deted when running `fly logout`, just the token
+* `fly` target will no longer be deleted when running `fly logout`, just the token
 * Resource page on the web UI will now show when it last checked
 * `Docker Image` resource supports loading multiple images at the start via `load_bases` for use in multi-part Dockerfiles
 * When using `fly intercept` with `--url`, the appropriate target will now be auto-detected based on the URL
@@ -217,7 +217,7 @@ with the introduction of timestamps in v3.6.0
 If you are currently running a version of Concourse that is older than v3.6.0 and are planning to upgrade to v3.8.0, <strong>you must first upgrade to v3.6.0 before upgrading past it!</strong>
 
 ###<a id="known-issues"></a>Known Issues
-* When configuring CredHub to Concourse, you may encounter a `certificate signed by unkown authority` error. Please see [GH Issue #1873](https://github.com/concourse/concourse/issues/1873) for more details
+* When configuring CredHub to Concourse, you may encounter a `certificate signed by unknown authority` error. Please see [GH Issue #1873](https://github.com/concourse/concourse/issues/1873) for more details
 
 ###<a id="breaking"></a>BREAKING
 * Concourse now support both up and down migrations. In the future, this will allow you to back out of an upgrade and revert back to a previous version of Concourse. However, this work required us to squash our migrations, so you will need to first upgrade to Concourse v3.6.0 before upgrading to v3.8.0
@@ -242,7 +242,7 @@ Please also refer to Concourse BOSH release documentation on [`bosh.io`](http://
 * The Concourse Dashboard has been updated and has a new home under `beta/dashboard`. Tell us what you think about the new dashboard by commenting on our GitHub issue [#1829](https://github.com/concourse/concourse/issues/1829)
 * The [`execute`](https://concourse-ci.org/running-tasks.html#fly-execute) command will now default to `-x`, which has been replaced with a new flag, `--include-ignored`, to rever to the old behavior. In addition, `fly` will gracefully handle executions with an input that doesn't have a `.gitignore`. It will also gracefully handle inputs that are files and not directories.
 * The ATC will now use a separate database connection pool for the API and the pipeline scheduling work. This will make it so that slow API requests won't starve critical functionality.
-* Pipeline-provided resource types will no longer fail for the first two mintues after configuration
+* Pipeline-provided resource types will no longer fail for the first two minutes after configuration
 * Jobs and steps now support [`on_abort`](https://concourse-ci.org/on-abort-step-hook.html)
 * ATC can be configured with a pure-random worker selection strategy. This can be configured by passing `--container-placement-strategy=random` through the `web` command
 * The [`jobs`](https://concourse-ci.org/managing-jobs.html#fly-jobs) command now has a column indicating whether any builds are pending or started for each job
@@ -293,7 +293,7 @@ tested this upgrade path with version 20, currently available on
   job for `postgres/postgres`.
 
 4. In the same Concourse deployment manifest, update the ATC properties to
-explicilty configure the database name and role. These values will vary based on your
+explicitly configure the database name and role. These values will vary based on your
 deployment preferences. You can refer to our <a href="https://github.com/concourse/concourse/commit/17be5f144a799e344c9d1bb56d9595ff164c96ef">
 changes on the single-vm Concourse manifest</a> as a reference point.
 
@@ -307,7 +307,7 @@ version of Garden runC and recreate your workers.
 ###<a id="features"></a>Features
 * `fly validate-pipeline` will now validate the `config` field on embedded tasks.
 As a part of this change we have removed support for configuring both `config`
-and `file`, which has been depracated.
+and `file`, which has been deprecated.
 * Build logs now have timestamps. You can find more about it on the feature post <a href="https://medium.com/concourse-ci/build-page-improvements-64ebe663a7ec">here</a>
 * Build page now supports keyboard shortcuts. You can find more about it on the feature post <a href="https://medium.com/concourse-ci/build-page-improvements-64ebe663a7ec">here</a>.
   There is a known issue where keyboard shortcuts are non-functional on Firefox browsers. This should be fixed in a subsequent release.
@@ -343,7 +343,7 @@ and `file`, which has been depracated.
 
 ####Web UI
 * The legend on the pipeline page will now auto-hide after 10 seconds.
-* When switiching between pipelines, the UI will now fit the pipeline in view.
+* When switching between pipelines, the UI will now fit the pipeline in view.
 * You can also press 'F' center a pipeline in view.
 
 ### <a id="bug-fixes"></a> Bug Fixes
