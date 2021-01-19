@@ -2,7 +2,7 @@
 
 ==============================================
 
-**Important Notice:** This book repo is no longer in use. For the current Concourse documentation using MKDocs, see https://github.com/pivotal/docs-concourse-pcf
+**Important Notice:** This repo is no longer in use. For the current Concourse documentation using MKDocs, see https://github.com/pivotal/docs-concourse-pcf
 
 ==============================================
 
